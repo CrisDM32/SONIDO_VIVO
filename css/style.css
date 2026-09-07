@@ -1,0 +1,123 @@
+:root{
+    --page-color: rgb(52, 51, 51);
+    --header-color: rgb(140, 138, 138);
+    --font-color: #5044a0;
+    --radius: 5px;    
+}
+
+*,
+*::before,
+*::after{
+    box-sizing: border-box;
+}
+
+html,
+body{
+    margin: 0;
+    padding: 0;
+    font-family: barlow ;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: var(--page-color);
+}
+
+
+.logo{
+    width: 100px   ;
+    height: 50;
+}
+
+
+.item-nav{
+    margin: 30px;
+    font-size: 24px;
+    color: var(--font-color);
+    text-decoration: none;   
+    font-weight: 500; 
+
+}
+
+.user-section{
+}
+
+.material-symbols-outlined{
+    color: var(--font-color);
+    font-size: 40px !important;
+}
+
+header{
+    background-color: var(--header-color);
+    justify-content: space-between;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+
+}
+
+.search-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--header-color);
+}
+
+.input-buscar{
+    padding: 10px;
+    margin: 30px;
+    border: 2px solid #ccc;
+    border-radius: var(--radius);
+    margin-right: 10px;
+    width: 50%;
+}
+
+.search-button{
+    width: 100px;
+    height: 40px;
+    border-radius: var(--radius);
+    font-size: 100%;
+
+}
+
+.banner-section{
+    background-image: url('../images/banner2.png');
+    background-size: 100% 100%;
+    background-position: center;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+
+
+}
+
+.content{
+    text-align: right;
+    color: white;
+}
+
+.section-title{
+    padding: 20px;
+    text-align: center;
+}
+.products-section{
+    padding: 20px;
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.product-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.producto1{
+    width: 50px;
+    height: 50px;
+}
