@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear cuenta - Sonido Vivo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== Barra de navegación ===== -->
+  <header class="barra-superior">
+    <a href="index.html" class="logo">SONIDO VIVO</a>
+    <nav>
+      <a href="index.html">Catálogo</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="registro.html" class="activo">Crear cuenta</a>
+    </nav>
+  </header>
+
+  <!-- ===== Contenido principal ===== -->
+  <main class="contenedor-formulario">
+    <h1>Crear cuenta de cliente</h1>
+    <p class="subtitulo">
+      Completa tus datos para crear tu perfil y poder hacer pedidos en línea.
+    </p>
+
+    <!-- El atributo novalidate desactiva los mensajes del navegador
+         para que podamos mostrar los nuestros con JavaScript -->
+    <form id="formRegistro" novalidate>
+
+      <div class="campo">
+        <label for="nombre">Nombre completo *</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej: María González">
+        <small class="error" id="error-nombre"></small>
+      </div>
+
+      <div class="campo">
+        <label for="email">Correo electrónico *</label>
+        <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com">
+        <small class="error" id="error-email"></small>
+      </div>
+
+      <div class="campo">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" name="telefono" placeholder="+56 9 1234 5678">
+        <small class="error" id="error-telefono"></small>
+      </div>
+
+      <div class="campo">
+        <label for="password">Contraseña *</label>
+        <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres">
+        <small class="error" id="error-password"></small>
+      </div>
+
+      <div class="campo">
+        <label for="password2">Repetir contraseña *</label>
+        <input type="password" id="password2" name="password2" placeholder="Vuelve a escribir la contraseña">
+        <small class="error" id="error-password2"></small>
+      </div>
+
+      <div class="campo campo-checkbox">
+        <label>
+          <input type="checkbox" id="terminos" name="terminos">
+          Acepto los términos y condiciones *
+        </label>
+        <small class="error" id="error-terminos"></small>
+      </div>
+
+      <button type="submit" class="boton-principal">Crear cuenta</button>
+
+      <p class="mensaje-exito" id="mensajeExito" hidden>
+        ¡Cuenta creada correctamente! Ya puedes iniciar sesión.
+      </p>
+
+      <p class="ir-login">
+        ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+      </p>
+    </form>
+  </main>
+
+  <footer class="pie">
+    <p>Sonido Vivo - Viña del Mar - Proyecto académico DSY1104</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
