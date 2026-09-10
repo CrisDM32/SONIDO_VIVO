@@ -1,8 +1,9 @@
 :root{
-    --page-color: rgb(52, 51, 51);
-    --header-color: rgb(140, 138, 138);
-    --font-color: #5044a0;
-    --radius: 5px;    
+    --page-color: #121212;
+    --header-color: #121212;
+    --button-color: #3b3a3a;    
+    --font-color: #f1f0f6;
+    --radius: 7px;    
 }
 
 *,
@@ -19,28 +20,42 @@ body{
 }
 
 body{
-    margin: 0;
-    padding: 0;
     background-color: var(--page-color);
+    color: var(--font-color);
+}
+
+header{
+    background-color: var(--header-color);
+    padding: 20px;
+}
+
+.main-header{
+    display: flex;
+    background-color: var(--page-color);
+    align-items: center;
+    justify-content:space-between;
+    padding: 10px 10px 10px 5px;
+    
 }
 
 
 .logo{
-    width: 100px   ;
-    height: 50;
+    width: 200px   ;
+    height: 100px;
 }
 
 
 .item-nav{
-    margin: 30px;
+    margin: 10px;
     font-size: 24px;
     color: var(--font-color);
     text-decoration: none;   
     font-weight: 500; 
-
+    align-items: center;
 }
 
 .user-section{
+    
 }
 
 .material-symbols-outlined{
@@ -48,55 +63,85 @@ body{
     font-size: 40px !important;
 }
 
-header{
-    background-color: var(--header-color);
-    justify-content: space-between;
-    display: flex;
-    padding: 10px;
-    align-items: center;
 
-}
 
 .search-section{
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 5px;
     background-color: var(--header-color);
 }
 
 .input-buscar{
     padding: 10px;
     margin: 30px;
-    border: 2px solid #ccc;
+    border: 4px solid #ccc;
     border-radius: var(--radius);
     margin-right: 10px;
     width: 50%;
+    background-color: var(--header-color);
 }
 
 .search-button{
     width: 100px;
     height: 40px;
     border-radius: var(--radius);
+    color: var(--font-color);
     font-size: 100%;
+    background-color: var(--button-color);
+    border: none;
 
 }
 
-.banner-section{
-    background-image: url('../images/banner2.png');
-    background-size: 100% 100%;
-    background-position: center;
+.banner-section{ 
     height: 600px;
     display: flex;
-    align-items: center;
-    justify-content: right;
+    position: relative;
+    align-items:center;
+    justify-content: center;
+}
 
+.banner-image{
+    height: 600px;
+    width: 100%;
+    display: block;
 
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 15%,
+        black 85%,
+        transparent 100%
+    );
+
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 15%,
+        black 85%,
+        transparent 100%
+    );
 }
 
 .content{
-    text-align: right;
+    position: absolute;
+    bottom:10%;
+    right: 15%;
+    transform: translateY(-50%);
     color: white;
+    max-width: 400px;
+    text-align: center;
+}
+
+.boton-productos{
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: var(--button-color);
+    color: var(--font-color);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 18px;
 }
 
 .section-title{
@@ -104,24 +149,58 @@ header{
     text-align: center;
 }
 .products-section{
-    padding: 20px;
-    text-align: center;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    gap: 10px;
 }
 
 .product-list{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    display: flex;
     gap: 20px;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    width: 100%;
 }
 
-.producto1{
-    width: 50px;
-    height: 50px;
+
+.producto-item{
+    min-width: 250px;
+    flex-shrink: 0;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
 }
-.logo{
-    width: 100px   ;
-    height: 50;
+
+.producto img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
 }
+
+.flecha {
+    border: none;
+    background: none;
+    font-size: 50px;
+    cursor: pointer;
+    color: var(--font-color);
+}
+
+.bottom-content{
+    padding: 50px 20px 100px 20px;
+    display: flex;
+    align-items: center;
+    color: var(--font-color);
+}
+
+.item-container-bottom{
+
+}
+
+.item-container{
+    display:inline;
+}
+

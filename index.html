@@ -11,31 +11,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <script src="js/script.js"></script>
     <header class="header">
-        <section class="logo-section">
-            <img src="images/logo.png" alt="Logo" class="logo">
-        </section>
-        
-        <section class="nav-section">
-            <nav class="nav">
-                <a href="index.html" class="item-nav">Home</a>
-                <a href="productos.html" class="item-nav">Productos</a>
-                <a href="contacto.html" class="item-nav">Contacto</a>
-            </nav>
-        </section>
+        <div class="main-header">
+            <div class="logo-section">
+                <img src="images/logo.png" alt="Logo" class="logo">
+            </div>
 
-        <section class="user-section">
-            <a href="acceder.html" class="user-link">
-                <span class="material-symbols-outlined icono-cuenta">
-                    account_circle
-                </span>
-            </a>
-            <a href="carrito.html" class="cart-link">
-                <span class="material-symbols-outlined icono-carrito">
-                    shopping_cart
-                </span>
-            </a>
-        </section>
+            <section class="nav-section">
+                <nav class="nav">
+                    <a href="index.html" class="item-nav">Home</a>
+                    <a href="productos.html" class="item-nav">Productos</a>
+                    <a href="contacto.html" class="item-nav">Contacto</a>
+                </nav>
+            </section>
+
+            <section class="user-section">
+                <a href="acceder.html" class="user-link">
+                    <span class="material-symbols-outlined icono-cuenta">
+                        account_circle
+                    </span>
+                </a>
+                <a href="carrito.html" class="cart-link">
+                    <span class="material-symbols-outlined icono-carrito">
+                        shopping_cart
+                    </span>
+                </a>
+            </section>
+        </div>
     </header>
 
 <section class="search-section">
@@ -44,9 +47,9 @@
 </section>
 
     <section class="banner-section">
+        <img src="images/banner.jpeg" class="banner-image">
         <div class="content">
-            <h1>Bienvenido a nuestro sitio web</h1>
-            <p>Explora nuestros productos y servicios.</p>
+            <a href="productos.html" class="boton-productos" >Ver Productos</a>
         </div>
     </section>
     <div>
@@ -55,29 +58,77 @@
 
 
     <main class="main-content">
-        <section class="products-section"> 
-            <div class="product-list">
+        <div class="products-section"> 
+            <button class="flecha" onclick="moverGrid(-1)"> 
+                < 
+            </button>
+
+            <div class="product-list" id="product-list">
+                
                 <div class="product-item">
-                    <img src="images/producto1.jpg" alt="Producto 1" class="producto1">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
                     <h3>Producto 1</h3>
                     <p>Descripción del producto 1.</p>
                 </div>
                 <div class="product-item">
-                    <img src="images/producto1.jpg" alt="Producto 1" class="producto1">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
                     <h3>Producto 2</h3>
                     <p>Descripción del producto 2.</p>
                 </div>
                 <div class="product-item">
-                    <img src="images/producto1.jpg" alt="Producto 1" class="producto1">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
                     <h3>Producto 3</h3>
                     <p>Descripción del producto 3.</p>
                 </div>
                 <div class="product-item">
-                    <img src="images/producto1.jpg" alt="Producto 1" class="producto1">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
                     <h3>Producto 4</h3>
                     <p>Descripción del producto 4.</p>
                 </div>
+                <div class="product-item">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                    <h3>Producto 5</h3>
+                    <p>Descripción del producto 5.</p>
+                </div>
+                <div class="product-item">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                    <h3>Producto 6</h3>
+                    <p>Descripción del producto 6.</p>
+                </div>
+                <div class="product-item">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                    <h3>Producto 7</h3>
+                    <p>Descripción del producto 7.</p>
+                </div>
             </div>
-        </section>
+
+            <button class="flecha" onclick="moverGrid(1)"> 
+                >
+            </button>
+        </div>
+    </main>
+
+    <section class="bottom">
+        <div class="bottom-content">
+            <div class="item-container-bottom">
+                <h4>Servicio al Cliente</h4>
+                    <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
+                    <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
+                    <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
+            </div>
+            <div class="item-container-bottom">    
+                <h4>Terminos y Condiciones</h4>
+                    <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
+                    <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
+                    <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
+            </div>
+            <div class="item-container-bottom">
+                <h4>Mi Cuenta</h4>
+                    <a href="iniciar-sesion" class="item-bottom">Iniciar Sesión</a>
+                    <a href="registro-cliente.html" class="item-bottom">Registrate</a>
+            </div>
+        </div>
+
+    </section>
 </body>
 </html> 
