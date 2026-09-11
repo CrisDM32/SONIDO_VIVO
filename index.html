@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <script src="js/script.js"></script>
     <header class="header">
@@ -23,38 +28,58 @@
             <section class="nav-section">
                 <nav class="nav">
                     <a href="index.html" class="item-nav">Home</a>
-                    <a href="productos.html" class="item-nav">Productos</a>
+                    <div class="productos">
+                        <a href="productos.html" class="item-nav">Productos</a>
+                        <div class="menu-productos">
+                            <a href=" producto-filtrado.html" class="item-menu-drop">Instrumentos</a>
+                            <a href=" producto-filtrado.html" class="item-menu-drop">Accesorios</a>
+                            <a href=" producto-filtrado.html" class="item-menu-drop">Estudio de Grabación</a>
+                        </div>
+                    </div>
+
                     <a href="contacto.html" class="item-nav">Contacto</a>
                 </nav>
             </section>
 
             <section class="user-section">
-                <a href="acceder.html" class="user-link">
-                    <span class="material-symbols-outlined icono-cuenta">
-                        account_circle
-                    </span>
-                </a>
-                <a href="carrito.html" class="cart-link">
+                <div class="acceder">
+                    <a href="acceder.html" class="user-link">
+                        <span class="material-symbols-outlined icono-cuenta">
+                            account_circle
+                        </span>
+                    </a>    
+                    <div class="menu-acceder">
+                        <a href="iniciar-sesion.html" class="item-menu-drop">
+                            Iniciar Sesión
+                        </a>
+                        <a href="registro.html" class="item-menu-drop">
+                            Regristrate
+                        </a>
+                    </div>
+                    <a href="carrito.html" class="cart-link">
                     <span class="material-symbols-outlined icono-carrito">
                         shopping_cart
                     </span>
-                </a>
+                    </a>
+                </div>
+
+                
             </section>
         </div>
     </header>
 
-<section class="search-section">
-    <input type="text" placeholder="Buscar productos..." class="input-buscar">
-    <a href="buscar-producto" type="button" class="search-button">Buscar</a>
-</section>
+    <section class="search-section">
+        <input type="text" placeholder="Buscar productos..." class="input-buscar">
+        <a href="buscar-producto" type="button" class="search-button">Buscar</a>
+    </section>
 
     <section class="banner-section">
         <img src="images/banner.jpeg" class="banner-image">
         <div class="content">
-            <a href="productos.html" class="boton-productos" >Ver Productos</a>
+            <a href="productos.html" class="boton-productos">Ver Productos</a>
         </div>
     </section>
-    
+
 
     <section class="envios-chile-section">
         <div class="envios-chile">
@@ -73,66 +98,70 @@
 
 
     <main class="main-content">
-        <div class="products-section"> 
-            <button class="flecha" onclick="moverGrid(-1)"> 
-                < 
-            </button>
+        <div class="products-section">
+            <button class="flecha" onclick="moverGrid(-1)">
+                < </button>
 
-            <div class="product-list" id="product-list">
-                
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 1</h3>
-                    <p>Descripción del producto 1.</p>
-                </div>
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 2</h3>
-                    <p>Descripción del producto 2.</p>
-                </div>
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 3</h3>
-                    <p>Descripción del producto 3.</p>
-                </div>
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 4</h3>
-                    <p>Descripción del producto 4.</p>
-                </div>
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 5</h3>
-                    <p>Descripción del producto 5.</p>
-                </div>
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 6</h3>
-                    <p>Descripción del producto 6.</p>
-                </div>
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 7</h3>
-                    <p>Descripción del producto 7.</p>
-                </div>
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 8</h3>
-                    <p>Descripción del producto 8.</p>
-                </div>
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 9</h3>
-                    <p>Descripción del producto 9.</p>
-                </div>
-                <div class="product-item">
-                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
-                    <h3>Producto 10</h3>
-                    <p>Descripción del producto 10.</p>
-                </div>
-            </div>
+                    <div class="product-list" id="product-list">
+                        <a href="producto-1.html" class="product-item">
+                            <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                            <h3>Producto 1</h3>
+                            <p>$$$</p>
+                            <button class="carrito-button" onclick="agregarAlCarrito(event, 'Producto 1')">
+                                Añadir al carrito
+                            </button>
+                        </a>
+                        <a href="producto-1.html" class="product-item">
+                            <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                            <h3>Producto 2</h3>
+                            <p>$$$</p>
+                            <button class="carrito-button" onclick="agregarAlCarrito(event, 'Producto 1')">
+                                Añadir al carrito
+                            </button>
+                        </a>
+                        <a href="producto-1.html" class="product-item">
+                            <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                            <h3>Producto 3</h3>
+                            <p>$$$</p>
+                            <button class="carrito-button" onclick="agregarAlCarrito(event, 'Producto 1')">
+                                Añadir al carrito
+                            </button>
+                        </a>
+                        <a href="producto-1.html" class="product-item">
+                            <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                            <h3>Producto 4</h3>
+                            <p>$$$</p>
+                            <button class="carrito-button" onclick="agregarAlCarrito(event, 'Producto 1')">
+                                Añadir al carrito
+                            </button>
+                        </a>
+                        <a href="producto-1.html" class="product-item">
+                            <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                            <h3>Producto 5</h3>
+                            <p>$$$</p>
+                            <button class="carrito-button" onclick="agregarAlCarrito(event, 'Producto 1')">
+                                Añadir al carrito
+                            </button>
+                        </a>
+                        <a href="producto-1.html" class="product-item">
+                            <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                            <h3>Producto 6</h3>
+                            <p>$$$</p>
+                            <button class="carrito-button" onclick="agregarAlCarrito(event, 'Producto 1')">
+                                Añadir al carrito
+                            </button>
+                        </a>
+                        <a href="producto-1.html" class="product-item">
+                            <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                            <h3>Producto 7</h3>
+                            <p>$$$</p>
+                            <button class="carrito-button" onclick="agregarAlCarrito(event, 'Producto 1')">
+                                Añadir al carrito
+                            </button>
+                        </a>
+                    </div>
 
-            <button class="flecha" onclick="moverGrid(1)"> 
+            <button class="flecha" onclick="moverGrid(1)">
                 >
             </button>
         </div>
@@ -146,7 +175,7 @@
             <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
             <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
         </div>
-        <div class="item-container-bottom">    
+        <div class="item-container-bottom">
             <h3>Terminos y Condiciones</h3>
             <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
             <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
@@ -172,4 +201,5 @@
     </section>
 
 </body>
-</html> 
+
+</html>

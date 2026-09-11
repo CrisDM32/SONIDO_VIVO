@@ -19,3 +19,10 @@ function moverGrid(direccion) {
         }
     }
 }
+
+function agregarAlCarrito(event, producto) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    console.log(producto + "añadido al carrito");
+}
