@@ -1,8 +1,9 @@
 :root{
-    --page-color: #121212;
+    --page-color: #c9c5c5;
     --header-color: #121212;
     --button-color: #3b3a3a;    
-    --font-color: #f1f0f6;
+    --font-color-black: #0f0f0f;
+    --font-color-white: rgb(253, 252, 252);
     --radius: 7px;    
 }
 
@@ -25,28 +26,30 @@ body{
 }
 
 header{
-    background-color: var(--header-color);
-    padding: 20px;
+    background-color: var(--page-color);
 }
 
 .main-header{
     display: flex;
-    background-color: var(--page-color);
+    background-color: var(--header-color);
     align-items: center;
     justify-content:space-between;
-    padding: 10px 10px 10px 5px;
-    
+    padding: 10px 20px 10px 20px;
+    color: var(--font-color-white);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
-
 .logo{
-    width: 200px   ;
+    width: 200px ;
     height: 100px;
 }
 
 
 .item-nav{
     margin: 10px;
+    padding: 10px 30px;
+    border-radius: var(--radius);
     font-size: 24px;
     color: var(--font-color);
     text-decoration: none;   
@@ -54,12 +57,20 @@ header{
     align-items: center;
 }
 
-.user-section{
-    
+.item-nav:hover{
+    border-top: var(--button-color) solid 2px;
+    border-left: var(--button-color) solid 2px;
+    border-right: var(--button-color) solid 2px;
+    border-radius: var(--radius);
+}
+
+.user-link,
+.cart-link{
+    padding: 20px;
 }
 
 .material-symbols-outlined{
-    color: var(--font-color);
+    color: var(--font-color-white);
     font-size: 40px !important;
 }
 
@@ -70,28 +81,32 @@ header{
     justify-content: center;
     align-items: center;
     padding: 5px;
-    background-color: var(--header-color);
+    background-color: var(--page-color);
+    margin-top: 80px;
 }
 
 .input-buscar{
     padding: 10px;
-    margin: 30px;
-    border: 4px solid #ccc;
+    
+    border: 4px solid #020202;
     border-radius: var(--radius);
     margin-right: 10px;
     width: 50%;
     background-color: var(--header-color);
+    color: white;
 }
 
 .search-button{
     width: 100px;
     height: 40px;
     border-radius: var(--radius);
-    color: var(--font-color);
+    color: white;
     font-size: 100%;
     background-color: var(--button-color);
-    border: none;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
 }
 
 .banner-section{ 
@@ -100,28 +115,14 @@ header{
     position: relative;
     align-items:center;
     justify-content: center;
+    margin-top: 5%;
 }
 
 .banner-image{
     height: 600px;
     width: 100%;
     display: block;
-
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        black 15%,
-        black 85%,
-        transparent 100%
-    );
-
-    mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        black 15%,
-        black 85%,
-        transparent 100%
-    );
+ 
 }
 
 .content{
@@ -138,15 +139,39 @@ header{
     display: inline-block;
     padding: 12px 25px;
     background-color: var(--button-color);
-    color: var(--font-color);
+    color: white;
     text-decoration: none;
     border-radius: 8px;
     font-size: 18px;
 }
 
-.section-title{
+.envios-chile-section{
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin-top: 80px;
+    margin-bottom: 100px;
+    
+}
+
+.envios-chile img{
+    width: 35px;
+    height: 35px;
+}
+
+.cuotas,
+.envios-chile{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+
+
+.section-title-productos{
     padding: 20px;
     text-align: center;
+    font-size: 50px;
 }
 .products-section{
     display: flex;
@@ -163,6 +188,7 @@ header{
     overflow-x: hidden;
     scroll-behavior: smooth;
     width: 100%;
+    margin-bottom: 50px;
 }
 
 
@@ -189,18 +215,40 @@ header{
     color: var(--font-color);
 }
 
-.bottom-content{
-    padding: 50px 20px 100px 20px;
+.bottom{
+    padding: 50px 20px 20px 20px;
     display: flex;
-    align-items: center;
     color: var(--font-color);
+    width: 60%;
+    justify-content: space-between;
+    margin: auto;
 }
 
 .item-container-bottom{
+    display: flex;
+    flex-direction: column;
 
 }
 
-.item-container{
-    display:inline;
+.item-container-bottom img{
+    width: 35px;
+    height: 35px;
 }
 
+.item-bottom {
+    text-decoration: none;
+    color: var(--font-color);
+    padding: 10px;
+    
+}
+
+.item-bottom:hover{
+    background-color: rgb(122, 122, 122);
+    border-radius: var(--radius);
+}
+
+
+
+.logo-bottom{
+    color: var(--font-color);
+}

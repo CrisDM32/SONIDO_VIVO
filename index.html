@@ -15,7 +15,9 @@
     <header class="header">
         <div class="main-header">
             <div class="logo-section">
-                <img src="images/logo.png" alt="Logo" class="logo">
+                <a href="index.html" target="_self">
+                    <img src="images/logo.png" alt="Logo" class="logo">
+                </a>
             </div>
 
             <section class="nav-section">
@@ -43,7 +45,7 @@
 
 <section class="search-section">
     <input type="text" placeholder="Buscar productos..." class="input-buscar">
-    <button class="search-button">Buscar</button>
+    <a href="buscar-producto" type="button" class="search-button">Buscar</a>
 </section>
 
     <section class="banner-section">
@@ -52,8 +54,21 @@
             <a href="productos.html" class="boton-productos" >Ver Productos</a>
         </div>
     </section>
+    
+
+    <section class="envios-chile-section">
+        <div class="envios-chile">
+            <p><b>Envios a todo Chile</b></p>
+            <img src="images/iconos/bandera-logo.svg" alt="Bandera Chilena">
+        </div>
+        <div class="cuotas">
+            <p><b>Paga en 12 cuotas sin Intéres!</b></p>
+        </div>
+    </section>
+
+
     <div>
-        <h2 class="section-title">Productos Destacados</h2>
+        <p class="section-title-productos"><b>Productos Destacados</b></p>
     </div>
 
 
@@ -100,6 +115,21 @@
                     <h3>Producto 7</h3>
                     <p>Descripción del producto 7.</p>
                 </div>
+                <div class="product-item">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                    <h3>Producto 8</h3>
+                    <p>Descripción del producto 8.</p>
+                </div>
+                <div class="product-item">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                    <h3>Producto 9</h3>
+                    <p>Descripción del producto 9.</p>
+                </div>
+                <div class="product-item">
+                    <img src="images/producto1.png" alt="Producto 1" class="producto1">
+                    <h3>Producto 10</h3>
+                    <p>Descripción del producto 10.</p>
+                </div>
             </div>
 
             <button class="flecha" onclick="moverGrid(1)"> 
@@ -108,27 +138,38 @@
         </div>
     </main>
 
-    <section class="bottom">
-        <div class="bottom-content">
-            <div class="item-container-bottom">
-                <h4>Servicio al Cliente</h4>
-                    <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
-                    <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
-                    <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
-            </div>
-            <div class="item-container-bottom">    
-                <h4>Terminos y Condiciones</h4>
-                    <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
-                    <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
-                    <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
-            </div>
-            <div class="item-container-bottom">
-                <h4>Mi Cuenta</h4>
-                    <a href="iniciar-sesion" class="item-bottom">Iniciar Sesión</a>
-                    <a href="registro-cliente.html" class="item-bottom">Registrate</a>
-            </div>
-        </div>
 
+    <section class="bottom">
+        <div class="item-container-bottom">
+            <h3>Servicio al Cliente</h3>
+            <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
+            <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
+            <a href="preguntas-frecuentes.html" class="item-bottom">Preguntas Frecuentes</a>
+        </div>
+        <div class="item-container-bottom">    
+            <h3>Terminos y Condiciones</h3>
+            <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
+            <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
+            <a href="terminos-y-condiciones.hmtl" class="item-bottom">Terminos y Condiciones</a>
+        </div>
+        <div class="item-container-bottom">
+            <h3>Mi Cuenta</h3>
+            <a href="iniciar-sesion" class="item-bottom">Iniciar Sesión</a>
+            <a href="registro.html" class="item-bottom">Registrate</a>
+        </div>
+        <div class="item-container-bottom">
+            <h3>Contactanos</h3>
+            <a href="https://www.instagram.com/" target="_blank">
+                <img src="images/iconos/instagram-logo.svg" alt="Instagram">
+            </a>
+            <a href="https://www.facebook.com/" target="_blank">
+                <img src="images/iconos/facebook-logo.svg" alt="Facebook">
+            </a>
+            <a href="mailto:contacto@sonidovivo.cl" target="_blank">
+                <img src="images/iconos/correo-logo.svg" alt="Correo">
+            </a>
+        </div>
     </section>
+
 </body>
 </html> 
