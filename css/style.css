@@ -1,53 +1,333 @@
-/* ==========================================================================
-   Estilos generales - Sonido Vivo
-   ========================================================================== */
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root{
+    --page-color: #c9c5c5;
+    --header-color: #121212;
+    --button-color: #3b3a3a;    
+    --bottom-color: rgb(119, 117, 117);
+    --font-color-black: #0f0f0f;
+    --font-color-white: rgb(253, 252, 252);
+    --radius: 7px;    
 }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #f2f2f2;
-  color: #222;
-  line-height: 1.5;
+*,
+*::before,
+*::after{
+    box-sizing: border-box;
 }
 
-/* ===== Barra de navegación ===== */
-.barra-superior {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  background-color: #1a1a2e;
-  padding: 14px 20px;
+html,
+body{
+    margin: 0;
+    padding: 0;
+    font-family: barlow ;
 }
 
-.barra-superior .logo {
-  color: #fff;
-  font-weight: bold;
-  font-size: 20px;
-  letter-spacing: 1px;
-  text-decoration: none;
+body{
+    background-color: var(--page-color);
+    color: var(--font-color);
 }
 
-.barra-superior nav a {
-  color: #cfcfe6;
-  text-decoration: none;
-  margin-left: 16px;
-  font-size: 15px;
+header{
+    background-color: var(--page-color);
+   
 }
 
-.barra-superior nav a:hover,
-.barra-superior nav a.activo {
-  color: #fff;
-  text-decoration: underline;
+.main-header{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    background-color: var(--header-color);
+    padding: 10px 20px 10px 20px;
+    color: var(--font-color-white);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
-/* ===== Formulario ===== */
+.logo{
+    height: 80px;
+}
+
+.nav{
+    display: flex;;
+    align-items: center;
+    gap: 30px;
+}
+
+
+.item-nav{
+    margin: 0;
+    padding: 3% 1%;
+    border-radius: var(--radius);
+    font-size: 24px;
+    color: var(--font-color);
+    text-decoration: none;   
+    font-weight: 500; 
+    
+}
+
+.productos,
+.acceder{
+    position: relative;
+}
+
+.menu-productos,
+.menu-acceder{
+    display: none;
+    position: absolute;
+    top: 100%;
+    background-color: var(--header-color);
+    min-width: 200px;
+    border-radius: 10px;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+.menu-acceder{
+    right: 0;
+}
+
+.menu-productos a,
+.menu-acceder a{
+    display: block;
+    padding: 12px 20px;
+    color: var(--font-color-white);
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: var(--radius);
+}
+
+.menu-productos a:hover,
+.menu-acceder a:hover{
+    background-color: var(--page-color);
+    color: var(--font-color-black);
+}
+
+.productos:hover .menu-productos,
+.acceder:hover  .menu-acceder{
+    display: block;
+}
+
+
+.item-nav:hover{
+    border-top: var(--button-color) solid 2px;
+    border-left: var(--button-color) solid 2px;
+    border-right: var(--button-color) solid 2px;
+    border-radius: var(--radius);
+}
+
+.user-link,
+.cart-link{
+    padding: 20px;
+}
+
+.material-symbols-outlined{
+    color: var(--font-color-white);
+    font-size: 40px !important;
+}
+
+
+
+.search-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background-color: var(--page-color);
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.input-buscar{
+    padding: 10px;
+    
+    border: 4px solid #020202;
+    border-radius: var(--radius);
+    margin-right: 10px;
+    width: 50%;
+    background-color: var(--header-color);
+    color: white;
+}
+
+.search-button{
+    width: 100px;
+    height: 40px;
+    border-radius: var(--radius);
+    color: white;
+    font-size: 100%;
+    background-color: var(--button-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+.banner-section{ 
+    height: 600px;
+    display: flex;
+    position: relative;
+    align-items:center;
+    justify-content: center;
+    margin-top: 5%;
+}
+
+.banner-image{
+    height: 600px;
+    width: 100%;
+    display: block;
+ 
+}
+
+.content{
+    position: absolute;
+    bottom:10%;
+    right: 15%;
+    transform: translateY(-50%);
+    color: white;
+    max-width: 400px;
+    text-align: center;
+}
+
+.boton-productos{
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: var(--button-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 18px;
+}
+
+.envios-chile-section{
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin-top: 80px;
+    margin-bottom: 100px;
+    
+}
+
+.envios-chile img{
+    width: 35px;
+    height: 35px;
+}
+
+.cuotas,
+.envios-chile{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+
+
+.section-title-productos{
+    padding: 20px;
+    text-align: center;
+    font-size: 50px;
+}
+.products-section{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    gap: 10px;
+}
+
+.product-list{
+    display: flex;
+    gap: 20px;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    width: 100%;
+    margin-bottom: 50px;
+    text-decoration: none;
+
+}
+
+
+.product-item{
+    min-width: 250px;
+    flex-shrink: 0;
+    background: var(--button-color);
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--font-color-white);
+    transition: transform 0.3s ease;
+    
+}
+
+.product-item:hover{
+    transform: scale(1.05);
+}
+
+.product-item img{
+    border-radius: var(--radius);
+}
+
+.carrito-button{
+    border: none;
+    background-color: var(--header-color);
+    color: var(--font-color-white);
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.flecha {
+    border: none;
+    background: none;
+    font-size: 50px;
+    cursor: pointer;
+    color: var(--font-color);
+}
+
+.footer{
+    background-color: var(--bottom-color);
+    padding: 50px 20px 20px 20px;
+    display: flex;
+    color: var(--font-color);
+    width: 100%;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.item-container-footer{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+}
+
+.item-container-footer img{
+    width: 35px;
+    height: 35px;
+}
+
+.item-footer {
+    text-decoration: none;
+    color: var(--font-color);
+    padding: 10px;
+    
+}
+
+.item-footer:hover{
+    background-color: rgb(122, 122, 122);
+    border-radius: var(--radius);
+}
+
+
+
+.logo-footer{
+    color: var(--font-color);
+}
+
+
+
 .contenedor-formulario {
   max-width: 460px;
   margin: 40px auto;
@@ -95,7 +375,6 @@ body {
   border-color: #1a1a2e;
 }
 
-/* Borde rojo cuando el campo tiene un error (lo agrega el JS) */
 .campo input.invalido {
   border-color: #d32f2f;
 }
@@ -112,7 +391,6 @@ body {
   margin-bottom: 0;
 }
 
-/* Texto de error bajo cada campo */
 .error {
   color: #d32f2f;
   font-size: 12px;
@@ -120,7 +398,6 @@ body {
   min-height: 14px;
 }
 
-/* ===== Botón ===== */
 .boton-principal {
   width: 100%;
   padding: 12px;
@@ -154,31 +431,3 @@ body {
   text-align: center;
 }
 
-/* ===== Pie de página ===== */
-.pie {
-  text-align: center;
-  padding: 20px;
-  font-size: 13px;
-  color: #777;
-}
-
-/* ==========================================================================
-   Responsive: en pantallas pequeñas (teléfono, < 480 px)
-   el formulario ocupa casi todo el ancho
-   ========================================================================== */
-@media (max-width: 480px) {
-  .contenedor-formulario {
-    margin: 20px 12px;
-    padding: 20px;
-  }
-
-  .barra-superior {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .barra-superior nav a {
-    margin-left: 0;
-    margin-right: 14px;
-  }
-}

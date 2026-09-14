@@ -8,25 +8,14 @@
 </head>
 <body>
 
-  <!-- ===== Barra de navegación ===== -->
-  <header class="barra-superior">
-    <a href="index.html" class="logo">SONIDO VIVO</a>
-    <nav>
-      <a href="index.html">Catálogo</a>
-      <a href="contacto.html">Contacto</a>
-      <a href="registro.html" class="activo">Crear cuenta</a>
-    </nav>
-  </header>
+  <div id="header"></div>
 
-  <!-- ===== Contenido principal ===== -->
   <main class="contenedor-formulario">
     <h1>Crear cuenta de cliente</h1>
     <p class="subtitulo">
       Completa tus datos para crear tu perfil y poder hacer pedidos en línea.
     </p>
 
-    <!-- El atributo novalidate desactiva los mensajes del navegador
-         para que podamos mostrar los nuestros con JavaScript -->
     <form id="formRegistro" novalidate>
 
       <div class="campo">
@@ -79,10 +68,10 @@
     </form>
   </main>
 
-  <footer class="pie">
-    <p>Sonido Vivo - Viña del Mar - Proyecto académico DSY1104</p>
-  </footer>
+  <footer class="footer"></footer>
 
   <script src="js/script.js"></script>
+  <script src="js/components.js"></script>
 </body>
+
 </html>
