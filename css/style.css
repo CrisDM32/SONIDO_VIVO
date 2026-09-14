@@ -285,7 +285,7 @@ header{
     color: var(--font-color);
 }
 
-.bottom{
+.footer{
     background-color: var(--bottom-color);
     padding: 50px 20px 20px 20px;
     display: flex;
@@ -296,32 +296,32 @@ header{
     padding-right: 5%;
 }
 
-.item-container-bottom{
+.item-container-footer{
     display: flex;
     flex-direction: column;
     padding: 10px;
 
 }
 
-.item-container-bottom img{
+.item-container-footer img{
     width: 35px;
     height: 35px;
 }
 
-.item-bottom {
+.item-footer {
     text-decoration: none;
     color: var(--font-color);
     padding: 10px;
     
 }
 
-.item-bottom:hover{
+.item-footer:hover{
     background-color: rgb(122, 122, 122);
     border-radius: var(--radius);
 }
 
 
 
-.logo-bottom{
+.logo-footer{
     color: var(--font-color);
 }
