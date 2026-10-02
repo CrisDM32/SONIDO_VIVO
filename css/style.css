@@ -431,3 +431,51 @@ header{
   text-align: center;
 }
 
+.catalogo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 60px auto;
+  padding: 0 20px;
+}
+
+.producto-icono {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.producto-categoria {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.producto-precio {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.producto-stock {
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.producto-stock.disponible {
+  color: #8bffb0;
+}
+
+.producto-stock.agotado {
+  color: #ff8b8b;
+}
+
+.sin-resultados {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+}
+
