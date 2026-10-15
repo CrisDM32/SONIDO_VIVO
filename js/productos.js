@@ -49,6 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     grid.innerHTML = lista.map(function (producto) {
+      const boton = producto.disponible
+        ? `<button type="button" class="carrito-button" data-id="${producto.id}">Agregar al carrito</button>`
+        : `<button type="button" class="carrito-button" disabled>Agotado</button>`;
+
       return `
         <article class="product-item">
           <div class="producto-icono">${producto.icono}</div>
@@ -58,9 +62,27 @@ document.addEventListener("DOMContentLoaded", function () {
           <p class="producto-stock ${producto.disponible ? "disponible" : "agotado"}">
             ${producto.disponible ? "En stock" : "Agotado"}
           </p>
+          ${boton}
         </article>
       `;
     }).join("");
+
+    grid.querySelectorAll(".carrito-button[data-id]").forEach(function (boton) {
+      boton.addEventListener("click", function () {
+        const id = Number(boton.dataset.id);
+        const producto = productos.find(function (p) { return p.id === id; });
+
+        agregarAlCarrito(producto);
+
+        const textoOriginal = boton.textContent;
+        boton.textContent = "¡Agregado! ✓";
+        boton.disabled = true;
+        setTimeout(function () {
+          boton.textContent = textoOriginal;
+          boton.disabled = false;
+        }, 1000);
+      });
+    });
   }
 
   function formatearPrecio(valor) {
