@@ -1,28 +1,9 @@
 import { useRef } from 'react'
 import Producto1 from '../images/producto1.png'
+import { productos } from '../data/productos.js'
 
 export const ProductosDestacados = () => {
     const productListRef = useRef(null)
-    const productosDestacados =[
-    {
-        nombre: "Producto 1",
-        precio: "$$$"
-    },{
-        nombre: "Producto 2",
-        precio: "$$$"
-    },{
-        nombre: "Producto 3",
-        precio: "$$$"
-    },
-    {
-        nombre: "Producto 4",
-        precio: "$$$"
-    },
-    {
-        nombre: "Producto 5",
-        precio: "$$$"
-    },
-    ]
 
     const desplazarCarrusel = (direccion) => {
         const productList = productListRef.current
@@ -66,7 +47,7 @@ export const ProductosDestacados = () => {
                     &#8249;
                 </button>
                 <div className="product-list" id="product-list" ref={productListRef}>
-                    {productosDestacados.map((producto) => (
+                    {productos.map((producto) => (
                         <a href="producto-1.html" className="product-item" key={producto.nombre}>
                             <img src={Producto1} alt={producto.nombre} className="producto1"></img>
                             <h3>{producto.nombre}</h3>
