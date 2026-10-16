@@ -4,11 +4,20 @@ import { SearchBar } from './components/Search-Bar.jsx';
 import {Banner} from './components/Banner.jsx';
 import {ProductosDestacados} from './components/Productos-Destacados.jsx';
 import {Cuotas} from './components/Cuotas.jsx';
-import { Catalogo } from './components/Catalogo.jsx';
+import CatalogoProductos from './CatalogoProductos.jsx';
 
 function App() {
   if (window.location.pathname.endsWith('/productos.html')) {
-    return <Catalogo />
+    return (
+      <>
+        <Header />
+        <main className="catalogo-page">
+          <h1 className="section-title-productos">Todos los productos</h1>
+          <CatalogoProductos />
+        </main>
+        <Footer />
+      </>
+    )
   }
 
   return (
