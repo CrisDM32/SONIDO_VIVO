@@ -43,7 +43,7 @@ export default function Productos() {
         )}
 
         {productosFiltrados.map((producto) => (
-          // "key" es obligatorio cuando se genera una lista con .map():
+          <article key={producto.id} className="producto">
             <div className="producto-icono">{producto.icono}</div>
             <p className="producto-categoria">{producto.categoria}</p>
             <h3>{producto.nombre}</h3>
@@ -68,6 +68,6 @@ export default function Productos() {
           </article>
         ))}
       </section>
-    </main>
+    </main>   
   );
 }
