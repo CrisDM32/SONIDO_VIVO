@@ -1,15 +1,17 @@
-import { Header } from '../components/generales/Header.jsx';
-import { Footer } from '../components/generales/Footer.jsx';
-import { SearchBar } from '../components/pagina-inicio/Search-Bar.jsx';
-import { Banner } from '../components/generales/Banner.jsx';
-import { ProductosDestacados } from '../components/pagina-inicio/Productos-Destacados.jsx';
-import { Cuotas } from '../components/pagina-inicio/Cuotas.jsx';
-import CatalogoProductos from '../pages/CatalogoProductos.jsx';
-import Carrito from '../pages/Carrito.jsx';
-import Pago from '../pages/Pago.jsx';
-import Resumen from '../pages/Resumen.jsx';
-import PagoTarjeta from '../pages/PagoTarjeta.jsx';
-import Registro from '../pages/Registro.jsx';
+import { Header } from './components/generales/Header.jsx';
+import { Footer } from './components/generales/Footer.jsx';
+import { SearchBar } from './components/pagina-inicio/Search-Bar.jsx';
+import { Banner } from './components/generales/Banner.jsx';
+import { ProductosDestacados } from './components/pagina-inicio/Productos-Destacados.jsx';
+import { Cuotas } from './components/pagina-inicio/Cuotas.jsx';
+import CatalogoProductos from './pages/CatalogoProductos.jsx';
+import Carrito from './pages/Carrito.jsx';
+import Contacto from './pages/Contacto.jsx';
+import Pago from './pages/Pago.jsx';
+import Resumen from './pages/Resumen.jsx';
+import PagoTarjeta from './pages/PagoTarjeta.jsx';
+import Login from './pages/Login.jsx';
+import Registro from './pages/Registro.jsx';
 
 function App() {
   const pathname = window.location.pathname;
@@ -37,7 +39,17 @@ function App() {
     )
   }
 
-  if (pathname.endsWith('/pago.html') || pathname.endsWith('/contacto.html')) {
+  if (pathname.endsWith('/contacto.html')) {
+    return (
+      <>
+        <Header />
+        <Contacto />
+        <Footer />
+      </>
+    )
+  }
+
+  if (pathname.endsWith('/pago.html')) {
     return (
       <>
         <Header />
@@ -62,6 +74,16 @@ function App() {
       <>
         <Header />
         <Resumen />
+        <Footer />
+      </>
+    )
+  }
+
+  if (pathname.endsWith('/iniciar-sesion.html')) {
+    return (
+      <>
+        <Header />
+        <Login />
         <Footer />
       </>
     )

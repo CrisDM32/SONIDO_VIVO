@@ -29,7 +29,7 @@ export const Header = () => {
             <section className="user-section">
                 <div className="header-actions">
                     <div className="acceder">
-                        <a href="acceder.html" className="user-link" aria-label="Cuenta">
+                        <a href="iniciar-sesion.html" className="user-link" aria-label="Cuenta">
                             <svg className="header-icon" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 3a3.25 3.25 0 1 1 0 6.5A3.25 3.25 0 0 1 12 5Zm0 14a7 7 0 0 1-5.6-2.8 5.8 5.8 0 0 1 11.2 0A7 7 0 0 1 12 19Z" />
                             </svg>

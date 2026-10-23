@@ -1,12 +1,21 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
   calcularTotalCarrito,
   formatearPrecioCLP,
   obtenerCarrito,
   vaciarCarrito,
 } from '../../utils/carrito.js'
+import { validarPagoTarjeta } from '../../utils/validacionPagoTarjeta.js'
+import CampoFormulario from '../pago/CampoFormulario.jsx'
 
 const PEDIDO_KEY = 'sv_ultimo_pedido'
+
+const formInicial = {
+  nombreTitular: '',
+  numeroTarjeta: '',
+  fechaVencimiento: '',
+  ccv: '',
+}
 
 function crearPedido(carrito, total) {
   return {
@@ -20,11 +29,25 @@ function crearPedido(carrito, total) {
 export default function PagoTarjeta() {
   const carrito = useMemo(() => obtenerCarrito(), [])
   const total = calcularTotalCarrito(carrito)
+  const [form, setForm] = useState(formInicial)
+  const [errores, setErrores] = useState({})
+
+  function handleChange(evento) {
+    const { name, value } = evento.target
+    setForm((anterior) => ({ ...anterior, [name]: value }))
+  }
 
   function handleSubmit(evento) {
     evento.preventDefault()
 
     if (carrito.length === 0) {
+      return
+    }
+
+    const nuevosErrores = validarPagoTarjeta(form)
+    setErrores(nuevosErrores)
+
+    if (Object.keys(nuevosErrores).length > 0) {
       return
     }
 
@@ -42,60 +65,48 @@ export default function PagoTarjeta() {
           <h2>Datos de pago</h2>
           <p>Ingresa los datos del titular y de la tarjeta.</p>
 
-          <form className="checkout-form" onSubmit={handleSubmit}>
-            <div className="campo">
-              <label htmlFor="nombreTitular">Nombre del titular</label>
-              <input
-                id="nombreTitular"
-                name="nombreTitular"
-                type="text"
-                autoComplete="cc-name"
-                placeholder="Como aparece en la tarjeta"
-                required
-              />
-            </div>
+          <form className="checkout-form" onSubmit={handleSubmit} noValidate>
+            <CampoFormulario
+              id="nombreTitular"
+              name="nombreTitular"
+              label="Nombre del titular"
+              value={form.nombreTitular}
+              onChange={handleChange}
+              placeholder="Como aparece en la tarjeta"
+              error={errores.nombreTitular}
+            />
 
-            <div className="campo">
-              <label htmlFor="numeroTarjeta">Número de tarjeta</label>
-              <input
-                id="numeroTarjeta"
-                name="numeroTarjeta"
-                type="text"
-                inputMode="numeric"
-                autoComplete="cc-number"
-                placeholder="1234 5678 9012 3456"
-                pattern="[0-9 ]{13,23}"
-                maxLength={23}
-                required
-              />
-            </div>
+            <CampoFormulario
+              id="numeroTarjeta"
+              name="numeroTarjeta"
+              label="Número de tarjeta"
+              value={form.numeroTarjeta}
+              onChange={handleChange}
+              placeholder="1234 5678 9012 3456"
+              error={errores.numeroTarjeta}
+            />
 
             <div className="campo-fila">
-              <div className="campo">
-                <label htmlFor="fechaVencimiento">Fecha de vencimiento</label>
-                <input
-                  id="fechaVencimiento"
-                  name="fechaVencimiento"
-                  type="month"
-                  autoComplete="cc-exp"
-                  required
-                />
-              </div>
+              <CampoFormulario
+                id="fechaVencimiento"
+                name="fechaVencimiento"
+                label="Fecha de vencimiento"
+                type="month"
+                value={form.fechaVencimiento}
+                onChange={handleChange}
+                error={errores.fechaVencimiento}
+              />
 
-              <div className="campo">
-                <label htmlFor="ccv">CCV</label>
-                <input
-                  id="ccv"
-                  name="ccv"
-                  type="password"
-                  inputMode="numeric"
-                  autoComplete="cc-csc"
-                  placeholder="123"
-                  pattern="[0-9]{3,4}"
-                  maxLength={4}
-                  required
-                />
-              </div>
+              <CampoFormulario
+                id="ccv"
+                name="ccv"
+                label="CCV"
+                type="password"
+                value={form.ccv}
+                onChange={handleChange}
+                placeholder="123"
+                error={errores.ccv}
+              />
             </div>
 
             <button
