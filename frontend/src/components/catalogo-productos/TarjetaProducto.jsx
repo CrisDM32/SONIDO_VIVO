@@ -3,9 +3,11 @@ import { formatearPrecioCLP } from '../../utils/carrito.js'
 export default function TarjetaProducto({ producto, agregado, onAgregar }) {
   return (
     <article className="product-item">
-      <div className="producto-icono" aria-hidden="true">{producto.icono}</div>
-      <p className="producto-categoria">{producto.categoria}</p>
-      <h2>{producto.nombre}</h2>
+      <a className="producto-enlace" href={`producto.html?id=${producto.id}`}>
+        <div className="producto-icono" aria-hidden="true">{producto.icono}</div>
+        <p className="producto-categoria">{producto.categoria}</p>
+        <h2>{producto.nombre}</h2>
+      </a>
       <p className="producto-precio">{formatearPrecioCLP(producto.precio)}</p>
       <p className={`producto-stock ${producto.disponible ? 'disponible' : 'agotado'}`}>
         {producto.disponible ? 'En stock' : 'Agotado'}

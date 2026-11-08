@@ -5,6 +5,7 @@ import { Banner } from './components/generales/Banner.jsx';
 import { ProductosDestacados } from './components/pagina-inicio/Productos-Destacados.jsx';
 import { Cuotas } from './components/pagina-inicio/Cuotas.jsx';
 import CatalogoProductos from './pages/CatalogoProductos.jsx';
+import Producto from './pages/Producto.jsx';
 import Carrito from './pages/Carrito.jsx';
 import Contacto from './pages/Contacto.jsx';
 import Pago from './pages/Pago.jsx';
@@ -24,6 +25,16 @@ function App() {
           <h1 className="section-title-productos">Todos los productos</h1>
           <CatalogoProductos />
         </main>
+        <Footer />
+      </>
+    )
+  }
+
+  if (pathname.endsWith('/producto.html')) {
+    return (
+      <>
+        <Header />
+        <Producto />
         <Footer />
       </>
     )
