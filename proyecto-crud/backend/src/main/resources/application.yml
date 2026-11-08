@@ -1,0 +1,29 @@
+server:
+  port: 8080
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+
+spring:
+  application:
+    name: productos
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/productos}
+    username: ${SPRING_DATASOURCE_USERNAME:productos}
+    password: ${SPRING_DATASOURCE_PASSWORD:productos}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  public-base-url: ${APP_PUBLIC_BASE_URL:http://localhost:8080}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:*,http://127.0.0.1:*}
+  jwt:
+    secreto: ${JWT_SECRETO:almacen-duoc-fullstack-clave-jwt-256bits}
+    expiracion-ms: ${JWT_EXPIRACION_MS:28800000}

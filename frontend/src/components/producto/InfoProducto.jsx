@@ -3,14 +3,14 @@ import { formatearPrecioCLP } from '../../utils/carrito.js'
 export default function InfoProducto({ producto }) {
   return (
     <>
-      <p className="producto-categoria">{producto.categoria}</p>
-      <h1>{producto.nombre}</h1>
-      <p className="producto-codigo">Código: {producto.codigo}</p>
-      <p className="producto-precio">{formatearPrecioCLP(producto.precio)}</p>
-      <p className={`producto-stock ${producto.disponible ? 'disponible' : 'agotado'}`}>
+      <p className="m-0 text-[13px] tracking-[1px] uppercase opacity-80">{producto.categoria}</p>
+      <h1 className="m-0 text-[36px] mobile:text-[28px]">{producto.nombre}</h1>
+      <p className="m-0 text-[14px] opacity-80">Código: {producto.codigo}</p>
+      <p className="m-0 text-[32px] font-bold">{formatearPrecioCLP(producto.precio)}</p>
+      <p className="m-0">
         {producto.disponible ? 'En stock' : 'Agotado'}
       </p>
-      <p className="producto-descripcion">{producto.descripcion}</p>
+      <p className="m-0 leading-[1.6]">{producto.descripcion}</p>
     </>
   )
 }

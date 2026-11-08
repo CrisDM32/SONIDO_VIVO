@@ -1,15 +1,24 @@
+import { Link } from 'react-router-dom'
 import CampoFormulario from './CampoFormulario.jsx'
 import { regionesChile } from '../../data/regionesChile.js'
+import {
+  botonPrincipal,
+  filaCampos,
+  formularioCheckout,
+  resumenVacio,
+  tarjetaCheckoutClara,
+  tituloTarjeta,
+} from '../../styles/clases.js'
 
-export default function FormularioEnvio({ formulario, errores, onCambio, onSubmit }) {
+export default function FormularioEnvio({ formulario, errores, carritoVacio, onCambio, onSubmit }) {
   const regiones = Object.keys(regionesChile)
   const comunasDisponibles = regionesChile[formulario.region] || []
 
   return (
-    <section className="checkout-card">
-      <h2>Datos de envío</h2>
+    <section className={tarjetaCheckoutClara}>
+      <h2 className={tituloTarjeta}>Datos de envío</h2>
 
-      <form className="checkout-form" onSubmit={onSubmit} noValidate>
+      <form className={formularioCheckout} onSubmit={onSubmit} noValidate>
         <CampoFormulario
           id="nombre"
           name="nombre"
@@ -20,7 +29,7 @@ export default function FormularioEnvio({ formulario, errores, onCambio, onSubmi
           error={errores.nombre}
         />
 
-        <div className="campo-fila">
+        <div className={filaCampos}>
           <CampoFormulario
             id="rut"
             name="rut"
@@ -64,7 +73,7 @@ export default function FormularioEnvio({ formulario, errores, onCambio, onSubmi
           error={errores.direccion}
         />
 
-        <div className="campo-fila">
+        <div className={filaCampos}>
           <CampoFormulario
             id="region"
             name="region"
@@ -96,9 +105,15 @@ export default function FormularioEnvio({ formulario, errores, onCambio, onSubmi
           </CampoFormulario>
         </div>
 
-        <button type="submit" className="boton-principal boton-ancho-auto">
+        <button type="submit" className={botonPrincipal} disabled={carritoVacio}>
           Continuar
         </button>
+
+        {carritoVacio && (
+          <p className={resumenVacio} role="status">
+            Agrega productos al carrito antes de continuar. <Link to="/productos">Ver catálogo</Link>
+          </p>
+        )}
       </form>
     </section>
   )

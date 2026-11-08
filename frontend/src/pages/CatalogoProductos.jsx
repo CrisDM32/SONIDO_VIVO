@@ -4,12 +4,14 @@ import { agregarAlCarrito } from '../utils/carrito.js'
 import BuscadorProductos from '../components/catalogo-productos/BuscadorProductos.jsx'
 import ListaProductos from '../components/catalogo-productos/ListaProductos.jsx'
 
-export default function CatalogoProductos() {
+export default function CatalogoProductos({ categoria }) {
   const [busqueda, setBusqueda] = useState('')
   const [agregados, setAgregados] = useState({})
 
-  const productosFiltrados = productos.filter((producto) =>
-    producto.nombre.toLowerCase().includes(busqueda.trim().toLowerCase()),
+  const productosFiltrados = productos.filter(
+    (producto) =>
+      (!categoria || producto.categoria === categoria) &&
+      producto.nombre.toLowerCase().includes(busqueda.trim().toLowerCase()),
   )
 
   const agregarProducto = (producto) => {

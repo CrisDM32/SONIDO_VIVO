@@ -1,3 +1,4 @@
+import { MemoryRouter } from 'react-router-dom';
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, test } from "vitest";
@@ -16,7 +17,7 @@ const formValido = {
 };
 
 test("el formulario de registro se renderiza correctamente", () => {
-  render(<Registro />);
+  render(<MemoryRouter><Registro /></MemoryRouter>);
 
   expect(screen.getByRole("textbox", { name: "Nombre completo *" })).toBeTruthy();
   expect(screen.getByRole("textbox", { name: "Correo electrónico *" })).toBeTruthy();
@@ -29,7 +30,7 @@ test("el formulario de registro se renderiza correctamente", () => {
 
 test("al enviar sin completar los campos, se muestran los mensajes de error", async () => {
   const user = userEvent.setup();
-  render(<Registro />);
+  render(<MemoryRouter><Registro /></MemoryRouter>);
 
   await user.click(screen.getByRole("button", { name: "Crear cuenta" }));
 
@@ -42,7 +43,7 @@ test("al enviar sin completar los campos, se muestran los mensajes de error", as
 
 test("confirma un registro válido", async () => {
   const user = userEvent.setup();
-  render(<Registro />);
+  render(<MemoryRouter><Registro /></MemoryRouter>);
 
   await user.type(screen.getByLabelText("Nombre completo *"), formValido.nombre);
   await user.type(screen.getByLabelText("Correo electrónico *"), formValido.email);

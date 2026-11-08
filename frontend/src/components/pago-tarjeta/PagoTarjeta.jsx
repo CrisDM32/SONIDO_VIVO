@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   calcularTotalCarrito,
   formatearPrecioCLP,
@@ -7,6 +8,22 @@ import {
 } from '../../utils/carrito.js'
 import { validarPagoTarjeta } from '../../utils/validacionPagoTarjeta.js'
 import CampoFormulario from '../pago/CampoFormulario.jsx'
+import {
+  botonPrincipal,
+  contenedorCheckout,
+  filaCampos,
+  formularioCheckout,
+  layoutCheckoutDos,
+  lineaTotal,
+  montoTotal,
+  resumenItemOscuro,
+  resumenVacio,
+  tarjetaCheckoutClara,
+  tarjetaCheckoutOscura,
+  tituloPagina,
+  tituloTarjeta,
+  tituloTarjetaOscura,
+} from '../../styles/clases.js'
 
 const PEDIDO_KEY = 'sv_ultimo_pedido'
 
@@ -27,6 +44,7 @@ function crearPedido(carrito, total) {
 }
 
 export default function PagoTarjeta() {
+  const navigate = useNavigate()
   const carrito = useMemo(() => obtenerCarrito(), [])
   const total = calcularTotalCarrito(carrito)
   const [form, setForm] = useState(formInicial)
@@ -53,19 +71,19 @@ export default function PagoTarjeta() {
 
     localStorage.setItem(PEDIDO_KEY, JSON.stringify(crearPedido(carrito, total)))
     vaciarCarrito()
-    window.location.assign('resumen.html')
+    navigate('/resumen')
   }
 
   return (
-    <main className="contenedor-ancho checkout-page">
-      <h1 className="section-title-productos">Pago con tarjeta</h1>
+    <main className={contenedorCheckout}>
+      <h1 className={tituloPagina}>Pago con tarjeta</h1>
 
-      <div className="checkout-layout">
-        <section className="checkout-card">
-          <h2>Datos de pago</h2>
+      <div className={layoutCheckoutDos}>
+        <section className={tarjetaCheckoutClara}>
+          <h2 className={tituloTarjeta}>Datos de pago</h2>
           <p>Ingresa los datos del titular y de la tarjeta.</p>
 
-          <form className="checkout-form" onSubmit={handleSubmit} noValidate>
+          <form className={formularioCheckout} onSubmit={handleSubmit} noValidate>
             <CampoFormulario
               id="nombreTitular"
               name="nombreTitular"
@@ -86,7 +104,7 @@ export default function PagoTarjeta() {
               error={errores.numeroTarjeta}
             />
 
-            <div className="campo-fila">
+            <div className={filaCampos}>
               <CampoFormulario
                 id="fechaVencimiento"
                 name="fechaVencimiento"
@@ -111,40 +129,40 @@ export default function PagoTarjeta() {
 
             <button
               type="submit"
-              className="boton-principal boton-ancho-auto"
+              className={botonPrincipal}
               disabled={carrito.length === 0}
             >
               Pagar {formatearPrecioCLP(total)}
             </button>
 
             {carrito.length === 0 && (
-              <p className="resumen-vacio" role="status">
-                Agrega productos al carrito antes de pagar. <a href="productos.html">Ver catálogo</a>
+              <p className={resumenVacio} role="status">
+                Agrega productos al carrito antes de pagar. <Link to="/productos">Ver catálogo</Link>
               </p>
             )}
-            <p className="resumen-vacio">
+            <p className={resumenVacio}>
               Pago de demostración: no se enviará ni almacenará información de la tarjeta.
             </p>
           </form>
         </section>
 
-        <aside className="checkout-card resumen-card">
-          <h2>Resumen del pedido</h2>
+        <aside className={tarjetaCheckoutOscura}>
+          <h2 className={tituloTarjetaOscura}>Resumen del pedido</h2>
 
           {carrito.length === 0 ? (
-            <p className="resumen-vacio">Tu carrito está vacío.</p>
+            <p className={resumenVacio}>Tu carrito está vacío.</p>
           ) : (
             <>
               {carrito.map((item) => (
-                <div className="resumen-item" key={item.id}>
+                <div className={resumenItemOscuro} key={item.id}>
                   <span>{item.icono} {item.nombre} x{item.cantidad}</span>
                   <span>{formatearPrecioCLP(item.precio * item.cantidad)}</span>
                 </div>
               ))}
 
-              <div className="carrito-total-linea">
+              <div className={lineaTotal}>
                 <span>Total a pagar:</span>
-                <span className="carrito-total">{formatearPrecioCLP(total)}</span>
+                <span className={montoTotal}>{formatearPrecioCLP(total)}</span>
               </div>
             </>
           )}

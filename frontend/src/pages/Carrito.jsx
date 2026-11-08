@@ -8,6 +8,7 @@ import {
 } from "../utils/carrito.js";
 import CarritoLista from "../components/carrito/Lista.jsx";
 import CarritoResumen from "../components/carrito/Resumen.jsx";
+import { contenedorAncho, tituloPagina } from "../styles/clases.js";
 
 export default function Carrito() {
   const [carrito, setCarrito] = useState(() => obtenerCarrito());
@@ -28,8 +29,8 @@ export default function Carrito() {
   const carritoVacio = carrito.length === 0;
 
   return (
-    <main className="contenedor-ancho">
-      <h1 className="section-title-productos">Mi carrito</h1>
+    <main className={contenedorAncho}>
+      <h1 className={tituloPagina}>Mi carrito</h1>
       <CarritoLista
         carrito={carrito}
         onCantidad={handleCantidad}

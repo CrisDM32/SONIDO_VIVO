@@ -1,11 +1,18 @@
 import CampoFormulario from '../pago/CampoFormulario.jsx'
+import {
+  botonPrincipal,
+  formularioCheckout,
+  mensajeExito,
+  tarjetaCheckoutClara,
+  tituloTarjeta,
+} from '../../styles/clases.js'
 
 export default function FormularioContacto({ formulario, errores, exito, onCambio, onSubmit }) {
   return (
-    <section className="checkout-card">
-      <h2>Datos de contacto</h2>
+    <section className={tarjetaCheckoutClara}>
+      <h2 className={tituloTarjeta}>Datos de contacto</h2>
 
-      <form className="checkout-form" onSubmit={onSubmit} noValidate>
+      <form className={formularioCheckout} onSubmit={onSubmit} noValidate>
         <CampoFormulario
           id="nombre"
           name="nombre"
@@ -49,12 +56,12 @@ export default function FormularioContacto({ formulario, errores, exito, onCambi
           error={errores.motivo}
         />
 
-        <button type="submit" className="boton-principal boton-ancho-auto">
+        <button type="submit" className={botonPrincipal}>
           Enviar
         </button>
 
         {exito && (
-          <p className="mensaje-exito">
+          <p className={mensajeExito}>
             ¡Mensaje enviado! Nos pondremos en contacto contigo pronto.
           </p>
         )}

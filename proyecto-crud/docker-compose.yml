@@ -1,0 +1,40 @@
+name: productos
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: productos-db
+    environment:
+      POSTGRES_DB: productos
+      POSTGRES_USER: productos
+      POSTGRES_PASSWORD: productos
+    ports:
+      - "5432:5432"
+    volumes:
+      - productos-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U productos -d productos"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    container_name: productos-api
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/productos
+      SPRING_DATASOURCE_USERNAME: productos
+      SPRING_DATASOURCE_PASSWORD: productos
+      CORS_ALLOWED_ORIGINS: "http://localhost:*,http://127.0.0.1:*"
+      APP_PUBLIC_BASE_URL: http://localhost:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure:5
+
+volumes:
+  productos-db:

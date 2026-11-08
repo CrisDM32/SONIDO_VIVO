@@ -1,3 +1,4 @@
+import { MemoryRouter } from 'react-router-dom';
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, test } from "vitest";
@@ -12,7 +13,7 @@ const formValido = {
 };
 
 test("el formulario de inicio de sesión se renderiza correctamente", () => {
-  render(<Login />);
+  render(<MemoryRouter><Login /></MemoryRouter>);
 
   expect(screen.getByRole("textbox", { name: "Correo electrónico" })).toBeTruthy();
   expect(screen.getByLabelText("Contraseña")).toBeTruthy();
@@ -22,7 +23,7 @@ test("el formulario de inicio de sesión se renderiza correctamente", () => {
 
 test("al enviar sin completar los campos, se muestran los mensajes de error", async () => {
   const user = userEvent.setup();
-  render(<Login />);
+  render(<MemoryRouter><Login /></MemoryRouter>);
 
   await user.click(screen.getByRole("button", { name: "Iniciar sesión" }));
 
@@ -32,7 +33,7 @@ test("al enviar sin completar los campos, se muestran los mensajes de error", as
 
 test("con datos válidos no se muestran errores", async () => {
   const user = userEvent.setup();
-  render(<Login />);
+  render(<MemoryRouter><Login /></MemoryRouter>);
 
   await user.type(screen.getByLabelText("Correo electrónico"), formValido.email);
   await user.type(screen.getByLabelText("Contraseña"), formValido.password);

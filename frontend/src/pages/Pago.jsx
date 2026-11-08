@@ -1,11 +1,14 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { calcularTotalCarrito, obtenerCarrito } from '../utils/carrito.js'
 import { validarEnvio } from '../utils/validacionEnvio.js'
 import { regionesChile } from '../data/regionesChile.js'
 import FormularioEnvio from '../components/pago/FormularioEnvio.jsx'
 import ResumenPedido from '../components/pago/ResumenPedido.jsx'
+import { contenedorCheckout, layoutCheckoutDos, tituloPagina } from '../styles/clases.js'
 
 export default function Pago() {
+  const navigate = useNavigate()
   const [formulario, setFormulario] = useState({
     nombre: '',
     rut: '',
@@ -36,22 +39,25 @@ export default function Pago() {
   function handleSubmit(evento) {
     evento.preventDefault()
 
+    if (carrito.length === 0) return
+
     const nuevosErrores = validarEnvio(formulario)
     setErrores(nuevosErrores)
 
     if (Object.keys(nuevosErrores).length > 0) return
 
-    window.location.assign('pago-tarjeta.html')
+    navigate('/pago-tarjeta')
   }
 
   return (
-    <main className="contenedor-ancho checkout-page">
-      <h1 className="section-title-productos">Datos de envío</h1>
+    <main className={contenedorCheckout}>
+      <h1 className={tituloPagina}>Datos de envío</h1>
 
-      <div className="checkout-layout">
+      <div className={layoutCheckoutDos}>
         <FormularioEnvio
           formulario={formulario}
           errores={errores}
+          carritoVacio={carrito.length === 0}
           onCambio={handleCambio}
           onSubmit={handleSubmit}
         />

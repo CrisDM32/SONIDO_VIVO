@@ -1,3 +1,4 @@
+import { MemoryRouter } from 'react-router-dom';
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test } from "vitest";
@@ -26,7 +27,7 @@ afterEach(() => {
 });
 
 test("el formulario de pago con tarjeta se renderiza correctamente", () => {
-  render(<PagoTarjeta />);
+  render(<MemoryRouter><PagoTarjeta /></MemoryRouter>);
 
   expect(screen.getByRole("textbox", { name: "Nombre del titular" })).toBeTruthy();
   expect(screen.getByRole("textbox", { name: "Número de tarjeta" })).toBeTruthy();
@@ -37,7 +38,7 @@ test("el formulario de pago con tarjeta se renderiza correctamente", () => {
 
 test("al enviar sin completar los campos, se muestran los mensajes de error", async () => {
   const user = userEvent.setup();
-  render(<PagoTarjeta />);
+  render(<MemoryRouter><PagoTarjeta /></MemoryRouter>);
 
   await user.click(screen.getByRole("button", { name: /Pagar/ }));
 
@@ -49,7 +50,7 @@ test("al enviar sin completar los campos, se muestran los mensajes de error", as
 
 test("con el carrito vacío el botón de pagar está deshabilitado", () => {
   localStorage.clear();
-  render(<PagoTarjeta />);
+  render(<MemoryRouter><PagoTarjeta /></MemoryRouter>);
 
   expect(screen.getByRole("button", { name: /Pagar/ }).disabled).toBe(true);
 });

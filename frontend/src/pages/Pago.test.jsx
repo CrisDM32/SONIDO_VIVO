@@ -1,10 +1,21 @@
+import { MemoryRouter } from 'react-router-dom';
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, beforeEach, expect, test } from "vitest";
 import Pago from "./Pago";
 import { validarEnvio } from "../utils/validacionEnvio";
 
-afterEach(cleanup);
+beforeEach(() => {
+  localStorage.setItem(
+    "sv_carrito",
+    JSON.stringify([{ id: 1, nombre: "Guitarra", precio: 100000, icono: "🎸", cantidad: 1 }])
+  );
+});
+
+afterEach(() => {
+  cleanup();
+  localStorage.clear();
+});
 
 const formValido = {
   nombre: "Ana Pérez",
@@ -17,7 +28,7 @@ const formValido = {
 };
 
 test("el formulario de envío se renderiza correctamente", () => {
-  render(<Pago />);
+  render(<MemoryRouter><Pago /></MemoryRouter>);
 
   expect(screen.getByRole("textbox", { name: "Nombre completo" })).toBeTruthy();
   expect(screen.getByRole("textbox", { name: "RUT" })).toBeTruthy();
@@ -31,7 +42,7 @@ test("el formulario de envío se renderiza correctamente", () => {
 
 test("al enviar sin completar los campos, se muestran los mensajes de error", async () => {
   const user = userEvent.setup();
-  render(<Pago />);
+  render(<MemoryRouter><Pago /></MemoryRouter>);
 
   await user.click(screen.getByRole("button", { name: "Continuar" }));
 
@@ -42,9 +53,30 @@ test("al enviar sin completar los campos, se muestran los mensajes de error", as
   expect(screen.getByText("Escribe tu dirección (calle y número).")).toBeTruthy();
 });
 
+test("con el carrito vacío no se puede continuar y se invita a agregar productos", async () => {
+  const user = userEvent.setup();
+  localStorage.clear();
+  render(<MemoryRouter><Pago /></MemoryRouter>);
+
+  const continuar = screen.getByRole("button", { name: "Continuar" });
+  expect(continuar.disabled).toBe(true);
+  expect(screen.getByText(/Agrega productos al carrito antes de continuar/)).toBeTruthy();
+  expect(screen.getByRole("link", { name: "Ver catálogo" }).getAttribute("href")).toBe("/productos");
+
+  await user.click(continuar);
+  expect(screen.queryByText("Escribe tu nombre completo (mínimo 3 caracteres).")).toBeNull();
+});
+
+test("con productos en el carrito el botón Continuar está habilitado", () => {
+  render(<MemoryRouter><Pago /></MemoryRouter>);
+
+  expect(screen.getByRole("button", { name: "Continuar" }).disabled).toBe(false);
+  expect(screen.queryByText(/Agrega productos al carrito antes de continuar/)).toBeNull();
+});
+
 test("al cambiar la región se actualizan las comunas disponibles", async () => {
   const user = userEvent.setup();
-  render(<Pago />);
+  render(<MemoryRouter><Pago /></MemoryRouter>);
 
   await user.selectOptions(screen.getByRole("combobox", { name: "Región" }), "Región de Valparaíso");
 

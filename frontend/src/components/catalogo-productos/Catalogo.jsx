@@ -1,3 +1,4 @@
+import { formatearPrecioCLP } from '../../utils/carrito.js'
 import Producto1 from '../../images/producto1.png'
 import { productos } from '../../data/productos.js'
 import { Header } from './Header.jsx'
@@ -13,7 +14,7 @@ export const Catalogo = () => (
                     <article className="catalogo-card" key={producto.nombre}>
                         <img src={Producto1} alt={producto.nombre} />
                         <h2>{producto.nombre}</h2>
-                        <p>{producto.precio}</p>
+                        <p>{formatearPrecioCLP(producto.precio)}</p>
                         <button className="carrito-button" type="button">
                             Añadir al carrito
                         </button>

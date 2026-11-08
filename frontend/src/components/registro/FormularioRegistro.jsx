@@ -1,7 +1,20 @@
+import {
+  botonPrincipal,
+  campo,
+  campoError,
+  campoEtiqueta,
+  campoInput,
+  contenedorFormulario,
+  formularioTarjeta,
+  mensajeExito,
+  subtituloFormulario,
+  tituloFormulario,
+} from '../../styles/clases.js'
+
 function CampoFormulario({ id, label, type = 'text', value, onChange, placeholder, error, name }) {
   return (
-    <div className="campo">
-      <label htmlFor={id}>{label}</label>
+    <div className={campo}>
+      <label htmlFor={id} className={campoEtiqueta}>{label}</label>
       <input
         id={id}
         name={name}
@@ -9,22 +22,22 @@ function CampoFormulario({ id, label, type = 'text', value, onChange, placeholde
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={error ? 'invalido' : ''}
+        className={campoInput(Boolean(error))}
       />
-      {error && <small className="error">{error}</small>}
+      {error && <small className={campoError}>{error}</small>}
     </div>
   )
 }
 
 export default function FormularioRegistro({ form, errores, exito, onChange, onSubmit }) {
   return (
-    <main className="contenedor-formulario">
-      <h1>Crear cuenta de cliente</h1>
-      <p className="subtitulo">
+    <main className={contenedorFormulario}>
+      <h1 className={tituloFormulario}>Crear cuenta de cliente</h1>
+      <p className={subtituloFormulario}>
         Completa tus datos para crear tu perfil y poder hacer pedidos en línea.
       </p>
 
-      <form onSubmit={onSubmit} noValidate>
+      <form className={formularioTarjeta} onSubmit={onSubmit} noValidate>
         <CampoFormulario
           id="nombre"
           name="nombre"
@@ -79,9 +92,10 @@ export default function FormularioRegistro({ form, errores, exito, onChange, onS
           error={errores.password2}
         />
 
-        <div className="campo campo-checkbox">
-          <label>
+        <div className={campo}>
+          <label className="flex items-center gap-2.5 font-semibold text-ink mobile:items-start">
             <input
+              className={`${campoInput(false)} h-[18px]`}
               type="checkbox"
               name="terminos"
               checked={form.terminos}
@@ -89,15 +103,15 @@ export default function FormularioRegistro({ form, errores, exito, onChange, onS
             />
             Acepto los términos y condiciones *
           </label>
-          {errores.terminos && <small className="error">{errores.terminos}</small>}
+          {errores.terminos && <small className={campoError}>{errores.terminos}</small>}
         </div>
 
-        <button type="submit" className="boton-principal boton-ancho-auto">
+        <button type="submit" className={botonPrincipal}>
           Crear cuenta
         </button>
 
         {exito && (
-          <p className="mensaje-exito">
+          <p className={mensajeExito}>
             ¡Cuenta creada correctamente! Ya puedes iniciar sesión.
           </p>
         )}

@@ -1,10 +1,13 @@
+import { Link } from 'react-router-dom'
+import { tituloPagina } from '../../styles/clases.js'
+
 export default function ProductoNoEncontrado() {
   return (
     <>
-      <h1 className="section-title-productos">Producto no encontrado</h1>
-      <p className="producto-vacio">
+      <h1 className={tituloPagina}>Producto no encontrado</h1>
+      <p className="text-center">
         El producto que buscas no existe.{' '}
-        <a href="productos.html">Volver a productos</a>
+        <Link to="/productos">Volver a productos</Link>
       </p>
     </>
   )

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import FormularioContacto from '../components/contacto/FormularioContacto.jsx'
 import { validarContacto } from '../utils/validacionContacto.js'
+import { contenedorCheckout, layoutCheckoutSimple, tituloPagina } from '../styles/clases.js'
 
 const formInicial = {
   nombre: '',
@@ -36,10 +37,10 @@ export default function Contacto() {
   }
 
   return (
-    <main className="contenedor-ancho checkout-page">
-      <h1 className="section-title-productos">Contacto</h1>
+    <main className={contenedorCheckout}>
+      <h1 className={tituloPagina}>Contacto</h1>
 
-      <div className="checkout-layout checkout-layout-simple">
+      <div className={layoutCheckoutSimple}>
         <FormularioContacto
           formulario={formulario}
           errores={errores}

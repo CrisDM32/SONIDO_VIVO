@@ -1,12 +1,20 @@
+import { Link } from 'react-router-dom'
 import CampoFormulario from '../pago/CampoFormulario.jsx'
+import {
+  botonPrincipal,
+  contenedorFormulario,
+  formularioTarjeta,
+  subtituloFormulario,
+  tituloFormulario,
+} from '../../styles/clases.js'
 
 export default function FormularioLogin({ form, errores, onChange, onSubmit }) {
   return (
-    <main className="contenedor-formulario">
-      <h1>Iniciar sesión</h1>
-      <p className="subtitulo">Ingresa tu correo y contraseña para acceder a tu cuenta.</p>
+    <main className={contenedorFormulario}>
+      <h1 className={tituloFormulario}>Iniciar sesión</h1>
+      <p className={subtituloFormulario}>Ingresa tu correo y contraseña para acceder a tu cuenta.</p>
 
-      <form onSubmit={onSubmit} noValidate>
+      <form className={formularioTarjeta} onSubmit={onSubmit} noValidate>
         <CampoFormulario
           id="email"
           name="email"
@@ -29,16 +37,16 @@ export default function FormularioLogin({ form, errores, onChange, onSubmit }) {
           error={errores.password}
         />
 
-        <a href="recuperar-contrasena.html" className="enlace-olvido">
+        <a href="recuperar-contrasena.html" className="self-start text-[14px] font-semibold text-button underline">
           ¿Olvidaste tu contraseña?
         </a>
 
-        <button type="submit" className="boton-principal boton-ancho-auto">
+        <button type="submit" className={botonPrincipal}>
           Iniciar sesión
         </button>
 
-        <p className="enlace-registro">
-          ¿No tienes cuenta? <a href="registro.html">Regístrate</a>
+        <p className="m-0 text-center text-[14px]">
+          ¿No tienes cuenta? <Link to="/registro" className="font-semibold underline">Regístrate</Link>
         </p>
       </form>
     </main>

@@ -1,11 +1,19 @@
+import {
+  campo,
+  campoError,
+  campoEtiqueta,
+  campoInput,
+  campoTextarea,
+} from '../../styles/clases.js'
+
 export default function CampoFormulario({ id, label, type = 'text', value, onChange, placeholder, error, name, rows, children }) {
-  const clase = error ? 'invalido' : ''
+  const invalido = Boolean(error)
 
   return (
-    <div className="campo">
-      <label htmlFor={id}>{label}</label>
+    <div className={campo}>
+      <label htmlFor={id} className={campoEtiqueta}>{label}</label>
       {children ? (
-        <select id={id} name={name} value={value} onChange={onChange} className={clase}>
+        <select id={id} name={name} value={value} onChange={onChange} className={campoInput(invalido)}>
           {children}
         </select>
       ) : rows ? (
@@ -16,7 +24,7 @@ export default function CampoFormulario({ id, label, type = 'text', value, onCha
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={clase}
+          className={campoTextarea(invalido)}
         />
       ) : (
         <input
@@ -26,10 +34,10 @@ export default function CampoFormulario({ id, label, type = 'text', value, onCha
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={clase}
+          className={campoInput(invalido)}
         />
       )}
-      {error && <small className="error">{error}</small>}
+      {error && <small className={campoError}>{error}</small>}
     </div>
   )
 }
