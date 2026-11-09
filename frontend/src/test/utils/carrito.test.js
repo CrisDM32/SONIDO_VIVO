@@ -8,7 +8,7 @@ import {
   guardarCarrito,
   obtenerCarrito,
   vaciarCarrito,
-} from "./carrito";
+} from "../../utils/carrito";
 
 const guitarra = { id: 1, nombre: "Guitarra Acústica Yamaha", precio: 189990, icono: "🎸", categoria: "Instrumentos", disponible: true };
 const cable = { id: 7, nombre: "Cable de instrumento 3 metros", precio: 8990, icono: "🔌" };

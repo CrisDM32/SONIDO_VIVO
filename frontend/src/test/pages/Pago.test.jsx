@@ -2,8 +2,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test } from "vitest";
-import Pago from "./Pago";
-import { validarEnvio } from "../utils/validacionEnvio";
+import Pago from "../../pages/Pago";
+import { validarEnvio } from "../../utils/validacionEnvio";
 
 beforeEach(() => {
   localStorage.setItem(

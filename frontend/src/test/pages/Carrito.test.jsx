@@ -2,7 +2,7 @@ import { MemoryRouter } from "react-router-dom";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test } from "vitest";
-import Carrito from "./Carrito";
+import Carrito from "../../pages/Carrito";
 
 const guitarra = { id: 1, nombre: "Guitarra Acústica Yamaha", precio: 189990, icono: "🎸", cantidad: 2 };
 const cable = { id: 7, nombre: "Cable de instrumento 3 metros", precio: 8990, icono: "🔌", cantidad: 1 };

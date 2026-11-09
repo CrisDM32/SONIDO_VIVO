@@ -1,8 +1,8 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, test } from "vitest";
-import Contacto from "./Contacto";
-import { validarContacto } from "../utils/validacionContacto";
+import Contacto from "../../pages/Contacto";
+import { validarContacto } from "../../utils/validacionContacto";
 
 afterEach(cleanup);
 

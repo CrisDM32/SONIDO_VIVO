@@ -2,8 +2,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, test } from "vitest";
-import Login from "./Login";
-import { validarLogin } from "../utils/validacionLogin";
+import Login from "../../pages/Login";
+import { validarLogin } from "../../utils/validacionLogin";
 
 afterEach(cleanup);
 

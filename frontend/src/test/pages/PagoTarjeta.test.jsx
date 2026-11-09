@@ -2,8 +2,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test } from "vitest";
-import PagoTarjeta from "./PagoTarjeta";
-import { validarPagoTarjeta } from "../utils/validacionPagoTarjeta";
+import PagoTarjeta from "../../pages/PagoTarjeta";
+import { validarPagoTarjeta } from "../../utils/validacionPagoTarjeta";
 
 const hoy = new Date(2026, 9, 15); // octubre de 2026
 

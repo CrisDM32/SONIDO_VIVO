@@ -12,6 +12,11 @@ import PagoTarjeta from './pages/PagoTarjeta.jsx'
 import Resumen from './pages/Resumen.jsx'
 import Login from './pages/Login.jsx'
 import Registro from './pages/Registro.jsx'
+import PreguntasFrecuentes from './pages/PreguntasFrecuentes.jsx'
+import Garantia from './pages/Garantia.jsx'
+import ServicioTecnico from './pages/ServicioTecnico.jsx'
+import TerminosCondiciones from './pages/TerminosCondiciones.jsx'
+import PoliticasPrivacidad from './pages/PoliticasPrivacidad.jsx'
 
 const PaginaCatalogo = () => {
   const { categoria: slug } = useParams()
@@ -47,6 +52,11 @@ const App = () => {
           <Route path="/resumen" element={<Resumen />} />
           <Route path="/iniciar-sesion" element={<Login />} />
           <Route path="/registro" element={<Registro />} />
+          <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
+          <Route path="/garantia" element={<Garantia />} />
+          <Route path="/servicio-tecnico" element={<ServicioTecnico />} />
+          <Route path="/terminos-y-condiciones" element={<TerminosCondiciones />} />
+          <Route path="/politicas-privacidad" element={<PoliticasPrivacidad />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

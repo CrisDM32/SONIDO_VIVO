@@ -2,8 +2,8 @@ import { MemoryRouter } from "react-router-dom";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import CatalogoProductos from "./CatalogoProductos";
-import { productos } from "../data/productos";
+import CatalogoProductos from "../../pages/CatalogoProductos";
+import { productos } from "../../data/productos";
 
 function renderCatalogo(props = {}) {
   return render(

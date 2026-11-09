@@ -2,8 +2,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, test } from "vitest";
-import Registro from "./Registro";
-import { validarRegistro } from "../utils/validacionRegistro";
+import Registro from "../../pages/Registro";
+import { validarRegistro } from "../../utils/validacionRegistro";
 
 afterEach(cleanup);
 

@@ -23,7 +23,7 @@ class ProductoControllerTest {
 
 	@Test
 	void listarDevuelveLosProductosActuales() throws Exception {
-		mockMvc.perform(get("/api/productos"))
+		mockMvc.perform(get("/api/v1/productos"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()").value(12))
 				.andExpect(jsonPath("$[0].nombre").value("Guitarra Acústica Yamaha"))

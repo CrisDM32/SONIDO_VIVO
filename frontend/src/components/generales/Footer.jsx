@@ -15,15 +15,14 @@ export const Footer = () => {
     <footer className="grid w-full grid-cols-4 gap-6 bg-bottom px-[5%] pt-[50px] pb-5 mobile:grid-cols-2 mobile:gap-x-3 mobile:gap-y-4 mobile:px-4 mobile:pt-7 mobile:pb-5 mini:grid-cols-1">
         <div className={columna}>
             <h3 className={titulo}>Servicio al Cliente</h3>
-            <a href="preguntas-frecuentes.html" className={enlace}>Preguntas Frecuentes</a>
-            <a href="preguntas-frecuentes.html" className={enlace}>Preguntas Frecuentes</a>
-            <a href="preguntas-frecuentes.html" className={enlace}>Preguntas Frecuentes</a>
+            <Link to="/preguntas-frecuentes" className={enlace}>Preguntas Frecuentes</Link>
+            <Link to="/garantia" className={enlace}>Garantía</Link>
+            <Link to="/servicio-tecnico" className={enlace}>Servicio Técnico</Link>
         </div>
         <div className={columna}>
             <h3 className={titulo}>Terminos y Condiciones</h3>
-            <a href="terminos-y-condiciones.hmtl" className={enlace}>Terminos y Condiciones</a>
-            <a href="terminos-y-condiciones.hmtl" className={enlace}>Terminos y Condiciones</a>
-            <a href="terminos-y-condiciones.hmtl" className={enlace}>Terminos y Condiciones</a>
+            <Link to="/terminos-y-condiciones" className={enlace}>Terminos y Condiciones</Link>
+            <Link to="/politicas-privacidad" className={enlace}>Politicas de Privacidad</Link>
         </div>
         <div className={columna}>
             <h3 className={titulo}>Mi Cuenta</h3>
