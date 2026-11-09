@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { categorias } from '../../data/categorias.js'
 import { useSesion } from '../../hooks/useSesion.js'
 import Logo from '../../images/logo.png'
 
@@ -32,9 +33,11 @@ export const Header = () => {
             <div className="group relative">
               <Link to="/productos" className={enlaceNav}>Productos</Link>
               <div className={menuDesplegable}>
-                <Link to="/productos/instrumentos" className={enlaceMenu}>Instrumentos</Link>
-                <Link to="/productos/accesorios" className={enlaceMenu}>Accesorios</Link>
-                <Link to="/productos/estudio-de-grabacion" className={enlaceMenu}>Estudio de Grabación</Link>
+                {categorias.map((categoria) => (
+                  <Link key={categoria.slug} to={`/productos/${categoria.slug}`} className={enlaceMenu}>
+                    {categoria.nombre}
+                  </Link>
+                ))}
               </div>
             </div>
 

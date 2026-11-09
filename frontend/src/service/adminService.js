@@ -13,6 +13,9 @@ export const editarProducto = (id, datos) =>
 export const cambiarStock = (id, stock) =>
   peticionAutenticada(`${Rutas.adminProductos}/${id}/stock`, { metodo: 'PATCH', cuerpo: { stock } })
 
+export const cambiarDestacado = (id, destacado) =>
+  peticionAutenticada(`${Rutas.adminProductos}/${id}/destacado`, { metodo: 'PATCH', cuerpo: { destacado } })
+
 export const cambiarActivo = (id, activo) =>
   peticionAutenticada(`${Rutas.adminProductos}/${id}/activo`, { metodo: 'PATCH', cuerpo: { activo } })
 

@@ -10,7 +10,7 @@ afterEach(() => {
   localStorage.clear();
 });
 
-const productoValido = { nombre: "Cuerdas Elixir", categoria: "Accesorios", precio: "15990", stock: "0", icono: "🎼" };
+const productoValido = { codigo: "AC050", marca: "", modelo: "", descripcion: "", nombre: "Cuerdas Elixir", categoria: "Accesorios", precio: "15990", stock: "0", icono: "🎼" };
 const personalValido = { nombre: "Vera Vendedora", correo: "vera@sonidovivo.cl", rut: "12.345.678-5", telefono: "", clave: "clave1234", perfil: "vendedor" };
 
 test("validarProducto acepta datos válidos y stock 0", () => {
@@ -18,7 +18,9 @@ test("validarProducto acepta datos válidos y stock 0", () => {
 });
 
 test("validarProducto rechaza nombre corto, categoría ajena, precio y stock inválidos e icono vacío", () => {
+  expect(validarProducto({ ...productoValido, codigo: "ab" }).codigo).toBeTruthy();
   expect(validarProducto({ ...productoValido, nombre: "ab" }).nombre).toBeTruthy();
+  expect(validarProducto({ ...productoValido, descripcion: "x".repeat(501) }).descripcion).toBeTruthy();
   expect(validarProducto({ ...productoValido, categoria: "Otra" }).categoria).toBeTruthy();
   for (const precio of ["", "0", "-5", "10.5", "abc"]) {
     expect(validarProducto({ ...productoValido, precio }).precio).toBeTruthy();

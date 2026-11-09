@@ -15,8 +15,21 @@ public class Producto {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// Nullable: los productos anteriores al catálogo con códigos no lo tienen.
+	@Column(unique = true, length = 20)
+	private String codigo;
+
 	@Column(nullable = false, unique = true, length = 120)
 	private String nombre;
+
+	@Column(length = 60)
+	private String marca;
+
+	@Column(length = 60)
+	private String modelo;
+
+	@Column(length = 500)
+	private String descripcion;
 
 	@Column(nullable = false, length = 60)
 	private String categoria;
@@ -32,6 +45,10 @@ public class Producto {
 
 	@Column(nullable = false)
 	private boolean activo = true;
+
+	// Con DEFAULT para que ddl-auto=update pueda agregar la columna a una tabla que ya tiene filas (PostgreSQL).
+	@Column(nullable = false, columnDefinition = "boolean not null default false")
+	private boolean destacado = false;
 
 	public Producto() {
 	}
@@ -51,6 +68,38 @@ public class Producto {
 
 	public Long getId() {
 		return id;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
+
+	public String getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	public String getNombre() {
@@ -91,6 +140,14 @@ public class Producto {
 
 	public void setStock(int stock) {
 		this.stock = stock;
+	}
+
+	public boolean isDestacado() {
+		return destacado;
+	}
+
+	public void setDestacado(boolean destacado) {
+		this.destacado = destacado;
 	}
 
 	public boolean isActivo() {

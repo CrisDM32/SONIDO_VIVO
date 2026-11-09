@@ -84,7 +84,12 @@ class ProductoAdminControllerTest {
 	}
 
 	private String producto(String nombre, String categoria, int precio, int stock) {
-		return "{\"nombre\":\"" + nombre + "\",\"categoria\":\"" + categoria + "\",\"precio\":" + precio
+		return productoConCodigo("T" + UUID.randomUUID().toString().substring(0, 10), nombre, categoria, precio, stock);
+	}
+
+	private String productoConCodigo(String codigo, String nombre, String categoria, int precio, int stock) {
+		return "{\"codigo\":\"" + codigo + "\",\"nombre\":\"" + nombre + "\",\"categoria\":\"" + categoria
+				+ "\",\"marca\":\"Marca\",\"modelo\":\"M1\",\"descripcion\":\"Descripción de prueba\",\"precio\":" + precio
 				+ ",\"stock\":" + stock + ",\"icono\":\"🎸\"}";
 	}
 
@@ -132,8 +137,9 @@ class ProductoAdminControllerTest {
 
 	@Test
 	void datosInvalidosDevuelven400ConErroresPorCampo() throws Exception {
-		enviar(post(RUTA), tokenDe(Perfiles.ADMINISTRADOR), producto("ab", "Otra", 0, -1))
+		enviar(post(RUTA), tokenDe(Perfiles.ADMINISTRADOR), productoConCodigo("x", "ab", "Otra", 0, -1))
 				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.errores.codigo").exists())
 				.andExpect(jsonPath("$.errores.nombre").exists())
 				.andExpect(jsonPath("$.errores.categoria").exists())
 				.andExpect(jsonPath("$.errores.precio").exists())
@@ -149,6 +155,20 @@ class ProductoAdminControllerTest {
 		enviar(post(RUTA), token, producto(nombre.toUpperCase(), "Accesorios", 1000, 1))
 				.andExpect(status().isConflict())
 				.andExpect(jsonPath("$.campo").value("nombre"));
+	}
+
+	@Test
+	void unCodigoRepetidoDevuelve409AunqueCambienLasMayusculasYTambienAlEditar() throws Exception {
+		String token = tokenDe(Perfiles.ADMINISTRADOR);
+		long otro = crear(token, "Otro producto " + UUID.randomUUID(), 1);
+
+		// El código GA001 pertenece a un producto del catálogo.
+		enviar(post(RUTA), token, productoConCodigo("ga001", "Nombre nuevo " + UUID.randomUUID(), "Accesorios", 1000, 1))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.campo").value("codigo"));
+		enviar(put(RUTA + "/" + otro), token, productoConCodigo("GA001", "Otro editado " + UUID.randomUUID(), "Accesorios", 1000, 1))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.campo").value("codigo"));
 	}
 
 	@Test
@@ -210,10 +230,85 @@ class ProductoAdminControllerTest {
 	@Test
 	void elListadoFiltraPorTextoYCategoria() throws Exception {
 		String token = tokenDe(Perfiles.ADMINISTRADOR);
-		enviar(get(RUTA + "?q=yamaha"), token, null)
+		enviar(get(RUTA + "?q=pop filter"), token, null)
+				.andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$[0].codigo").value("ES005"));
+		enviar(get(RUTA + "?categoria=Baterías"), token, null)
+				.andExpect(jsonPath("$.length()").value(5));
+		enviar(get(RUTA + "?categoria=Estudio y Grabación&q=auriculares"), token, null)
 				.andExpect(jsonPath("$.length()").value(2));
-		enviar(get(RUTA + "?categoria=Estudio de Grabación"), token, null)
-				.andExpect(jsonPath("$.length()").value(3));
+	}
+
+	// ---------- Destacados ----------
+
+	private String conDestacado(String json, boolean destacado) {
+		return json.substring(0, json.length() - 1) + ",\"destacado\":" + destacado + "}";
+	}
+
+	@Test
+	void unProductoNuevoNoEsDestacadoAMenosQueSeIndique() throws Exception {
+		String token = tokenDe(Perfiles.ADMINISTRADOR);
+
+		long normal = crear(token, "Normal " + UUID.randomUUID(), 1);
+		enviar(get(RUTA + "?q=Normal"), token, null)
+				.andExpect(jsonPath("$[?(@.id==" + normal + ")].destacado").value(false));
+
+		String json = enviar(post(RUTA), token, conDestacado(producto("Estrella " + UUID.randomUUID(), "Accesorios", 5000, 2), true))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.destacado").value(true))
+				.andReturn().getResponse().getContentAsString();
+		productosCreados.add(Long.parseLong(json.replaceAll(".*\"id\":(\\d+).*", "$1")));
+	}
+
+	@Test
+	void administradorYVendedorPuedenMarcarYDesmarcarUnDestacado() throws Exception {
+		long id = crear(tokenDe(Perfiles.ADMINISTRADOR), "Marcable " + UUID.randomUUID(), 3);
+
+		for (String perfil : List.of(Perfiles.ADMINISTRADOR, Perfiles.VENDEDOR)) {
+			String token = tokenDe(perfil);
+			enviar(patch(RUTA + "/" + id + "/destacado"), token, "{\"destacado\":true}")
+					.andExpect(status().isOk()).andExpect(jsonPath("$.destacado").value(true));
+			mockMvc.perform(get("/api/v1/productos"))
+					.andExpect(jsonPath("$[?(@.id==" + id + ")].destacado").value(true));
+			enviar(patch(RUTA + "/" + id + "/destacado"), token, "{\"destacado\":false}")
+					.andExpect(status().isOk()).andExpect(jsonPath("$.destacado").value(false));
+		}
+	}
+
+	@Test
+	void marcarDestacadoExigePermisosYUnCuerpoValido() throws Exception {
+		long id = crear(tokenDe(Perfiles.ADMINISTRADOR), "Permisos " + UUID.randomUUID(), 3);
+		String admin = tokenDe(Perfiles.ADMINISTRADOR);
+
+		enviar(patch(RUTA + "/" + id + "/destacado"), null, "{\"destacado\":true}").andExpect(status().isUnauthorized());
+		enviar(patch(RUTA + "/" + id + "/destacado"), tokenDe(Perfiles.CLIENTE), "{\"destacado\":true}")
+				.andExpect(status().isForbidden());
+		enviar(patch(RUTA + "/" + id + "/destacado"), admin, "{}").andExpect(status().isBadRequest());
+		enviar(patch(RUTA + "/999999/destacado"), admin, "{\"destacado\":true}").andExpect(status().isNotFound());
+	}
+
+	@Test
+	void editarUnProductoSinIndicarDestacadoConservaSuValor() throws Exception {
+		String token = tokenDe(Perfiles.ADMINISTRADOR);
+		long id = crear(token, "Conserva " + UUID.randomUUID(), 3);
+		enviar(patch(RUTA + "/" + id + "/destacado"), token, "{\"destacado\":true}").andExpect(status().isOk());
+
+		enviar(put(RUTA + "/" + id), token, producto("Conserva editado " + id, "Accesorios", 7000, 3))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.destacado").value(true));
+		enviar(put(RUTA + "/" + id), token, conDestacado(producto("Conserva editado " + id, "Accesorios", 7000, 3), false))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.destacado").value(false));
+	}
+
+	@Test
+	void desactivarUnDestacadoLoSacaDelCatalogoPublico() throws Exception {
+		String token = tokenDe(Perfiles.ADMINISTRADOR);
+		long id = crear(token, "Destacado temporal " + UUID.randomUUID(), 3);
+		enviar(patch(RUTA + "/" + id + "/destacado"), token, "{\"destacado\":true}").andExpect(status().isOk());
+
+		enviar(patch(RUTA + "/" + id + "/activo"), token, "{\"activo\":false}").andExpect(status().isOk());
+
+		mockMvc.perform(get("/api/v1/productos"))
+				.andExpect(jsonPath("$[?(@.id==" + id + ")]").isEmpty());
 	}
 
 }

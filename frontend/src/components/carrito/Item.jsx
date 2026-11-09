@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { formatearPrecioCLP } from '../../utils/carrito.js'
-import { productos } from '../../data/productos.js'
+import imagenProducto from '../../images/producto1.png'
 
 export default function CarritoItem({ item, onCantidad, onEliminar }) {
-  // La imagen se busca por id en el catálogo (no se guarda en localStorage)
-  const imagen = productos.find((producto) => producto.id === item.id)?.imagenes?.[0]
+  // Todos los productos comparten por ahora la misma imagen genérica (no se guarda en localStorage)
 
   // Texto mientras se edita el campo de cantidad (null = mostrar la cantidad real).
   // Así se puede borrar el número para escribir otro sin que salte a 1.
@@ -22,15 +21,11 @@ export default function CarritoItem({ item, onCantidad, onEliminar }) {
 
   return (
     <article className="grid grid-cols-[64px_minmax(0,1fr)_auto_minmax(120px,auto)_40px] items-center gap-5 rounded-[10px] border border-[rgb(18_18_18/10%)] bg-paper px-6 py-5 shadow-[0_4px_14px_rgb(18_18_18/8%)] *:min-w-0 tablet:grid-cols-[56px_minmax(130px,1fr)_auto_minmax(100px,auto)_36px] tablet:gap-3 tablet:p-4 mobile:grid-cols-[48px_minmax(0,1fr)_34px] mobile:gap-2.5 mobile:p-3.5">
-      {imagen ? (
-        <img
-          className="block size-16 rounded-sv bg-page object-cover mobile:size-12"
-          src={imagen}
-          alt={item.nombre}
-        />
-      ) : (
-        <div className="grid size-16 place-items-center rounded-sv bg-page text-[34px] mobile:size-12 mobile:text-[26px]" aria-hidden="true">{item.icono}</div>
-      )}
+      <img
+        className="block size-16 rounded-sv bg-page object-cover mobile:size-12"
+        src={imagenProducto}
+        alt={item.nombre}
+      />
 
       <div>
         <h2>{item.nombre}</h2>

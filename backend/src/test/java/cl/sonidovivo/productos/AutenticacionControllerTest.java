@@ -214,7 +214,7 @@ class AutenticacionControllerTest {
 	void elCatalogoDeProductosSigueSiendoPublico() throws Exception {
 		mockMvc.perform(get("/api/v1/productos"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.length()").value(12));
+				.andExpect(jsonPath("$.length()").value(51));
 	}
 
 }

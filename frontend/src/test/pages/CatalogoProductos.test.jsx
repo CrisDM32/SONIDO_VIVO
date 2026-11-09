@@ -1,9 +1,8 @@
 import { MemoryRouter } from "react-router-dom";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import CatalogoProductos from "../../pages/CatalogoProductos";
-import { productos } from "../../data/productos";
 import { productosApi, stubCatalogo } from "../helpers/catalogo";
 
 function renderCatalogo(props = {}) {
@@ -31,7 +30,7 @@ afterEach(() => {
 test("muestra todos los productos del catálogo con su precio", async () => {
   renderCatalogo();
 
-  expect(await screen.findAllByRole("article")).toHaveLength(productos.length);
+  expect(await screen.findAllByRole("article")).toHaveLength(productosApi.length);
   expect(screen.getByRole("heading", { name: "Guitarra Acústica Yamaha" })).toBeTruthy();
   expect(screen.getByText("$189.990")).toBeTruthy();
 });
@@ -114,7 +113,7 @@ test("con una categoría solo muestra los productos de esa categoría", async ()
   renderCatalogo({ categoria: "Accesorios" });
 
   const tarjetas = await screen.findAllByRole("article");
-  expect(tarjetas).toHaveLength(productos.filter((p) => p.categoria === "Accesorios").length);
+  expect(tarjetas).toHaveLength(productosApi.filter((p) => p.categoria === "Accesorios").length);
   expect(screen.queryByRole("heading", { name: "Guitarra Acústica Yamaha" })).toBeNull();
   expect(screen.getByRole("heading", { name: "Micrófono Shure SM58" })).toBeTruthy();
 });
@@ -131,7 +130,7 @@ test("un producto desactivado en el panel no aparece en el catálogo", async () 
   stubCatalogo(productosApi.filter((p) => p.id !== 1));
   renderCatalogo();
 
-  expect(await screen.findAllByRole("article")).toHaveLength(productos.length - 1);
+  expect(await screen.findAllByRole("article")).toHaveLength(productosApi.length - 1);
   expect(screen.queryByRole("heading", { name: "Guitarra Acústica Yamaha" })).toBeNull();
 });
 
@@ -145,7 +144,7 @@ test("un producto sin stock en el backend se muestra agotado", async () => {
 });
 
 test("un producto nuevo creado desde el panel aparece en el catálogo", async () => {
-  stubCatalogo([...productosApi, { id: 50, nombre: "Cuerdas Elixir", categoria: "Accesorios", precio: 15990, icono: "🎼", disponible: true }]);
+  stubCatalogo([{ id: 50, nombre: "Cuerdas Elixir", categoria: "Accesorios", precio: 15990, icono: "🎼", disponible: true }, ...productosApi]);
   renderCatalogo();
 
   expect(await screen.findByRole("heading", { name: "Cuerdas Elixir" })).toBeTruthy();
@@ -157,4 +156,102 @@ test("mientras carga muestra un aviso y si el backend falla, un mensaje de error
 
   expect(screen.getByText("Cargando productos...")).toBeTruthy();
   expect((await screen.findByRole("alert")).textContent).toBe("No se han cargado los productos");
+});
+
+// ---------- Paginación ----------
+
+const muchos = Array.from({ length: 30 }, (_, i) => ({
+  id: i + 1,
+  codigo: `P${i + 1}`,
+  nombre: `Producto ${String(i + 1).padStart(2, "0")}`,
+  categoria: "Accesorios",
+  precio: 1000 + i,
+  icono: "🎸",
+  disponible: true,
+}));
+
+const nombresVisibles = () => screen.getAllByRole("heading").map((h) => h.textContent);
+const rango = () => screen.getByRole("status").textContent;
+
+test("por defecto muestra 12 productos por página con el rango y la navegación", async () => {
+  stubCatalogo(muchos);
+  renderCatalogo();
+
+  expect(await screen.findAllByRole("article")).toHaveLength(12);
+  expect(rango()).toBe("Mostrando 1–12 de 30 productos");
+  expect(screen.getByRole("combobox", { name: "Productos por página" }).value).toBe("12");
+  const nav = within(screen.getByRole("navigation", { name: "Paginación del catálogo" }));
+  expect(nav.getByRole("button", { name: "Página 1" }).getAttribute("aria-current")).toBe("page");
+  expect(nav.getByRole("button", { name: "Página 3" })).toBeTruthy();
+  expect(nav.getByRole("button", { name: "Anterior" }).disabled).toBe(true);
+});
+
+test("cambiar productos por página actualiza la cantidad y las páginas", async () => {
+  const user = userEvent.setup();
+  stubCatalogo(muchos);
+  renderCatalogo();
+  await screen.findAllByRole("article");
+
+  await user.selectOptions(screen.getByRole("combobox", { name: "Productos por página" }), "6");
+
+  expect(screen.getAllByRole("article")).toHaveLength(6);
+  expect(rango()).toBe("Mostrando 1–6 de 30 productos");
+  expect(screen.getByRole("button", { name: "Página 5" })).toBeTruthy();
+  expect(screen.queryByRole("button", { name: "Página 6" })).toBeNull();
+
+  await user.selectOptions(screen.getByRole("combobox", { name: "Productos por página" }), "48");
+  expect(screen.getAllByRole("article")).toHaveLength(30);
+  expect(screen.queryByRole("navigation", { name: "Paginación del catálogo" })).toBeNull();
+});
+
+test("Siguiente, Anterior y los números de página cambian los productos mostrados", async () => {
+  const user = userEvent.setup();
+  stubCatalogo(muchos);
+  renderCatalogo();
+  await screen.findAllByRole("article");
+  expect(nombresVisibles()[0]).toBe("Producto 01");
+
+  await user.click(screen.getByRole("button", { name: "Siguiente" }));
+  expect(nombresVisibles()).toHaveLength(12);
+  expect(nombresVisibles()[0]).toBe("Producto 13");
+  expect(rango()).toBe("Mostrando 13–24 de 30 productos");
+  expect(screen.getByRole("button", { name: "Página 2" }).getAttribute("aria-current")).toBe("page");
+
+  await user.click(screen.getByRole("button", { name: "Página 3" }));
+  expect(nombresVisibles()).toHaveLength(6);
+  expect(rango()).toBe("Mostrando 25–30 de 30 productos");
+  expect(screen.getByRole("button", { name: "Siguiente" }).disabled).toBe(true);
+
+  await user.click(screen.getByRole("button", { name: "Anterior" }));
+  expect(nombresVisibles()[0]).toBe("Producto 13");
+});
+
+test("buscar o cambiar la cantidad por página vuelve a la primera página", async () => {
+  const user = userEvent.setup();
+  stubCatalogo(muchos);
+  renderCatalogo();
+  await screen.findAllByRole("article");
+
+  await user.click(screen.getByRole("button", { name: "Página 3" }));
+  await user.type(screen.getByRole("searchbox", { name: "Buscar productos por nombre" }), "Producto 2");
+  expect(rango()).toBe("Mostrando 1–10 de 10 productos");
+  expect(screen.queryByRole("navigation", { name: "Paginación del catálogo" })).toBeNull();
+
+  await user.clear(screen.getByRole("searchbox", { name: "Buscar productos por nombre" }));
+  await user.click(screen.getByRole("button", { name: "Página 2" }));
+  await user.selectOptions(screen.getByRole("combobox", { name: "Productos por página" }), "24");
+  expect(rango()).toBe("Mostrando 1–24 de 30 productos");
+});
+
+test("agregar al carrito funciona en cualquier página", async () => {
+  const user = userEvent.setup();
+  stubCatalogo(muchos);
+  renderCatalogo();
+  await screen.findAllByRole("article");
+  await user.click(screen.getByRole("button", { name: "Siguiente" }));
+
+  const tarjeta = screen.getByRole("heading", { name: "Producto 13" }).closest("article");
+  await user.click(tarjeta.querySelector("button"));
+
+  expect(carritoGuardado()).toEqual([{ id: 13, nombre: "Producto 13", precio: 1012, icono: "🎸", cantidad: 1 }]);
 });

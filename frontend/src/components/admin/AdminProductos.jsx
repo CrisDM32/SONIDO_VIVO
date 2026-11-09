@@ -1,21 +1,28 @@
 import { useEffect, useState } from 'react'
 import FormularioProducto from './FormularioProducto.jsx'
+import NavegacionPaginas from '../catalogo-productos/NavegacionPaginas.jsx'
 import TablaProductos from './TablaProductos.jsx'
 import {
   cambiarActivo,
+  cambiarDestacado,
   cambiarStock,
   crearProducto,
   editarProducto,
   listarProductos,
 } from '../../service/adminService.js'
 import { categorias } from '../../data/categorias.js'
+import { paginar } from '../../utils/paginacion.js'
 import { botonPrincipal, campoError, campoInput, mensajeExito } from '../../styles/clases.js'
+
+// En el panel siempre se ven 12 productos por página (no es configurable).
+const PRODUCTOS_POR_PAGINA = 12
 
 export default function AdminProductos({ onError }) {
   const [productos, setProductos] = useState(null)
   const [recarga, setRecarga] = useState(0)
   const [busqueda, setBusqueda] = useState('')
   const [categoria, setCategoria] = useState('')
+  const [paginaSolicitada, setPaginaSolicitada] = useState(1)
   const [formulario, setFormulario] = useState(null)
   const [aviso, setAviso] = useState('')
   const [error, setError] = useState('')
@@ -67,6 +74,19 @@ export default function AdminProductos({ onError }) {
     (p) => (categoria === '' || p.categoria === categoria) && (texto === '' || p.nombre.toLowerCase().includes(texto))
   )
 
+  const { items, total, totalPaginas, pagina, desde, hasta } = paginar(visibles, paginaSolicitada, PRODUCTOS_POR_PAGINA)
+
+  // Buscar o filtrar cambia la lista: se vuelve a la primera página.
+  const cambiarBusqueda = (valor) => {
+    setBusqueda(valor)
+    setPaginaSolicitada(1)
+  }
+
+  const cambiarCategoria = (valor) => {
+    setCategoria(valor)
+    setPaginaSolicitada(1)
+  }
+
   if (formulario) {
     return (
       <FormularioProducto
@@ -86,13 +106,13 @@ export default function AdminProductos({ onError }) {
           aria-label="Buscar producto"
           placeholder="Buscar por nombre"
           value={busqueda}
-          onChange={(evento) => setBusqueda(evento.target.value)}
+          onChange={(evento) => cambiarBusqueda(evento.target.value)}
           className={`${campoInput(false)} !w-auto min-w-0 flex-1`}
         />
         <select
           aria-label="Filtrar por categoría"
           value={categoria}
-          onChange={(evento) => setCategoria(evento.target.value)}
+          onChange={(evento) => cambiarCategoria(evento.target.value)}
           className={`${campoInput(false)} !w-auto`}
         >
           <option value="">Todas las categorías</option>
@@ -112,14 +132,33 @@ export default function AdminProductos({ onError }) {
         <p className="m-0 text-ink">Cargando productos…</p>
       ) : (
         <TablaProductos
-          productos={visibles}
+          productos={items}
           onEditar={(producto) => setFormulario({ producto })}
           onCambiarStock={(producto, stock) => ejecutar(() => cambiarStock(producto.id, stock), `Stock de "${producto.nombre}" actualizado.`)}
+          onCambiarDestacado={(producto, destacado) =>
+            ejecutar(
+              () => cambiarDestacado(producto.id, destacado),
+              destacado ? `"${producto.nombre}" ahora es destacado.` : `"${producto.nombre}" ya no es destacado.`,
+            )
+          }
           onCambiarActivo={(producto, activo) =>
             ejecutar(() => cambiarActivo(producto.id, activo), activo ? `"${producto.nombre}" reactivado.` : `"${producto.nombre}" desactivado.`)
           }
         />
       )}
+
+      {productos !== null && total > 0 && (
+        <p className="m-0 text-center text-ink">
+          Mostrando <strong>{desde}–{hasta}</strong> de <strong>{total}</strong> productos
+        </p>
+      )}
+      <NavegacionPaginas
+        pagina={pagina}
+        totalPaginas={totalPaginas}
+        onCambiar={setPaginaSolicitada}
+        etiqueta="Paginación de productos"
+        className="mb-2"
+      />
     </section>
   )
 }

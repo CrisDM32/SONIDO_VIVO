@@ -13,15 +13,20 @@ import {
   tituloTarjeta,
 } from '../../styles/clases.js'
 
-const CAMPOS = ['nombre', 'categoria', 'precio', 'stock', 'icono']
+const CAMPOS = ['codigo', 'nombre', 'categoria', 'marca', 'modelo', 'descripcion', 'precio', 'stock', 'icono']
 
 function formularioDesde(producto) {
   return {
+    codigo: producto?.codigo ?? '',
     nombre: producto?.nombre ?? '',
     categoria: producto?.categoria ?? categorias[0].nombre,
+    marca: producto?.marca ?? '',
+    modelo: producto?.modelo ?? '',
+    descripcion: producto?.descripcion ?? '',
     precio: producto ? String(producto.precio) : '',
     stock: producto ? String(producto.stock) : '0',
     icono: producto?.icono ?? '',
+    destacado: producto?.destacado ?? false,
   }
 }
 
@@ -33,8 +38,8 @@ export default function FormularioProducto({ producto, onGuardar, onCancelar }) 
   const [enviando, setEnviando] = useState(false)
 
   function handleChange(evento) {
-    const { name, value } = evento.target
-    setForm((anterior) => ({ ...anterior, [name]: value }))
+    const { name, value, type, checked } = evento.target
+    setForm((anterior) => ({ ...anterior, [name]: type === 'checkbox' ? checked : value }))
   }
 
   async function handleSubmit(evento) {
@@ -49,11 +54,16 @@ export default function FormularioProducto({ producto, onGuardar, onCancelar }) 
     setEnviando(true)
     try {
       await onGuardar({
+        codigo: form.codigo.trim(),
         nombre: form.nombre.trim(),
         categoria: form.categoria,
+        marca: form.marca.trim(),
+        modelo: form.modelo.trim(),
+        descripcion: form.descripcion.trim(),
         precio: Number(form.precio),
         stock: Number(form.stock),
         icono: form.icono.trim(),
+        destacado: form.destacado,
       })
     } catch (error) {
       const { campos, general } = erroresDeServidor(error, CAMPOS)
@@ -67,7 +77,10 @@ export default function FormularioProducto({ producto, onGuardar, onCancelar }) 
     <form className={formularioTarjeta} onSubmit={handleSubmit} noValidate aria-label={producto ? 'Editar producto' : 'Nuevo producto'}>
       <h2 className={tituloTarjeta}>{producto ? 'Editar producto' : 'Nuevo producto'}</h2>
 
-      <CampoFormulario id="producto-nombre" name="nombre" label="Nombre *" value={form.nombre} onChange={handleChange} error={errores.nombre} />
+      <div className={filaCampos}>
+        <CampoFormulario id="producto-codigo" name="codigo" label="Código *" value={form.codigo} onChange={handleChange} placeholder="GA001" error={errores.codigo} />
+        <CampoFormulario id="producto-nombre" name="nombre" label="Nombre *" value={form.nombre} onChange={handleChange} error={errores.nombre} />
+      </div>
 
       <div className={filaCampos}>
         <CampoFormulario id="producto-categoria" name="categoria" label="Categoría *" value={form.categoria} onChange={handleChange} error={errores.categoria}>
@@ -79,9 +92,21 @@ export default function FormularioProducto({ producto, onGuardar, onCancelar }) 
       </div>
 
       <div className={filaCampos}>
+        <CampoFormulario id="producto-marca" name="marca" label="Marca" value={form.marca} onChange={handleChange} error={errores.marca} />
+        <CampoFormulario id="producto-modelo" name="modelo" label="Modelo" value={form.modelo} onChange={handleChange} error={errores.modelo} />
+      </div>
+
+      <CampoFormulario id="producto-descripcion" name="descripcion" label="Descripción" rows={3} value={form.descripcion} onChange={handleChange} error={errores.descripcion} />
+
+      <div className={filaCampos}>
         <CampoFormulario id="producto-precio" name="precio" label="Precio (CLP) *" type="number" value={form.precio} onChange={handleChange} error={errores.precio} />
         <CampoFormulario id="producto-stock" name="stock" label="Stock *" type="number" value={form.stock} onChange={handleChange} error={errores.stock} />
       </div>
+
+      <label className="flex items-center gap-2.5 font-semibold text-ink">
+        <input type="checkbox" name="destacado" className="size-[18px]" checked={form.destacado} onChange={handleChange} />
+        Producto destacado (aparece en el carrusel del inicio)
+      </label>
 
       {errorGeneral && (
         <p role="alert" className={`m-0 ${campoError}`}>

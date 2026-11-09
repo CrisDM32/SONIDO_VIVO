@@ -156,3 +156,17 @@ test("una compra con sesión iniciada queda en el historial del perfil", () => {
   expect(pedidos).toHaveLength(1);
   expect(pedidos[0].total).toBe(100000);
 });
+
+test("el menú Productos del encabezado lista las 10 categorías del catálogo", () => {
+  render(<App />);
+
+  const menu = within(screen.getByRole("banner"));
+  for (const [nombre, ruta] of [
+    ["Guitarras Acústicas", "/productos/guitarras-acusticas"],
+    ["Baterías", "/productos/baterias"],
+    ["Estudio y Grabación", "/productos/estudio-y-grabacion"],
+  ]) {
+    expect(menu.getByRole("link", { name: nombre }).getAttribute("href")).toBe(ruta);
+  }
+  expect(menu.queryByRole("link", { name: "Instrumentos" })).toBeNull();
+});

@@ -10,7 +10,7 @@ let manejadores;
 let productos;
 let usuarios;
 
-const producto = (datos) => ({ categoria: "Instrumentos", precio: 100000, icono: "🎸", stock: 10, activo: true, disponible: true, ...datos });
+const producto = (datos) => ({ codigo: `GA00${datos.id}`, marca: "Yamaha", modelo: "F310", descripcion: "Descripción", categoria: "Guitarras Acústicas", precio: 100000, icono: "🎸", stock: 10, activo: true, disponible: true, destacado: false, ...datos });
 
 beforeEach(() => {
   productos = [
@@ -132,11 +132,15 @@ test("crea un producto: valida, envía los datos y refresca la lista", async () 
 
   await user.click(screen.getByRole("button", { name: "Nuevo producto" }));
   await user.click(screen.getByRole("button", { name: "Crear producto" }));
+  expect(screen.getByText("El código debe tener entre 3 y 20 caracteres.")).toBeTruthy();
   expect(screen.getByText("El nombre debe tener entre 3 y 120 caracteres.")).toBeTruthy();
   expect(screen.getByText("El precio debe ser un número entero mayor que 0.")).toBeTruthy();
   expect(llamadas("POST", "/admin/productos")).toHaveLength(0);
 
+  await user.type(screen.getByLabelText("Código *"), "AC050");
   await user.type(screen.getByLabelText("Nombre *"), "Cuerdas Elixir");
+  await user.type(screen.getByLabelText("Marca"), "Elixir");
+  await user.type(screen.getByLabelText("Descripción"), "Cuerdas con recubrimiento");
   await user.type(screen.getByLabelText("Icono *"), "🎼");
   await user.type(screen.getByLabelText("Precio (CLP) *"), "15990");
   await user.clear(screen.getByLabelText("Stock *"));
@@ -146,8 +150,13 @@ test("crea un producto: valida, envía los datos y refresca la lista", async () 
   expect(await screen.findByText("Cuerdas Elixir")).toBeTruthy();
   expect(screen.getByRole("status").textContent).toBe("Producto creado.");
   expect(JSON.parse(llamadas("POST", "/admin/productos")[0][1].body)).toEqual({
+    codigo: "AC050",
     nombre: "Cuerdas Elixir",
-    categoria: "Instrumentos",
+    categoria: "Guitarras Acústicas",
+    marca: "Elixir",
+    modelo: "",
+    descripcion: "Cuerdas con recubrimiento",
+    destacado: false,
     precio: 15990,
     stock: 25,
     icono: "🎼",
@@ -161,6 +170,7 @@ test("un nombre repetido se muestra bajo el campo y se conserva lo escrito", asy
   await screen.findByText("Guitarra Acústica Yamaha");
 
   await user.click(screen.getByRole("button", { name: "Nuevo producto" }));
+  await user.type(screen.getByLabelText("Código *"), "XX123");
   await user.type(screen.getByLabelText("Nombre *"), "Guitarra Acústica Yamaha");
   await user.type(screen.getByLabelText("Icono *"), "🎸");
   await user.type(screen.getByLabelText("Precio (CLP) *"), "1000");
@@ -169,6 +179,35 @@ test("un nombre repetido se muestra bajo el campo y se conserva lo escrito", asy
   expect(await screen.findByText("Ya existe un producto con ese nombre")).toBeTruthy();
   expect(screen.getByLabelText("Nombre *").value).toBe("Guitarra Acústica Yamaha");
   expect(screen.getByRole("button", { name: "Crear producto" }).disabled).toBe(false);
+});
+
+test("un código repetido se muestra bajo el campo código", async () => {
+  const user = userEvent.setup();
+  manejadores["POST /admin/productos"] = () => [409, { mensaje: "Ya existe un producto con ese código", campo: "codigo" }];
+  abrirPanel();
+  await screen.findByText("Guitarra Acústica Yamaha");
+
+  await user.click(screen.getByRole("button", { name: "Nuevo producto" }));
+  await user.type(screen.getByLabelText("Código *"), "GA001");
+  await user.type(screen.getByLabelText("Nombre *"), "Producto distinto");
+  await user.type(screen.getByLabelText("Icono *"), "🎸");
+  await user.type(screen.getByLabelText("Precio (CLP) *"), "1000");
+  await user.click(screen.getByRole("button", { name: "Crear producto" }));
+
+  expect(await screen.findByText("Ya existe un producto con ese código")).toBeTruthy();
+});
+
+test("el formulario ofrece las 10 categorías del catálogo", async () => {
+  const user = userEvent.setup();
+  abrirPanel();
+  await screen.findByText("Guitarra Acústica Yamaha");
+
+  await user.click(screen.getByRole("button", { name: "Nuevo producto" }));
+  const opciones = within(screen.getByLabelText("Categoría *")).getAllByRole("option").map((o) => o.textContent);
+
+  expect(opciones).toHaveLength(10);
+  expect(opciones).toContain("Estudio y Grabación");
+  expect(opciones).not.toContain("Instrumentos");
 });
 
 test("edita un producto existente con PUT", async () => {
@@ -352,4 +391,158 @@ test("crea un vendedor: valida, muestra errores del backend por campo y luego lo
   await user.click(screen.getByRole("button", { name: "Crear usuario" }));
   expect(await screen.findByText("Vera Vendedora")).toBeTruthy();
   expect(JSON.parse(llamadas("POST", "/admin/usuarios")[1][1].body)).toMatchObject({ perfil: "vendedor", rut: "12.345.678-5" });
+});
+
+// ---------- Paginación de productos (12 por página, no configurable) ----------
+
+function conMuchosProductos() {
+  productos = Array.from({ length: 30 }, (_, i) =>
+    producto({ id: i + 1, nombre: `Producto ${String(i + 1).padStart(2, "0")}`, categoria: i < 20 ? "Accesorios" : "Baterías" })
+  );
+}
+
+const filasDeProductos = () => screen.getAllByRole("row").slice(1);
+
+test("el panel muestra 12 productos por página, sin selector para cambiarlo", async () => {
+  conMuchosProductos();
+  abrirPanel();
+
+  await screen.findByText("Producto 01");
+  expect(filasDeProductos()).toHaveLength(12);
+  expect(screen.getByText(/Mostrando/).textContent).toBe("Mostrando 1–12 de 30 productos");
+  expect(screen.queryByRole("combobox", { name: /por página/i })).toBeNull();
+  expect(within(screen.getByRole("navigation", { name: "Paginación de productos" })).getByRole("button", { name: "Página 3" })).toBeTruthy();
+});
+
+test("se navega entre páginas de productos", async () => {
+  const user = userEvent.setup();
+  conMuchosProductos();
+  abrirPanel();
+  await screen.findByText("Producto 01");
+
+  await user.click(screen.getByRole("button", { name: "Siguiente" }));
+  expect(screen.getByText("Producto 13")).toBeTruthy();
+  expect(screen.queryByText("Producto 01")).toBeNull();
+  expect(screen.getByText(/Mostrando/).textContent).toBe("Mostrando 13–24 de 30 productos");
+
+  await user.click(screen.getByRole("button", { name: "Página 3" }));
+  expect(filasDeProductos()).toHaveLength(6);
+  expect(screen.getByRole("button", { name: "Siguiente" }).disabled).toBe(true);
+});
+
+test("buscar o filtrar por categoría vuelve a la primera página", async () => {
+  const user = userEvent.setup();
+  conMuchosProductos();
+  abrirPanel();
+  await screen.findByText("Producto 01");
+
+  await user.click(screen.getByRole("button", { name: "Página 3" }));
+  await user.selectOptions(screen.getByLabelText("Filtrar por categoría"), "Accesorios");
+  expect(screen.getByText(/Mostrando/).textContent).toBe("Mostrando 1–12 de 20 productos");
+
+  await user.click(screen.getByRole("button", { name: "Página 2" }));
+  await user.type(screen.getByLabelText("Buscar producto"), "Producto 0");
+  expect(screen.getByText(/Mostrando/).textContent).toBe("Mostrando 1–9 de 9 productos");
+  expect(screen.queryByRole("navigation", { name: "Paginación de productos" })).toBeNull();
+});
+
+test("al guardar un cambio en la página 2 se queda en esa página", async () => {
+  const user = userEvent.setup();
+  conMuchosProductos();
+  manejadores["PATCH /admin/productos/13/stock"] = (op) => {
+    productos[12] = { ...productos[12], stock: JSON.parse(op.body).stock };
+    return [200, productos[12]];
+  };
+  abrirPanel();
+  await screen.findByText("Producto 01");
+  await user.click(screen.getByRole("button", { name: "Siguiente" }));
+
+  await user.clear(screen.getByLabelText("Stock de Producto 13"));
+  await user.type(screen.getByLabelText("Stock de Producto 13"), "4");
+  await user.click(screen.getByRole("button", { name: "Guardar stock de Producto 13" }));
+
+  await waitFor(() => expect(screen.getByRole("status").textContent).toContain("Stock de"));
+  expect(screen.getByText("Producto 13")).toBeTruthy();
+  expect(screen.getByText(/Mostrando/).textContent).toBe("Mostrando 13–24 de 30 productos");
+});
+
+test("con 12 productos o menos no aparece la navegación", async () => {
+  abrirPanel();
+  await screen.findByText("Guitarra Acústica Yamaha");
+
+  expect(screen.queryByRole("navigation", { name: "Paginación de productos" })).toBeNull();
+  expect(screen.getByText(/Mostrando/).textContent).toBe("Mostrando 1–3 de 3 productos");
+});
+
+// ---------- Destacados ----------
+
+test("la tabla muestra con un check cuáles productos son destacados", async () => {
+  productos[1] = { ...productos[1], destacado: true };
+  abrirPanel();
+  await screen.findByText("Guitarra Acústica Yamaha");
+
+  expect(screen.getByRole("checkbox", { name: "Destacado: Guitarra Acústica Yamaha" }).checked).toBe(false);
+  expect(screen.getByRole("checkbox", { name: "Destacado: Batería Acústica" }).checked).toBe(true);
+});
+
+test("marcar el check guarda el producto como destacado y desmarcarlo lo quita", async () => {
+  const user = userEvent.setup();
+  manejadores["PATCH /admin/productos/1/destacado"] = (op) => {
+    productos[0] = { ...productos[0], destacado: JSON.parse(op.body).destacado };
+    return [200, productos[0]];
+  };
+  abrirPanel();
+  await screen.findByText("Guitarra Acústica Yamaha");
+
+  await user.click(screen.getByRole("checkbox", { name: "Destacado: Guitarra Acústica Yamaha" }));
+
+  await waitFor(() => expect(screen.getByRole("status").textContent).toBe('"Guitarra Acústica Yamaha" ahora es destacado.'));
+  expect(JSON.parse(llamadas("PATCH", "/admin/productos/1/destacado")[0][1].body)).toEqual({ destacado: true });
+  expect(screen.getByRole("checkbox", { name: "Destacado: Guitarra Acústica Yamaha" }).checked).toBe(true);
+
+  await user.click(screen.getByRole("checkbox", { name: "Destacado: Guitarra Acústica Yamaha" }));
+  await waitFor(() => expect(screen.getByRole("status").textContent).toBe('"Guitarra Acústica Yamaha" ya no es destacado.'));
+  expect(screen.getByRole("checkbox", { name: "Destacado: Guitarra Acústica Yamaha" }).checked).toBe(false);
+});
+
+test("si el backend rechaza el cambio de destacado se muestra el error y el check vuelve a su valor", async () => {
+  const user = userEvent.setup();
+  manejadores["PATCH /admin/productos/1/destacado"] = () => [403, { mensaje: "No tienes permisos para esta acción" }];
+  abrirPanel();
+  await screen.findByText("Guitarra Acústica Yamaha");
+
+  await user.click(screen.getByRole("checkbox", { name: "Destacado: Guitarra Acústica Yamaha" }));
+
+  expect((await screen.findByRole("alert")).textContent).toBe("No tienes permisos para esta acción");
+  expect(screen.getByRole("checkbox", { name: "Destacado: Guitarra Acústica Yamaha" }).checked).toBe(false);
+});
+
+test("el formulario permite crear un producto ya marcado como destacado", async () => {
+  const user = userEvent.setup();
+  manejadores["POST /admin/productos"] = (op) => [201, { id: 9, ...JSON.parse(op.body) }];
+  abrirPanel();
+  await screen.findByText("Guitarra Acústica Yamaha");
+
+  await user.click(screen.getByRole("button", { name: "Nuevo producto" }));
+  expect(screen.getByRole("checkbox", { name: /Producto destacado/ }).checked).toBe(false);
+  await user.type(screen.getByLabelText("Código *"), "AC051");
+  await user.type(screen.getByLabelText("Nombre *"), "Capo Premium");
+  await user.type(screen.getByLabelText("Icono *"), "🎸");
+  await user.type(screen.getByLabelText("Precio (CLP) *"), "9990");
+  await user.click(screen.getByRole("checkbox", { name: /Producto destacado/ }));
+  await user.click(screen.getByRole("button", { name: "Crear producto" }));
+
+  await waitFor(() => expect(llamadas("POST", "/admin/productos")).toHaveLength(1));
+  expect(JSON.parse(llamadas("POST", "/admin/productos")[0][1].body).destacado).toBe(true);
+});
+
+test("al editar un producto destacado el formulario lo muestra marcado", async () => {
+  const user = userEvent.setup();
+  productos[0] = { ...productos[0], destacado: true };
+  abrirPanel();
+  await screen.findByText("Guitarra Acústica Yamaha");
+
+  await user.click(screen.getByRole("button", { name: "Editar Guitarra Acústica Yamaha" }));
+
+  expect(screen.getByRole("checkbox", { name: /Producto destacado/ }).checked).toBe(true);
 });

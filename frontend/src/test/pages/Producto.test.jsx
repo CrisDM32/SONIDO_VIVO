@@ -3,6 +3,7 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import Producto from "../../pages/Producto";
+import GaleriaProducto from "../../components/producto/GaleriaProducto";
 import { productosApi, stubCatalogo } from "../helpers/catalogo";
 
 async function renderProducto(id) {
@@ -39,18 +40,22 @@ test("muestra nombre, código, precio, stock y descripción del producto", async
   expect(screen.getByText(/Guitarra acústica de cuerdas de acero/)).toBeTruthy();
 });
 
-test("muestra la imagen principal y permite cambiar entre miniaturas", async () => {
-  const user = userEvent.setup();
+test("muestra la imagen del producto", async () => {
   await renderProducto(1);
 
   expect(screen.getByAltText("Guitarra Acústica Yamaha - imagen 1")).toBeTruthy();
+});
+
+test("la galería permite cambiar entre miniaturas cuando hay varias imágenes", async () => {
+  const user = userEvent.setup();
+  render(<GaleriaProducto imagenes={["a.png", "b.png", "c.png"]} nombre="Guitarra" icono="🎸" />);
 
   const miniatura = screen.getByRole("button", { name: "Ver imagen 2" });
   expect(miniatura.getAttribute("aria-pressed")).toBe("false");
 
   await user.click(miniatura);
 
-  expect(screen.getByAltText("Guitarra Acústica Yamaha - imagen 2")).toBeTruthy();
+  expect(screen.getByAltText("Guitarra - imagen 2")).toBeTruthy();
   expect(miniatura.getAttribute("aria-pressed")).toBe("true");
 });
 
@@ -113,12 +118,13 @@ test("el stock y el precio del backend mandan sobre los datos estáticos", async
   expect(screen.getByRole("button", { name: "Agotado" }).disabled).toBe(true);
 });
 
-test("un producto nuevo creado desde el panel se muestra con valores por defecto", async () => {
-  stubCatalogo([...productosApi, { id: 50, nombre: "Cuerdas Elixir", categoria: "Accesorios", precio: 15990, icono: "🎼", disponible: true }]);
+test("un producto creado desde el panel se muestra con sus datos y sin descripción si no la tiene", async () => {
+  stubCatalogo([...productosApi, { id: 50, codigo: "AC050", nombre: "Cuerdas Elixir", categoria: "Accesorios", marca: "Elixir", modelo: "Nanoweb", precio: 15990, icono: "🎼", disponible: true }]);
   await renderProducto(50);
 
   expect(screen.getByRole("heading", { level: 1, name: "Cuerdas Elixir" })).toBeTruthy();
-  expect(screen.getByText("Código: SV-050")).toBeTruthy();
+  expect(screen.getByText("Código: AC050")).toBeTruthy();
+  expect(screen.getByText("Elixir · Nanoweb")).toBeTruthy();
   expect(screen.getByRole("button", { name: "Añadir al carrito" })).toBeTruthy();
 });
 

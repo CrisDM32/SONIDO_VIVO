@@ -18,7 +18,7 @@ function Etiqueta({ children, tono }) {
   return <span className={`ml-2 rounded-full px-2 py-0.5 text-[12px] font-semibold ${colores[tono]}`}>{children}</span>
 }
 
-function FilaProducto({ producto, onEditar, onCambiarStock, onCambiarActivo }) {
+function FilaProducto({ producto, onEditar, onCambiarStock, onCambiarActivo, onCambiarDestacado }) {
   const [stock, setStock] = useState(String(producto.stock))
   const [confirmando, setConfirmando] = useState(false)
 
@@ -31,6 +31,7 @@ function FilaProducto({ producto, onEditar, onCambiarStock, onCambiarActivo }) {
       <td className={celda}>
         <span aria-hidden="true" className="mr-2">{producto.icono}</span>
         <strong>{producto.nombre}</strong>
+        {producto.codigo && <span className="ml-2 text-[13px] text-[#555]">{producto.codigo}</span>}
         {!producto.activo && <Etiqueta tono="gris">Inactivo</Etiqueta>}
       </td>
       <td className={celda}>{producto.categoria}</td>
@@ -57,6 +58,15 @@ function FilaProducto({ producto, onEditar, onCambiarStock, onCambiarActivo }) {
           {producto.stock === 0 && <Etiqueta tono="rojo">Sin stock</Etiqueta>}
           {producto.stock > 0 && producto.stock <= STOCK_BAJO && <Etiqueta tono="ambar">Stock bajo</Etiqueta>}
         </div>
+      </td>
+      <td className={`${celda} text-center`}>
+        <input
+          type="checkbox"
+          className="size-[18px] cursor-pointer accent-[#3b3a3a]"
+          aria-label={`Destacado: ${producto.nombre}`}
+          checked={producto.destacado}
+          onChange={(evento) => onCambiarDestacado(producto, evento.target.checked)}
+        />
       </td>
       <td className={celda}>
         {confirmando ? (
@@ -97,7 +107,7 @@ function FilaProducto({ producto, onEditar, onCambiarStock, onCambiarActivo }) {
   )
 }
 
-export default function TablaProductos({ productos, onEditar, onCambiarStock, onCambiarActivo }) {
+export default function TablaProductos({ productos, onEditar, onCambiarStock, onCambiarActivo, onCambiarDestacado }) {
   if (productos.length === 0) {
     return <p className="m-0 rounded-lg bg-[#efeded] px-4 py-3.5 text-ink">No hay productos que coincidan.</p>
   }
@@ -111,6 +121,7 @@ export default function TablaProductos({ productos, onEditar, onCambiarStock, on
             <th className={celda}>Categoría</th>
             <th className={celda}>Precio</th>
             <th className={celda}>Stock</th>
+            <th className={`${celda} text-center`}>Destacado</th>
             <th className={celda}>Acciones</th>
           </tr>
         </thead>
@@ -123,6 +134,7 @@ export default function TablaProductos({ productos, onEditar, onCambiarStock, on
               onEditar={onEditar}
               onCambiarStock={onCambiarStock}
               onCambiarActivo={onCambiarActivo}
+              onCambiarDestacado={onCambiarDestacado}
             />
           ))}
         </tbody>

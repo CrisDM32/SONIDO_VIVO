@@ -5,7 +5,7 @@ import Producto1 from '../../images/producto1.png'
 import { useProductos } from '../../hooks/useProductos.jsx'
 import { botonCarrito, tituloSeccion } from '../../styles/clases.js'
 
-const flecha = 'flex-none cursor-pointer border-none bg-transparent text-[50px] text-ink mobile:px-1 mobile:py-0 mobile:text-[36px]'
+const flecha ='flex-none cursor-pointer border-none bg-transparent text-[50px] text-ink mobile:px-1 mobile:py-0 mobile:text-[36px]'
 const tarjeta =
     'flex-[0_0_250px] snap-start rounded-[10px] bg-button p-[30px] text-center text-paper no-underline transition-transform duration-300 ease-[ease] hover:scale-105 tablet:basis-[220px] tablet:p-[22px] mobile:flex-[0_0_min(220px,calc(100vw_-_100px))] mobile:p-[18px]'
 
@@ -13,6 +13,8 @@ export const ProductosDestacados = () => {
     const productListRef = useRef(null)
     const [agregados, setAgregados] = useState({})
     const { productos, estado } = useProductos()
+    // El carrusel muestra solo los productos que el administrador marcó como destacados.
+    const destacados = productos.filter((producto) => producto.destacado)
 
     const agregarProducto = (producto) => {
         agregarAlCarrito(producto)
@@ -48,6 +50,11 @@ export const ProductosDestacados = () => {
         })
     }
 
+    // Sin destacados (o mientras carga) no se muestra la sección; si falla la carga, sí, para avisarlo.
+    if (estado === 'LOADING' || (estado === 'SUCCESS' && destacados.length === 0)) {
+        return null
+    }
+
     return (
         
     <main>
@@ -65,7 +72,7 @@ export const ProductosDestacados = () => {
                     &#8249;
                 </button>
                 <div className="mb-[50px] flex w-full min-w-0 snap-x snap-mandatory flex-nowrap gap-5 overflow-x-auto scroll-smooth no-underline [scrollbar-width:none] [&::-webkit-scrollbar]:hidden mobile:mb-8 mobile:gap-3" id="product-list" ref={productListRef}>
-                    {productos.map((producto) => (
+                    {destacados.map((producto) => (
                         <article className={tarjeta} key={producto.id}>
                             <Link to={`/producto/${producto.id}`} className="block text-inherit no-underline">
                                 <img src={Producto1} alt={producto.nombre} className="h-auto max-w-full rounded-sv"></img>

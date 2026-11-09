@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.sonidovivo.productos.dto.ActivoRequest;
+import cl.sonidovivo.productos.dto.DestacadoRequest;
 import cl.sonidovivo.productos.dto.ProductoAdminResponse;
 import cl.sonidovivo.productos.dto.ProductoRequest;
 import cl.sonidovivo.productos.dto.StockRequest;
@@ -53,6 +54,11 @@ public class ProductoAdminController {
 	@PatchMapping("/{id}/stock")
 	public ProductoAdminResponse cambiarStock(@PathVariable Long id, @RequestBody StockRequest request) {
 		return productoAdminService.cambiarStock(id, request);
+	}
+
+	@PatchMapping("/{id}/destacado")
+	public ProductoAdminResponse cambiarDestacado(@PathVariable Long id, @Valid @RequestBody DestacadoRequest request) {
+		return productoAdminService.cambiarDestacado(id, request.destacado());
 	}
 
 	@PatchMapping("/{id}/activo")
