@@ -16,3 +16,5 @@ git config --global user.email "tu@email.com"
 git remote add origin "URL"
 git merge "nombre-rama"
 
+usuario: admin@sonidovivo.cl
+pass: admin
