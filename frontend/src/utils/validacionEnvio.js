@@ -1,6 +1,6 @@
 import { regionesChile } from '../data/regionesChile.js'
 
-function rutValido(rut) {
+export function rutValido(rut) {
   const limpio = rut.replace(/[.\s-]/g, '').toUpperCase()
   if (!/^[0-9]{7,8}[0-9K]$/.test(limpio)) return false
 

@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, within } from "@testing-library/rea
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import App from "../../App";
+import { stubCatalogo } from "../helpers/catalogo";
 
 // Pruebas del proceso de compra completo, navegando por la app real como lo haría una persona:
 // catálogo -> carrito -> datos de envío -> pago con tarjeta -> resumen.
@@ -53,10 +54,7 @@ async function completarTarjeta(user, sobrescribir = {}) {
 
 beforeEach(() => {
   localStorage.clear();
-  vi.stubGlobal(
-    "fetch",
-    vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve([]) }))
-  );
+  stubCatalogo();
 });
 
 afterEach(() => {

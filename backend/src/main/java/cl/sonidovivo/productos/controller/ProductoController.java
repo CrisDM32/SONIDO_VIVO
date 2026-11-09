@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cl.sonidovivo.productos.model.Producto;
+import cl.sonidovivo.productos.dto.ProductoPublico;
 import cl.sonidovivo.productos.repository.ProductoRepository;
 
 @RestController
@@ -20,8 +20,8 @@ public class ProductoController {
 	}
 
 	@GetMapping
-	public List<Producto> listar() {
-		return productoRepository.findAll();
+	public List<ProductoPublico> listar() {
+		return productoRepository.findByActivoTrueOrderByIdAsc().stream().map(ProductoPublico::de).toList();
 	}
 
 }

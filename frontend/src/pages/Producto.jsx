@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { useState } from 'react'
-import { productos } from '../data/productos.js'
+import { useProductos } from '../hooks/useProductos.jsx'
 import { agregarAlCarrito } from '../utils/carrito.js'
 import GaleriaProducto from '../components/producto/GaleriaProducto.jsx'
 import InfoProducto from '../components/producto/InfoProducto.jsx'
@@ -11,8 +11,25 @@ import { contenedorAncho } from '../styles/clases.js'
 export default function Producto() {
   const { id: idParam } = useParams()
   const id = Number(idParam)
+  const { productos, estado } = useProductos()
   const producto = productos.find((p) => p.id === id)
   const [agregado, setAgregado] = useState(false)
+
+  if (estado === 'LOADING') {
+    return (
+      <main className={contenedorAncho}>
+        <p role="status">Cargando producto...</p>
+      </main>
+    )
+  }
+
+  if (estado === 'ERROR') {
+    return (
+      <main className={contenedorAncho}>
+        <p role="alert">No se ha podido cargar el producto.</p>
+      </main>
+    )
+  }
 
   if (!producto) {
     return (

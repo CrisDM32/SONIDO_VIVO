@@ -36,15 +36,24 @@ public class SeguridadConfig {
 				.cors(Customizer.withDefaults())
 				.sessionManagement(sesion -> sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/registro").permitAll()
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/v1/productos").permitAll()
+						.requestMatchers("/api/v1/admin/productos/**").hasAnyRole("ADMINISTRADOR", "VENDEDOR")
+						.requestMatchers("/api/v1/admin/usuarios/**").hasRole("ADMINISTRADOR")
 						.anyRequest().authenticated())
-				.exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, exception) -> {
-					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-					response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-					response.getWriter().write("{\"mensaje\":\"No autorizado\"}");
-				}))
+				.exceptionHandling(ex -> ex
+						.authenticationEntryPoint((request, response, exception) -> {
+							response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+							response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+							response.getWriter().write("{\"mensaje\":\"No autorizado\"}");
+						})
+						.accessDeniedHandler((request, response, exception) -> {
+							response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+							response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+							response.setCharacterEncoding("UTF-8");
+							response.getWriter().write("{\"mensaje\":\"No tienes permisos para esta acción\"}");
+						}))
 				.addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
@@ -59,7 +68,7 @@ public class SeguridadConfig {
 
 		CorsConfiguration configuracion = new CorsConfiguration();
 		configuracion.setAllowedOriginPatterns(permitidos);
-		configuracion.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
+		configuracion.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 		configuracion.setAllowedHeaders(List.of("*"));
 		configuracion.setMaxAge(3600L);
 

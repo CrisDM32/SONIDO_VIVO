@@ -1,32 +1,36 @@
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, beforeEach, expect, test } from "vitest";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import Producto from "../../pages/Producto";
+import { productosApi, stubCatalogo } from "../helpers/catalogo";
 
-function renderProducto(id) {
-  return render(
+async function renderProducto(id) {
+  render(
     <MemoryRouter initialEntries={[`/producto/${id}`]}>
       <Routes>
         <Route path="/producto/:id" element={<Producto />} />
       </Routes>
     </MemoryRouter>
   );
+  await waitFor(() => expect(screen.queryByText("Cargando producto...")).toBeNull());
 }
 
 const carritoGuardado = () => JSON.parse(localStorage.getItem("sv_carrito") || "[]");
 
 beforeEach(() => {
   localStorage.clear();
+  stubCatalogo();
 });
 
 afterEach(() => {
   cleanup();
+  vi.unstubAllGlobals();
   localStorage.clear();
 });
 
-test("muestra nombre, código, precio, stock y descripción del producto", () => {
-  renderProducto(1);
+test("muestra nombre, código, precio, stock y descripción del producto", async () => {
+  await renderProducto(1);
 
   expect(screen.getByRole("heading", { level: 1, name: "Guitarra Acústica Yamaha" })).toBeTruthy();
   expect(screen.getByText("Código: SV-INS-001")).toBeTruthy();
@@ -37,7 +41,7 @@ test("muestra nombre, código, precio, stock y descripción del producto", () =>
 
 test("muestra la imagen principal y permite cambiar entre miniaturas", async () => {
   const user = userEvent.setup();
-  renderProducto(1);
+  await renderProducto(1);
 
   expect(screen.getByAltText("Guitarra Acústica Yamaha - imagen 1")).toBeTruthy();
 
@@ -52,7 +56,7 @@ test("muestra la imagen principal y permite cambiar entre miniaturas", async () 
 
 test("'Añadir al carrito' agrega el producto y muestra la confirmación", async () => {
   const user = userEvent.setup();
-  renderProducto(6);
+  await renderProducto(6);
 
   await user.click(screen.getByRole("button", { name: "Añadir al carrito" }));
 
@@ -64,7 +68,7 @@ test("'Añadir al carrito' agrega el producto y muestra la confirmación", async
 
 test("añadir dos veces el mismo producto suma la cantidad", async () => {
   const user = userEvent.setup();
-  renderProducto(7);
+  await renderProducto(7);
 
   const boton = screen.getByRole("button", { name: "Añadir al carrito" });
   await user.click(boton);
@@ -76,7 +80,7 @@ test("añadir dos veces el mismo producto suma la cantidad", async () => {
 
 test("un producto agotado muestra 'Agotado' y no se puede añadir", async () => {
   const user = userEvent.setup();
-  renderProducto(3);
+  await renderProducto(3);
 
   expect(screen.getAllByText("Agotado").length).toBeGreaterThan(0);
   const boton = screen.getByRole("button", { name: "Agotado" });
@@ -86,10 +90,41 @@ test("un producto agotado muestra 'Agotado' y no se puede añadir", async () => 
   expect(carritoGuardado()).toEqual([]);
 });
 
-test("con un id que no existe muestra 'Producto no encontrado' y un enlace al catálogo", () => {
-  renderProducto(999);
+test("con un id que no existe muestra 'Producto no encontrado' y un enlace al catálogo", async () => {
+  await renderProducto(999);
 
   expect(screen.getByRole("heading", { name: "Producto no encontrado" })).toBeTruthy();
   expect(screen.getByRole("link", { name: "Volver a productos" }).getAttribute("href")).toBe("/productos");
   expect(screen.queryByRole("button", { name: "Añadir al carrito" })).toBeNull();
+});
+
+test("un producto desactivado en el panel (ya no viene del backend) no se puede ver", async () => {
+  stubCatalogo(productosApi.filter((p) => p.id !== 1));
+  await renderProducto(1);
+
+  expect(screen.getByRole("heading", { name: "Producto no encontrado" })).toBeTruthy();
+});
+
+test("el stock y el precio del backend mandan sobre los datos estáticos", async () => {
+  stubCatalogo(productosApi.map((p) => (p.id === 1 ? { ...p, precio: 150000, disponible: false } : p)));
+  await renderProducto(1);
+
+  expect(screen.getByText("$150.000")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Agotado" }).disabled).toBe(true);
+});
+
+test("un producto nuevo creado desde el panel se muestra con valores por defecto", async () => {
+  stubCatalogo([...productosApi, { id: 50, nombre: "Cuerdas Elixir", categoria: "Accesorios", precio: 15990, icono: "🎼", disponible: true }]);
+  await renderProducto(50);
+
+  expect(screen.getByRole("heading", { level: 1, name: "Cuerdas Elixir" })).toBeTruthy();
+  expect(screen.getByText("Código: SV-050")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Añadir al carrito" })).toBeTruthy();
+});
+
+test("si el backend falla muestra un mensaje de error", async () => {
+  vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new TypeError("fail"))));
+  await renderProducto(1);
+
+  expect(screen.getByRole("alert").textContent).toBe("No se ha podido cargar el producto.");
 });

@@ -6,17 +6,24 @@ import {
   campoError,
   contenedorFormulario,
   formularioTarjeta,
+  mensajeExito,
   subtituloFormulario,
   tituloFormulario,
 } from '../../styles/clases.js'
 
-export default function FormularioLogin({ form, errores, errorGeneral, enviando, onChange, onSubmit }) {
+export default function FormularioLogin({ form, errores, errorGeneral, aviso, enviando, onChange, onSubmit }) {
   return (
     <main className={contenedorFormulario}>
       <h1 className={tituloFormulario}>Iniciar sesión</h1>
       <p className={subtituloFormulario}>Ingresa tu correo y contraseña para acceder a tu cuenta.</p>
 
       <form className={formularioTarjeta} onSubmit={onSubmit} noValidate>
+        {aviso && (
+          <p role="status" className={mensajeExito}>
+            {aviso}
+          </p>
+        )}
+
         <CampoFormulario
           id="email"
           name="email"

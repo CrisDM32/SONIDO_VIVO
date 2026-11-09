@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import CatalogoProductos from "../../pages/CatalogoProductos";
 import { productos } from "../../data/productos";
+import { productosApi, stubCatalogo } from "../helpers/catalogo";
 
 function renderCatalogo(props = {}) {
   return render(
@@ -17,11 +18,8 @@ const carritoGuardado = () => JSON.parse(localStorage.getItem("sv_carrito") || "
 
 beforeEach(() => {
   localStorage.clear();
-  // ListaProductos usa el hook useProductos, que pide datos al backend
-  vi.stubGlobal(
-    "fetch",
-    vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve([]) }))
-  );
+  // El catálogo se carga desde el backend (useProductos)
+  stubCatalogo();
 });
 
 afterEach(() => {
@@ -127,4 +125,36 @@ test("cada tarjeta enlaza al detalle del producto", async () => {
 
   const enlace = screen.getByRole("heading", { name: "Teclado Yamaha PSR" }).closest("a");
   expect(enlace.getAttribute("href")).toBe("/producto/4");
+});
+
+test("un producto desactivado en el panel no aparece en el catálogo", async () => {
+  stubCatalogo(productosApi.filter((p) => p.id !== 1));
+  renderCatalogo();
+
+  expect(await screen.findAllByRole("article")).toHaveLength(productos.length - 1);
+  expect(screen.queryByRole("heading", { name: "Guitarra Acústica Yamaha" })).toBeNull();
+});
+
+test("un producto sin stock en el backend se muestra agotado", async () => {
+  stubCatalogo(productosApi.map((p) => (p.id === 1 ? { ...p, disponible: false } : p)));
+  renderCatalogo();
+  await screen.findAllByRole("article");
+
+  const boton = screen.getByRole("heading", { name: "Guitarra Acústica Yamaha" }).closest("article").querySelector("button");
+  expect(boton.disabled).toBe(true);
+});
+
+test("un producto nuevo creado desde el panel aparece en el catálogo", async () => {
+  stubCatalogo([...productosApi, { id: 50, nombre: "Cuerdas Elixir", categoria: "Accesorios", precio: 15990, icono: "🎼", disponible: true }]);
+  renderCatalogo();
+
+  expect(await screen.findByRole("heading", { name: "Cuerdas Elixir" })).toBeTruthy();
+});
+
+test("mientras carga muestra un aviso y si el backend falla, un mensaje de error", async () => {
+  vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new TypeError("fail"))));
+  renderCatalogo();
+
+  expect(screen.getByText("Cargando productos...")).toBeTruthy();
+  expect((await screen.findByRole("alert")).textContent).toBe("No se han cargado los productos");
 });

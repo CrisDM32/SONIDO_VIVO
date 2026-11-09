@@ -10,7 +10,7 @@ export default function InfoProducto({ producto }) {
       <p className="m-0">
         {producto.disponible ? 'En stock' : 'Agotado'}
       </p>
-      <p className="m-0 leading-[1.6]">{producto.descripcion}</p>
+      {producto.descripcion && <p className="m-0 leading-[1.6]">{producto.descripcion}</p>}
     </>
   )
 }

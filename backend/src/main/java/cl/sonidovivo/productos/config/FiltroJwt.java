@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import cl.sonidovivo.productos.repository.UsuarioRepository;
 import cl.sonidovivo.productos.service.JwtServicio;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -22,9 +23,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class FiltroJwt extends OncePerRequestFilter {
 
 	private final JwtServicio jwtServicio;
+	private final UsuarioRepository usuarioRepository;
 
-	public FiltroJwt(JwtServicio jwtServicio) {
+	public FiltroJwt(JwtServicio jwtServicio, UsuarioRepository usuarioRepository) {
 		this.jwtServicio = jwtServicio;
+		this.usuarioRepository = usuarioRepository;
 	}
 
 	@Override
@@ -39,13 +42,16 @@ public class FiltroJwt extends OncePerRequestFilter {
 			try {
 				Claims claims = jwtServicio.leer(token);
 				String correo = claims.get("correo", String.class);
-				String perfil = claims.get("perfil", String.class);
-				if (correo != null && perfil != null) {
-					UsernamePasswordAuthenticationToken autenticacion = new UsernamePasswordAuthenticationToken(
-							correo,
-							null,
-							List.of(new SimpleGrantedAuthority("ROLE_" + perfil.toUpperCase())));
-					SecurityContextHolder.getContext().setAuthentication(autenticacion);
+				if (correo != null) {
+					// El perfil se lee de la BD (no del token): si el usuario fue eliminado o cambió de perfil,
+					// el cambio rige de inmediato y no cuando venza el token.
+					usuarioRepository.findByCorreo(correo).ifPresent(usuario -> {
+						UsernamePasswordAuthenticationToken autenticacion = new UsernamePasswordAuthenticationToken(
+								usuario.getCorreo(),
+								null,
+								List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getPerfil().toUpperCase())));
+						SecurityContextHolder.getContext().setAuthentication(autenticacion);
+					});
 				}
 			} catch (JwtException | IllegalArgumentException ex) {
 				SecurityContextHolder.clearContext();

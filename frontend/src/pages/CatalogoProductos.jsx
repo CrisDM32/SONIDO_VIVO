@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { productos } from '../data/productos.js'
+import { useProductos } from '../hooks/useProductos.jsx'
 import { agregarAlCarrito } from '../utils/carrito.js'
 import BuscadorProductos from '../components/catalogo-productos/BuscadorProductos.jsx'
 import ListaProductos from '../components/catalogo-productos/ListaProductos.jsx'
@@ -7,6 +7,7 @@ import ListaProductos from '../components/catalogo-productos/ListaProductos.jsx'
 export default function CatalogoProductos({ categoria }) {
   const [busqueda, setBusqueda] = useState('')
   const [agregados, setAgregados] = useState({})
+  const { productos, estado } = useProductos()
 
   const productosFiltrados = productos.filter(
     (producto) =>
@@ -30,6 +31,7 @@ export default function CatalogoProductos({ categoria }) {
       />
       <ListaProductos
         productos={productosFiltrados}
+        estado={estado}
         agregados={agregados}
         onAgregar={agregarProducto}
       />

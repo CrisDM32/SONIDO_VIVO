@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import cl.sonidovivo.productos.model.Perfiles;
 import cl.sonidovivo.productos.model.Usuario;
 import cl.sonidovivo.productos.repository.UsuarioRepository;
 
@@ -36,7 +37,7 @@ public class DatosIniciales implements CommandLineRunner {
 		usuario.setNombre("Administrador");
 		usuario.setCorreo(CORREO_ADMIN);
 		usuario.setClave(passwordEncoder.encode(claveAdmin));
-		usuario.setPerfil("administrador");
+		usuario.setPerfil(Perfiles.ADMINISTRADOR);
 		usuarioRepository.save(usuario);
 	}
 

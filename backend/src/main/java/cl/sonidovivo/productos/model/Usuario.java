@@ -21,6 +21,12 @@ public class Usuario {
 	@Column(nullable = false, unique = true, length = 180)
 	private String correo;
 
+	@Column(unique = true, length = 12)
+	private String rut;
+
+	@Column(length = 30)
+	private String telefono;
+
 	@Column(nullable = false)
 	private String clave;
 
@@ -49,6 +55,22 @@ public class Usuario {
 
 	public void setCorreo(String correo) {
 		this.correo = correo;
+	}
+
+	public String getRut() {
+		return rut;
+	}
+
+	public void setRut(String rut) {
+		this.rut = rut;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
 	}
 
 	public String getClave() {

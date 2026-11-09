@@ -2,7 +2,7 @@ import { agregarAlCarrito, formatearPrecioCLP } from '../../utils/carrito.js'
 import { Link } from 'react-router-dom'
 import { useRef, useState } from 'react'
 import Producto1 from '../../images/producto1.png'
-import { productos } from '../../data/productos.js'
+import { useProductos } from '../../hooks/useProductos.jsx'
 import { botonCarrito, tituloSeccion } from '../../styles/clases.js'
 
 const flecha = 'flex-none cursor-pointer border-none bg-transparent text-[50px] text-ink mobile:px-1 mobile:py-0 mobile:text-[36px]'
@@ -12,6 +12,7 @@ const tarjeta =
 export const ProductosDestacados = () => {
     const productListRef = useRef(null)
     const [agregados, setAgregados] = useState({})
+    const { productos, estado } = useProductos()
 
     const agregarProducto = (producto) => {
         agregarAlCarrito(producto)
@@ -52,6 +53,7 @@ export const ProductosDestacados = () => {
     <main>
         <div>
             <p className={tituloSeccion}><b>Productos Destacados</b></p>
+            {estado === 'ERROR' && <p role="alert" className="text-center">No se han cargado los productos</p>}
         </div>
         <div className="m-auto flex w-full max-w-[1200px] items-center gap-2.5 px-2.5 tablet:gap-1 tablet:px-2 mobile:gap-0 mobile:px-1">
                 <button

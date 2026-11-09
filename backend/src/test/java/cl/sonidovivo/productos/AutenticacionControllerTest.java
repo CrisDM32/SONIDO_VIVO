@@ -32,6 +32,7 @@ import io.jsonwebtoken.security.Keys;
 class AutenticacionControllerTest {
 
 	private static final String LOGIN = "/api/v1/auth/login";
+	private static final String REGISTRO = "/api/v1/auth/registro";
 	private static final String RUTA_PROTEGIDA = "/api/v1/usuarios";
 
 	@Autowired
@@ -143,6 +144,70 @@ class AutenticacionControllerTest {
 
 		mockMvc.perform(get(RUTA_PROTEGIDA).header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
 				.andExpect(status().isUnauthorized());
+	}
+
+	private String registro(String nombre, String correo, String rut, String telefono, String clave) {
+		return "{\"nombre\":\"" + nombre + "\",\"correo\":\"" + correo + "\",\"rut\":\"" + rut
+				+ "\",\"telefono\":\"" + telefono + "\",\"clave\":\"" + clave + "\"}";
+	}
+
+	private org.springframework.test.web.servlet.ResultActions registrar(String json) throws Exception {
+		return mockMvc.perform(post(REGISTRO).contentType(MediaType.APPLICATION_JSON).content(json));
+	}
+
+	@Test
+	void registroCorrectoCreaLaCuentaYPermiteIniciarSesion() throws Exception {
+		registrar(registro("Ana Pérez", "Ana.Registro@Correo.cl", "12.345.678-5", "+56 9 1234 5678", "clave1234"))
+				.andExpect(status().isCreated());
+
+		String json = mockMvc.perform(post(LOGIN).contentType(MediaType.APPLICATION_JSON)
+				.content(cuerpo("ana.registro@correo.cl", "clave1234")))
+				.andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		Claims claims = jwtServicio.leer(json.replaceAll(".*\"token\":\"([^\"]+)\".*", "$1"));
+
+		assertEquals("cliente", claims.get("perfil", String.class));
+		assertEquals("Ana Pérez", claims.get("nombre", String.class));
+	}
+
+	@Test
+	void correoRepetidoDevuelve409AunqueCambienLasMayusculas() throws Exception {
+		registrar(registro("Luis Soto", "luis@correo.cl", "11.111.111-1", "", "clave1234")).andExpect(status().isCreated());
+
+		registrar(registro("Otro Luis", "LUIS@Correo.CL", "22.222.222-2", "", "clave1234"))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.campo").value("correo"));
+	}
+
+	@Test
+	void rutRepetidoDevuelve409SinImportarElFormato() throws Exception {
+		registrar(registro("Rosa Díaz", "rosa@correo.cl", "7.654.321-6", "", "clave1234")).andExpect(status().isCreated());
+
+		registrar(registro("Otra Rosa", "rosa2@correo.cl", "7654321-6", "", "clave1234"))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.campo").value("rut"));
+	}
+
+	@Test
+	void rutConDigitoVerificadorIncorrectoDevuelve400() throws Exception {
+		registrar(registro("Pedro Gil", "pedro@correo.cl", "12.345.678-9", "", "clave1234"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.campo").value("rut"));
+	}
+
+	@Test
+	void claveDebilYCorreoInvalidoDevuelven400ConErroresPorCampo() throws Exception {
+		registrar(registro("Eva Mora", "no-es-correo", "12.345.678-5", "", "corta"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.errores.correo").exists())
+				.andExpect(jsonPath("$.errores.clave").exists());
+	}
+
+	@Test
+	void elRegistroNoPuedeUsarElCorreoDelAdministrador() throws Exception {
+		registrar(registro("Falso Admin", "admin@sonidovivo.cl", "9.999.999-3", "", "clave1234"))
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.campo").value("correo"));
 	}
 
 	@Test

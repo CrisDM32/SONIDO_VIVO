@@ -14,6 +14,8 @@ import Resumen from './pages/Resumen.jsx'
 import Login from './pages/Login.jsx'
 import Registro from './pages/Registro.jsx'
 import Perfil from './pages/Perfil.jsx'
+import Admin from './pages/Admin.jsx'
+import RutaProtegida from './components/generales/RutaProtegida.jsx'
 import PreguntasFrecuentes from './pages/PreguntasFrecuentes.jsx'
 import Garantia from './pages/Garantia.jsx'
 import ServicioTecnico from './pages/ServicioTecnico.jsx'
@@ -41,30 +43,38 @@ const PaginaCatalogo = () => {
 const App = () => {
   return (
     <SesionProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Inicio />} />
-          <Route path="/productos" element={<PaginaCatalogo />} />
-          <Route path="/productos/:categoria" element={<PaginaCatalogo />} />
-          <Route path="/producto/:id" element={<Producto />} />
-          <Route path="/carrito" element={<Carrito />} />
-          <Route path="/contacto" element={<Contacto />} />
-          <Route path="/pago" element={<Pago />} />
-          <Route path="/pago-tarjeta" element={<PagoTarjeta />} />
-          <Route path="/resumen" element={<Resumen />} />
-          <Route path="/iniciar-sesion" element={<Login />} />
-          <Route path="/registro" element={<Registro />} />
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
-          <Route path="/garantia" element={<Garantia />} />
-          <Route path="/servicio-tecnico" element={<ServicioTecnico />} />
-          <Route path="/terminos-y-condiciones" element={<TerminosCondiciones />} />
-          <Route path="/politicas-privacidad" element={<PoliticasPrivacidad />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Inicio />} />
+            <Route path="/productos" element={<PaginaCatalogo />} />
+            <Route path="/productos/:categoria" element={<PaginaCatalogo />} />
+            <Route path="/producto/:id" element={<Producto />} />
+            <Route path="/carrito" element={<Carrito />} />
+            <Route path="/contacto" element={<Contacto />} />
+            <Route path="/pago" element={<Pago />} />
+            <Route path="/pago-tarjeta" element={<PagoTarjeta />} />
+            <Route path="/resumen" element={<Resumen />} />
+            <Route path="/iniciar-sesion" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/perfil" element={<Perfil />} />
+            <Route
+              path="/admin"
+              element={
+                <RutaProtegida perfiles={['administrador', 'vendedor']}>
+                  <Admin />
+                </RutaProtegida>
+              }
+            />
+            <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
+            <Route path="/garantia" element={<Garantia />} />
+            <Route path="/servicio-tecnico" element={<ServicioTecnico />} />
+            <Route path="/terminos-y-condiciones" element={<TerminosCondiciones />} />
+            <Route path="/politicas-privacidad" element={<PoliticasPrivacidad />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
     </SesionProvider>
   )
 }

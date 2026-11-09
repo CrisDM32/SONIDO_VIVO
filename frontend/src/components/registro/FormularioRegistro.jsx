@@ -1,12 +1,12 @@
 import {
   botonPrincipal,
+  botonPrincipalDeshabilitado,
   campo,
   campoError,
   campoEtiqueta,
   campoInput,
   contenedorFormulario,
   formularioTarjeta,
-  mensajeExito,
   subtituloFormulario,
   tituloFormulario,
 } from '../../styles/clases.js'
@@ -29,7 +29,7 @@ function CampoFormulario({ id, label, type = 'text', value, onChange, placeholde
   )
 }
 
-export default function FormularioRegistro({ form, errores, exito, onChange, onSubmit }) {
+export default function FormularioRegistro({ form, errores, errorGeneral, enviando, onChange, onSubmit }) {
   return (
     <main className={contenedorFormulario}>
       <h1 className={tituloFormulario}>Crear cuenta de cliente</h1>
@@ -57,6 +57,16 @@ export default function FormularioRegistro({ form, errores, exito, onChange, onS
           onChange={onChange}
           placeholder="tucorreo@ejemplo.com"
           error={errores.email}
+        />
+
+        <CampoFormulario
+          id="rut"
+          name="rut"
+          label="RUT *"
+          value={form.rut}
+          onChange={onChange}
+          placeholder="12.345.678-5"
+          error={errores.rut}
         />
 
         <CampoFormulario
@@ -106,15 +116,15 @@ export default function FormularioRegistro({ form, errores, exito, onChange, onS
           {errores.terminos && <small className={campoError}>{errores.terminos}</small>}
         </div>
 
-        <button type="submit" className={botonPrincipal}>
-          Crear cuenta
-        </button>
-
-        {exito && (
-          <p className={mensajeExito}>
-            ¡Cuenta creada correctamente! Ya puedes iniciar sesión.
+        {errorGeneral && (
+          <p role="alert" className={`m-0 ${campoError}`}>
+            {errorGeneral}
           </p>
         )}
+
+        <button type="submit" className={enviando ? botonPrincipalDeshabilitado : botonPrincipal} disabled={enviando}>
+          {enviando ? 'Creando cuenta…' : 'Crear cuenta'}
+        </button>
       </form>
     </main>
   )

@@ -59,6 +59,11 @@ export const Header = () => {
                     <Link to="/perfil" className={enlaceMenu}>
                       Mi perfil
                     </Link>
+                    {(usuario.perfil === 'administrador' || usuario.perfil === 'vendedor') && (
+                      <Link to="/admin" className={enlaceMenu}>
+                        Panel de administración
+                      </Link>
+                    )}
                     <button type="button" onClick={cerrar} className={`${enlaceMenu} w-full cursor-pointer border-0 bg-transparent font-[inherit] text-left`}>
                       Cerrar sesión
                     </button>

@@ -1,3 +1,5 @@
+import { rutValido } from './validacionEnvio.js'
+
 export function validarRegistro(form) {
   const nuevosErrores = {}
 
@@ -8,6 +10,10 @@ export function validarRegistro(form) {
   const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!formatoEmail.test(form.email.trim())) {
     nuevosErrores.email = 'Ingresa un correo electrónico válido.'
+  }
+
+  if (!rutValido(form.rut)) {
+    nuevosErrores.rut = 'Ingresa un RUT válido (ej: 12.345.678-5).'
   }
 
   if (form.telefono.trim() !== '') {
