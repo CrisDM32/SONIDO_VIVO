@@ -1,5 +1,8 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import FormularioLogin from '../components/login/FormularioLogin.jsx'
+import { useSesion } from '../hooks/useSesion.js'
+import { iniciarSesion } from '../service/sesionService.js'
 import { validarLogin } from '../utils/validacionLogin.js'
 
 const formInicial = {
@@ -10,22 +13,45 @@ const formInicial = {
 export default function Login() {
   const [form, setForm] = useState(formInicial)
   const [errores, setErrores] = useState({})
+  const [errorGeneral, setErrorGeneral] = useState('')
+  const [enviando, setEnviando] = useState(false)
+  const { iniciar } = useSesion()
+  const navigate = useNavigate()
 
   function handleChange(evento) {
     const { name, value } = evento.target
     setForm((anterior) => ({ ...anterior, [name]: value }))
   }
 
-  function handleSubmit(evento) {
+  async function handleSubmit(evento) {
     evento.preventDefault()
+    if (enviando) return
 
     const nuevosErrores = validarLogin(form)
     setErrores(nuevosErrores)
+    setErrorGeneral('')
 
     if (Object.keys(nuevosErrores).length > 0) return
 
-    console.log('Inicio de sesión:', form.email)
+    setEnviando(true)
+    try {
+      const { token } = await iniciarSesion({ correo: form.email.trim(), clave: form.password })
+      iniciar(token)
+      navigate('/')
+    } catch (error) {
+      setErrorGeneral(error.message)
+      setEnviando(false)
+    }
   }
 
-  return <FormularioLogin form={form} errores={errores} onChange={handleChange} onSubmit={handleSubmit} />
+  return (
+    <FormularioLogin
+      form={form}
+      errores={errores}
+      errorGeneral={errorGeneral}
+      enviando={enviando}
+      onChange={handleChange}
+      onSubmit={handleSubmit}
+    />
+  )
 }

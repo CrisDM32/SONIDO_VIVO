@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useSesion } from '../../hooks/useSesion.js'
 import Logo from '../../images/logo.png'
 
 const enlaceMenu =
@@ -14,6 +15,8 @@ const enlaceIcono = 'block p-5 tablet:p-3 mobile:p-2 mini:p-1.5'
 const icono = 'block size-10 fill-paper tablet:size-[34px] mobile:size-[30px] mini:size-[26px]'
 
 export const Header = () => {
+  const { usuario, activa, cerrar } = useSesion()
+
   return (
     <header className="bg-page">
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-b-[10px] bg-header px-5 py-2.5 text-paper tablet:px-4 mobile:gap-x-3 mobile:gap-y-1.5 mobile:px-3 mobile:pt-2 mobile:pb-3">
@@ -42,18 +45,34 @@ export const Header = () => {
         <section>
           <div className="flex items-center gap-3 mobile:gap-0.5">
             <div className="group relative">
-              <Link to="/iniciar-sesion" className={enlaceIcono} aria-label="Cuenta">
+              <Link to={activa ? '/perfil' : '/iniciar-sesion'} className={enlaceIcono} aria-label="Cuenta">
                 <svg className={icono} viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 3a3.25 3.25 0 1 1 0 6.5A3.25 3.25 0 0 1 12 5Zm0 14a7 7 0 0 1-5.6-2.8 5.8 5.8 0 0 1 11.2 0A7 7 0 0 1 12 19Z" />
                 </svg>
               </Link>
               <div className={`${menuDesplegable} right-0`}>
-                <Link to="/iniciar-sesion" className={enlaceMenu}>
-                  Iniciar Sesión
-                </Link>
-                <Link to="/registro" className={enlaceMenu}>
-                  Regístrate
-                </Link>
+                {activa ? (
+                  <>
+                    <p className="m-0 px-5 py-3 text-[18px] text-paper mobile:px-4 mobile:text-[16px]">
+                      Hola, {usuario.nombre}
+                    </p>
+                    <Link to="/perfil" className={enlaceMenu}>
+                      Mi perfil
+                    </Link>
+                    <button type="button" onClick={cerrar} className={`${enlaceMenu} w-full cursor-pointer border-0 bg-transparent font-[inherit] text-left`}>
+                      Cerrar sesión
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/iniciar-sesion" className={enlaceMenu}>
+                      Iniciar Sesión
+                    </Link>
+                    <Link to="/registro" className={enlaceMenu}>
+                      Regístrate
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
             <Link to="/carrito" className={enlaceIcono} aria-label="Carrito de compras">

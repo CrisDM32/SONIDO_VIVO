@@ -6,6 +6,8 @@ import {
   obtenerCarrito,
   vaciarCarrito,
 } from '../../utils/carrito.js'
+import { useSesion } from '../../hooks/useSesion.js'
+import { agregarPedido } from '../../utils/perfil.js'
 import { validarPagoTarjeta } from '../../utils/validacionPagoTarjeta.js'
 import CampoFormulario from '../pago/CampoFormulario.jsx'
 import {
@@ -45,6 +47,7 @@ function crearPedido(carrito, total) {
 
 export default function PagoTarjeta() {
   const navigate = useNavigate()
+  const { usuario } = useSesion()
   const carrito = useMemo(() => obtenerCarrito(), [])
   const total = calcularTotalCarrito(carrito)
   const [form, setForm] = useState(formInicial)
@@ -69,7 +72,9 @@ export default function PagoTarjeta() {
       return
     }
 
-    localStorage.setItem(PEDIDO_KEY, JSON.stringify(crearPedido(carrito, total)))
+    const pedido = crearPedido(carrito, total)
+    localStorage.setItem(PEDIDO_KEY, JSON.stringify(pedido))
+    if (usuario) agregarPedido(usuario.correo, pedido)
     vaciarCarrito()
     navigate('/resumen')
   }

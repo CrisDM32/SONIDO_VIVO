@@ -1,4 +1,5 @@
 import { useState,useEffect } from "react";
+import { Rutas } from "../service/endpoints.js";
 
 export const useProductos = () => {
     const [productos, setProductos] = useState([]);
@@ -7,7 +8,7 @@ export const useProductos = () => {
     const cargarProductos = async () => {
         try {
             setEstado("LOADING");
-            const respuesta = await fetch('http://localhost:8080/api/v1/productos');
+            const respuesta = await fetch(Rutas.productos);
             if (!respuesta.ok) {
                 throw new Error(`Error HTTP ${respuesta.status}`);
             }

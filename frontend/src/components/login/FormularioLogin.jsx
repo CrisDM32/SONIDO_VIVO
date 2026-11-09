@@ -2,13 +2,15 @@ import { Link } from 'react-router-dom'
 import CampoFormulario from '../pago/CampoFormulario.jsx'
 import {
   botonPrincipal,
+  botonPrincipalDeshabilitado,
+  campoError,
   contenedorFormulario,
   formularioTarjeta,
   subtituloFormulario,
   tituloFormulario,
 } from '../../styles/clases.js'
 
-export default function FormularioLogin({ form, errores, onChange, onSubmit }) {
+export default function FormularioLogin({ form, errores, errorGeneral, enviando, onChange, onSubmit }) {
   return (
     <main className={contenedorFormulario}>
       <h1 className={tituloFormulario}>Iniciar sesión</h1>
@@ -41,8 +43,14 @@ export default function FormularioLogin({ form, errores, onChange, onSubmit }) {
           ¿Olvidaste tu contraseña?
         </a>
 
-        <button type="submit" className={botonPrincipal}>
-          Iniciar sesión
+        {errorGeneral && (
+          <p role="alert" className={`m-0 ${campoError}`}>
+            {errorGeneral}
+          </p>
+        )}
+
+        <button type="submit" className={enviando ? botonPrincipalDeshabilitado : botonPrincipal} disabled={enviando}>
+          {enviando ? 'Ingresando…' : 'Iniciar sesión'}
         </button>
 
         <p className="m-0 text-center text-[14px]">

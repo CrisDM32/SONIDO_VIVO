@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { calcularTotalCarrito, obtenerCarrito } from '../utils/carrito.js'
+import { useSesion } from '../hooks/useSesion.js'
+import { obtenerPerfil } from '../utils/perfil.js'
 import { validarEnvio } from '../utils/validacionEnvio.js'
 import { regionesChile } from '../data/regionesChile.js'
 import FormularioEnvio from '../components/pago/FormularioEnvio.jsx'
@@ -9,14 +11,19 @@ import { contenedorCheckout, layoutCheckoutDos, tituloPagina } from '../styles/c
 
 export default function Pago() {
   const navigate = useNavigate()
-  const [formulario, setFormulario] = useState({
-    nombre: '',
-    rut: '',
-    correo: '',
-    telefono: '',
-    direccion: '',
-    region: 'Región Metropolitana',
-    comuna: 'Santiago',
+  const { usuario } = useSesion()
+  const [formulario, setFormulario] = useState(() => {
+    const perfil = usuario ? obtenerPerfil(usuario.correo) : {}
+
+    return {
+      nombre: usuario?.nombre ?? '',
+      rut: '',
+      correo: usuario?.correo ?? '',
+      telefono: perfil.telefono ?? '',
+      direccion: perfil.direccion ?? '',
+      region: perfil.region ?? 'Región Metropolitana',
+      comuna: perfil.comuna ?? 'Santiago',
+    }
   })
   const [errores, setErrores] = useState({})
 

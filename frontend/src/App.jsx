@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { categorias } from './data/categorias.js'
 import Layout from './components/generales/Layout.jsx'
+import { SesionProvider } from './context/Sesion.jsx'
 import { tituloSeccion } from './styles/clases.js'
 import Inicio from './pages/Inicio.jsx'
 import CatalogoProductos from './pages/CatalogoProductos.jsx'
@@ -12,6 +13,7 @@ import PagoTarjeta from './pages/PagoTarjeta.jsx'
 import Resumen from './pages/Resumen.jsx'
 import Login from './pages/Login.jsx'
 import Registro from './pages/Registro.jsx'
+import Perfil from './pages/Perfil.jsx'
 import PreguntasFrecuentes from './pages/PreguntasFrecuentes.jsx'
 import Garantia from './pages/Garantia.jsx'
 import ServicioTecnico from './pages/ServicioTecnico.jsx'
@@ -38,6 +40,7 @@ const PaginaCatalogo = () => {
 
 const App = () => {
   return (
+    <SesionProvider>
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
@@ -52,6 +55,7 @@ const App = () => {
           <Route path="/resumen" element={<Resumen />} />
           <Route path="/iniciar-sesion" element={<Login />} />
           <Route path="/registro" element={<Registro />} />
+          <Route path="/perfil" element={<Perfil />} />
           <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
           <Route path="/garantia" element={<Garantia />} />
           <Route path="/servicio-tecnico" element={<ServicioTecnico />} />
@@ -61,6 +65,7 @@ const App = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
+    </SesionProvider>
   )
 }
 
