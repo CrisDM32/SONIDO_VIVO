@@ -1,0 +1,18 @@
+npm i
+npm run dev
+npm run test
+
+
+
+git branch
+git switch
+git pull
+git add.
+git commit -m "commit"
+git push
+git status
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu@email.com"
+git remote add origin "URL"
+git merge "nombre-rama"
+
