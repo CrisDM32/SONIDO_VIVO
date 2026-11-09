@@ -105,7 +105,7 @@ export default function FormularioRegistro({ form, errores, errorGeneral, envian
         <div className={campo}>
           <label className="flex items-center gap-2.5 font-semibold text-ink mobile:items-start">
             <input
-              className={`${campoInput(false)} h-[18px]`}
+              className="size-[18px] shrink-0 cursor-pointer"
               type="checkbox"
               name="terminos"
               checked={form.terminos}

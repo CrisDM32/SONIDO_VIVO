@@ -182,3 +182,12 @@ test("validarRegistro rechaza contraseñas que no coinciden o repetición vacía
 test("validarRegistro exige aceptar los términos", () => {
   expect(validarRegistro({ ...formValido, terminos: false }).terminos).toBeTruthy();
 });
+
+test("el checkbox de términos y condiciones tiene tamaño normal (no usa el estilo de los campos de texto)", () => {
+  render(<MemoryRouter><Registro /></MemoryRouter>);
+
+  const clases = screen.getByRole("checkbox").className;
+  expect(clases).toContain("size-[18px]");
+  expect(clases).not.toContain("w-full");
+  expect(clases).not.toContain("min-h-");
+});
