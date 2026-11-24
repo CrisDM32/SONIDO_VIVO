@@ -1,3 +1,18 @@
+/* ==========================================================================
+   Carrito de compras - lógica compartida (versión React)
+   Es el mismo "contrato" que tenía js/carrito.js en la versión HTML,
+   pero con una diferencia importante:
+
+   En la versión HTML, funciones como actualizarCantidad() MODIFICABAN
+   directamente el objeto guardado (item.cantidad += 1) y después
+   volvían a dibujar el carrito a mano con innerHTML.
+
+   En React NUNCA se debe mutar un estado directamente: hay que crear
+   un arreglo/objeto NUEVO y pasárselo a setState (acá, al setCarrito()
+   de cada página). Por eso estas funciones ahora devuelven un carrito
+   nuevo en vez de cambiar el que recibieron.
+   ========================================================================== */
+
 const CARRITO_KEY = "sv_carrito";
 
 export function obtenerCarrito() {
@@ -9,6 +24,10 @@ export function guardarCarrito(carrito) {
   localStorage.setItem(CARRITO_KEY, JSON.stringify(carrito));
 }
 
+// Agrega un producto (o sube su cantidad en 1 si ya estaba).
+// No recibe el carrito actual como parámetro: siempre lee el más
+// reciente de localStorage, para que páginas distintas (Productos y
+// Carrito) nunca se pisen entre sí.
 export function agregarAlCarrito(producto) {
   const carrito = obtenerCarrito();
   const yaExiste = carrito.some((item) => item.id === producto.id);
@@ -32,6 +51,9 @@ export function agregarAlCarrito(producto) {
   return nuevoCarrito;
 }
 
+// A diferencia de agregarAlCarrito(), estas sí reciben el carrito actual:
+// la página Carrito.jsx ya lo tiene en su estado y evita leer localStorage
+// dos veces por cada clic.
 export function actualizarCantidad(carritoActual, id, cantidad) {
   const nuevoCarrito = carritoActual.map((item) =>
     item.id === id ? { ...item, cantidad: Math.max(1, cantidad) } : item

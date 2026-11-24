@@ -9,6 +9,20 @@ import {
 
 const PEDIDO_KEY = "sv_ultimo_pedido";
 
+/* ==========================================================================
+   Pago - SOLO SIMULACIÓN (antes: pago.html + js/pago.js)
+   Sigue sin conectarse a ninguna pasarela real y sin validar ningún
+   dato de la tarjeta: el formulario de abajo es puramente decorativo,
+   igual que en la versión HTML (sus valores nunca se leen).
+
+   Diferencia clave: antes, si el carrito llegaba vacío, se hacía
+   window.location.href = "carrito.html" en cualquier parte del script.
+   En React, "navegar a otra ruta" es un efecto secundario y debe ir
+   dentro de useEffect — no se puede llamar a navigate() directamente
+   en medio de un render, porque React todavía está pintando el
+   componente en ese momento.
+   ========================================================================== */
+
 export default function Pago() {
   const navigate = useNavigate();
   const [carrito] = useState(() => obtenerCarrito()); 
@@ -20,17 +34,24 @@ export default function Pago() {
     }
   }, [carrito, navigate]);
 
+  // Mientras useEffect redirige (ocurre después de este primer render),
+  // no mostramos el formulario de pago de un carrito vacío.
   if (carrito.length === 0) {
     return null;
   }
 
   const total = calcularTotalCarrito(carrito);
 
+  // Número de pedido ficticio, solo para que el comprobante final
+  // se vea como uno real (ej: SV-48213).
   function generarNumeroPedido() {
     const numeroAlAzar = Math.floor(10000 + Math.random() * 90000);
     return "SV-" + numeroAlAzar;
   }
 
+  // La "simulación": nunca llama a ningún banco. Solo bloquea el botón,
+  // espera 1.5 segundos como si estuviera procesando (setTimeout) y
+  // SIEMPRE aprueba la compra.
   function handlePagar() {
     setProcesando(true);
 
@@ -42,6 +63,9 @@ export default function Pago() {
         total,
       };
 
+      // Antes de vaciar el carrito dejamos una copia de la compra en
+      // localStorage, para que la página de Resumen pueda mostrar
+      // "qué se compró" aunque el carrito original ya esté vacío.
       localStorage.setItem(PEDIDO_KEY, JSON.stringify(pedido));
       vaciarCarrito();
       navigate("/resumen");
@@ -77,6 +101,10 @@ export default function Pago() {
         <section>
           <h2>Datos de la tarjeta (simulados)</h2>
 
+          {/* Campos sin "value"/"onChange" a propósito: son inputs no
+              controlados, porque igual que en la versión HTML, nunca se
+              leen ni se validan. Solo están ahí para que se vea como un
+              formulario de pago real. */}
           <form onSubmit={(evento) => evento.preventDefault()}>
             <div className="campo">
               <label htmlFor="nombreTitular">Nombre del titular</label>

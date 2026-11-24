@@ -1,4 +1,24 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
+/* ==========================================================================
+   Crear cuenta de cliente (antes: registro.html + js/script.js)
+
+   Diferencia clave con la versión HTML:
+   - Antes, cada input se leía "al final" con document.getElementById(...).value
+     dentro del evento submit.
+   - En React, cada input es "controlado": su valor vive en el estado
+     `form` (useState) y se actualiza en cada tecla mediante onChange.
+     React vuelve a dibujar el campo con ese valor, así que el input
+     siempre refleja el estado, nunca al revés.
+
+   Desde que existe el backend (ms-usuarios), el envío ya NO es un
+   console.log falso: handleSubmit llama a POST /api/auth/registro de
+   verdad. Si el correo ya está en uso, el backend responde 409 y ese
+   mensaje se muestra como error general del formulario.
+   ========================================================================== */
+
 const formInicial = {
   nombre: "",
   email: "",
@@ -9,10 +29,18 @@ const formInicial = {
 };
 
 export default function Registro() {
+  const { registrar } = useAuth();
+  const navigate = useNavigate();
+
   const [form, setForm] = useState(formInicial);
   const [errores, setErrores] = useState({});
+  const [errorServidor, setErrorServidor] = useState("");
   const [exito, setExito] = useState(false);
+  const [enviando, setEnviando] = useState(false);
 
+  // Un solo manejador para todos los campos: toma el "name" del input
+  // (nombre, email, telefono, etc.) y actualiza esa única propiedad del
+  // objeto `form`, dejando las demás igual gracias al spread (...anterior).
   function handleChange(evento) {
     const { name, value, type, checked } = evento.target;
     setForm((anterior) => ({
@@ -21,6 +49,9 @@ export default function Registro() {
     }));
   }
 
+  // Misma lógica de validación que tenía js/script.js, solo que en vez de
+  // escribir directamente en el DOM, arma un objeto de errores y lo
+  // devuelve para que el componente decida qué hacer con él.
   function validar() {
     const nuevosErrores = {};
 
@@ -58,20 +89,42 @@ export default function Registro() {
     return nuevosErrores;
   }
 
-  function handleSubmit(evento) {
-    evento.preventDefault(); 
+  async function handleSubmit(evento) {
+    evento.preventDefault();
 
     const nuevosErrores = validar();
     setErrores(nuevosErrores);
+    setErrorServidor("");
 
+    // Object.keys(...).length === 0 reemplaza al booleano "hayErrores"
+    // que se usaba en la versión HTML.
     if (Object.keys(nuevosErrores).length > 0) {
       setExito(false);
       return;
     }
 
-    console.log("Nuevo usuario:", form); 
-    setExito(true);
-    setForm(formInicial); 
+    setEnviando(true);
+
+    try {
+      // POST real a ms-usuarios (antes era un console.log que no guardaba nada).
+      await registrar({
+        nombre: form.nombre.trim(),
+        email: form.email.trim(),
+        telefono: form.telefono.trim(),
+        password: form.password,
+      });
+
+      setExito(true);
+      setForm(formInicial);
+
+      // A los 2 segundos lo mandamos a loguearse con la cuenta recien creada.
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (err) {
+      // Ej: "Ya existe una cuenta con ese correo" (409 del backend)
+      setErrorServidor(err.message);
+    } finally {
+      setEnviando(false);
+    }
   }
 
   return (
@@ -165,13 +218,21 @@ export default function Registro() {
           <small className="error">{errores.terminos}</small>
         </div>
 
-        <button type="submit" className="boton-principal">Crear cuenta</button>
+        {errorServidor && <small className="error">{errorServidor}</small>}
+
+        <button type="submit" className="boton-principal" disabled={enviando}>
+          {enviando ? "Creando cuenta..." : "Crear cuenta"}
+        </button>
 
         {exito && (
           <p className="mensaje-exito">
-            ¡Cuenta creada correctamente! Ya puedes iniciar sesión.
+            ¡Cuenta creada correctamente! Redirigiendo a iniciar sesión...
           </p>
         )}
+
+        <p className="ir-login">
+          ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+        </p>
       </form>
     </main>
   );

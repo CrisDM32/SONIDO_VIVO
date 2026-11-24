@@ -1,3 +1,11 @@
+/* ==========================================================================
+   Catálogo de productos (mismo contenido que tenía js/productos.js)
+   Prototipo estático: cuando exista el backend Spring Boot, este arreglo
+   se reemplaza por un fetch()/useEffect que traiga los datos de
+   /api/productos, pero los componentes que lo usan (Productos.jsx) no
+   tendrían que cambiar casi nada.
+   ========================================================================== */
+
 export const productos = [
   { id: 1,  nombre: "Guitarra Acústica Yamaha",            categoria: "Instrumentos",        precio: 189990, icono: "🎸", disponible: true  },
   { id: 2,  nombre: "Bajo Eléctrico Fender Precision",     categoria: "Instrumentos",        precio: 459990, icono: "🎸", disponible: true  },

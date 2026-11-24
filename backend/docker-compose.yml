@@ -1,0 +1,66 @@
+services:
+
+  db-usuarios:
+    image: mysql:8.0
+    container_name: sv-db-usuarios
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: sonidovivo_usuarios
+      MYSQL_USER: sonidovivo
+      MYSQL_PASSWORD: sonidovivo123
+      MYSQL_ROOT_PASSWORD: root123
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_usuarios_data:/var/lib/mysql
+
+  db-productos:
+    image: mysql:8.0
+    container_name: sv-db-productos
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: sonidovivo_productos
+      MYSQL_USER: sonidovivo
+      MYSQL_PASSWORD: sonidovivo123
+      MYSQL_ROOT_PASSWORD: root123
+    ports:
+      - "3308:3306"
+    volumes:
+      - db_productos_data:/var/lib/mysql
+
+  ms-usuarios:
+    build: ./ms-usuarios
+    container_name: sv-ms-usuarios
+    restart: unless-stopped
+    depends_on:
+      - db-usuarios
+    environment:
+      # Dentro de la red de Docker, el host de la base es el nombre del
+      # servicio ("db-usuarios"), no "localhost".
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-usuarios:3306/sonidovivo_usuarios?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Santiago
+      # Estas dos pisan los valores por defecto de application.properties
+      # (pensados para XAMPP: root sin clave) por las credenciales reales
+      # del contenedor db-usuarios de arriba.
+      SPRING_DATASOURCE_USERNAME: sonidovivo
+      SPRING_DATASOURCE_PASSWORD: sonidovivo123
+      JWT_SECRET: sonidoVivoClaveSecretaDeDesarrolloCambiarEnProduccion123456
+    ports:
+      - "8081:8081"
+
+  ms-productos:
+    build: ./ms-productos
+    container_name: sv-ms-productos
+    restart: unless-stopped
+    depends_on:
+      - db-productos
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-productos:3306/sonidovivo_productos?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Santiago
+      SPRING_DATASOURCE_USERNAME: sonidovivo
+      SPRING_DATASOURCE_PASSWORD: sonidovivo123
+      JWT_SECRET: sonidoVivoClaveSecretaDeDesarrolloCambiarEnProduccion123456
+    ports:
+      - "8082:8082"
+
+volumes:
+  db_usuarios_data:
+  db_productos_data:

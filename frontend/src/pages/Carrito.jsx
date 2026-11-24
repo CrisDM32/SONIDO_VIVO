@@ -9,9 +9,25 @@ import {
   formatearPrecioCLP,
 } from "../utils/carrito";
 
+/* ==========================================================================
+   Carrito de compras (antes: carrito.html + la parte de js/carrito.js
+   que dibujaba #carritoContenido)
+
+   Diferencia clave: useState(() => obtenerCarrito()) es un "estado
+   inicial perezoso" (lazy initial state). La función que le pasamos
+   solo se ejecuta UNA vez, la primera vez que se dibuja el componente,
+   para leer el carrito guardado en localStorage. Si escribiéramos
+   useState(obtenerCarrito()) en vez de useState(() => obtenerCarrito()),
+   React llamaría a obtenerCarrito() en cada render, aunque el resultado
+   no se use (ineficiente y, en general, mala práctica para leer algo
+   externo como localStorage).
+   ========================================================================== */
+
 export default function Carrito() {
   const [carrito, setCarrito] = useState(() => obtenerCarrito());
 
+  // Cada función de utils/carrito.js devuelve el carrito YA actualizado;
+  // acá solo nos queda guardarlo en el estado para que React repinte.
   function handleCantidad(id, cantidad) {
     setCarrito(actualizarCantidad(carrito, id, cantidad));
   }
@@ -99,6 +115,11 @@ export default function Carrito() {
           <span className="carrito-total">{formatearPrecioCLP(total)}</span>
         </div>
 
+        {/* Igual que en la versión HTML: si el carrito está vacío no se
+            puede avanzar a pagar. Antes se cancelaba la navegación con
+            evento.preventDefault(); acá, directamente no se dibuja un
+            <Link> navegable, sino un <span> con apariencia de botón
+            deshabilitado. */}
         {carritoVacio ? (
           <span className="boton-principal boton-ancho-auto deshabilitado">Ir a pagar</span>
         ) : (

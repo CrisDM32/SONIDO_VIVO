@@ -222,7 +222,20 @@ header{
 .section-title-productos{
     padding: 20px;
     text-align: center;
-    font-size: 50px;
+    font-size: 56px;
+    font-family: 'Bebas Neue', var(--fuente-base, barlow), sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Mismo tratamiento para los h1 de registro/login/carrito/pago/resumen
+   (contenedor-formulario y contenedor-ancho), para que todos los títulos
+   de la app se vean consistentes. */
+.contenedor-formulario h1,
+.contenedor-ancho h1 {
+    font-family: 'Bebas Neue', var(--fuente-base, barlow), sans-serif;
+    font-size: 32px;
+    letter-spacing: 1px;
 }
 .products-section{
     display: flex;
@@ -282,6 +295,8 @@ header{
     cursor: not-allowed;
 }
 
+/* Dentro de una tarjeta de producto, el botón ocupa todo el ancho
+   y queda separado del texto de stock */
 .product-item .carrito-button{
     width: 100%;
     margin-top: 14px;
@@ -489,6 +504,12 @@ header{
   font-size: 18px;
 }
 
+/* ==========================================================================
+   Carrito, pago y resumen de compra
+   ========================================================================== */
+
+/* Envoltorio ancho compartido por carrito/pago/resumen
+   (contenedor-formulario es más angosto, pensado para el registro) */
 .contenedor-ancho {
   max-width: 800px;
   margin: 40px auto;
@@ -499,6 +520,7 @@ header{
   color: var(--font-color-black);
 }
 
+/* ---- Carrito ---- */
 .carrito-item {
   display: flex;
   align-items: center;
@@ -587,6 +609,8 @@ header{
   cursor: pointer;
 }
 
+/* .boton-principal ya existía (registro.html); por defecto es width:100%,
+   aquí lo usamos como link/botón normal, así que anulamos ese ancho */
 .boton-ancho-auto {
   display: inline-block;
   width: auto;
@@ -599,6 +623,7 @@ header{
   pointer-events: none;
 }
 
+/* ---- Pago ---- */
 .aviso-simulacion {
   background-color: #fff3cd;
   border: 1px solid #e0c060;
@@ -650,10 +675,20 @@ header{
   color: #555;
 }
 
+/* ---- Resumen de compra ---- */
 .resumen-vacio {
   text-align: center;
   padding: 20px 0;
 }
+
+/* ==========================================================================
+   NAVEGACIÓN DE ESTE PROYECTO REACT (no pedida explícitamente)
+   El sitio HTML original navega abriendo otro archivo .html por cada
+   página. Una SPA de React es un único documento: no hay forma de pasar
+   de /productos a /carrito sin algún menú, así que agregué esta barra
+   mínima solo para poder moverte entre las 5 páginas que SÍ pediste.
+   No reemplaza ni toca el header.html real del sitio.
+   ========================================================================== */
 .react-navbar {
   display: flex;
   gap: 24px;
@@ -669,5 +704,30 @@ header{
 
 .react-navbar a.activo {
   text-decoration: underline;
+}
+
+.react-navbar {
+  flex-wrap: wrap;
+}
+
+.nav-usuario {
+  margin-left: auto;
+  color: var(--font-color-white);
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.nav-cerrar-sesion {
+  background: none;
+  border: 1px solid var(--font-color-white);
+  color: var(--font-color-white);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.nav-cerrar-sesion:hover {
+  background-color: var(--font-color-white);
+  color: var(--header-color);
 }
 

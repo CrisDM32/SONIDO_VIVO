@@ -3,12 +3,22 @@ import { Link } from "react-router-dom";
 
 const PEDIDO_KEY = "sv_ultimo_pedido";
 
+/* ==========================================================================
+   Resumen de compra / comprobante (antes: resumen.html + js/resumen.js)
+   Lee el último pedido que dejó guardado Pago.jsx en localStorage.
+   No vuelve a tocar el carrito: ya quedó vacío en el paso de pago.
+   ========================================================================== */
+
 export default function Resumen() {
+  // Igual que en Carrito.jsx: se lee localStorage una sola vez, al
+  // montar el componente, con un estado inicial perezoso.
   const [pedido] = useState(() => {
     const datos = localStorage.getItem(PEDIDO_KEY);
     return datos ? JSON.parse(datos) : null;
   });
 
+  // Si alguien entra a /resumen sin haber comprado nada todavía
+  // (por ejemplo, escribiendo la URL directo), no hay pedido que mostrar.
   if (!pedido) {
     return (
       <main className="contenedor-ancho">
