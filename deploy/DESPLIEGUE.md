@@ -99,9 +99,9 @@ cd ~
   set -eC
   umask 077
   {
-    echo 'DOCKERHUB_USER=tu-usuario-dockerhub'
+    echo 'DOCKERHUB_USER=cristiandm32'
     echo 'IMAGE_TAG=v1'
-    echo 'BACKEND_PRIVATE_IP=10.0.1.25'
+    echo 'BACKEND_PRIVATE_IP=10.0.143.131'
     echo 'WEB_ORIGIN=http://localhost:8888'
     for key in DB_PASSWORD JWT_SECRETO ADMIN_CLAVE; do
       value=$(openssl rand -hex 32)
@@ -120,7 +120,7 @@ sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml ps
 sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml logs --tail=60 backend
 ```
 
-Espera a que `db` indique `healthy` y Spring registre `Started`. Prueba `curl -i http://10.0.1.25:8080/api/v1/productos` sustituyendo la IP por la real. Debes obtener HTTP 200 con una lista JSON, que puede estar vacía. PostgreSQL guarda sus datos en un volumen de Docker en esta EC2. Si necesitas datos de tu PC, tendrás que exportarlos e importarlos por separado.
+Espera a que `db` indique `healthy` y Spring registre `Started`. Prueba `curl -i http://10.0.143.131:8080/api/v1/productos` sustituyendo la IP por la real. Debes obtener HTTP 200 con una lista JSON, que puede estar vacía. PostgreSQL guarda sus datos en un volumen de Docker en esta EC2. Si necesitas datos de tu PC, tendrás que exportarlos e importarlos por separado.
 
 ## 7. Arrancar el frontend y comprobar la aplicación
 
@@ -131,18 +131,12 @@ cd ~
 cat > sonidovivo.env <<'EOF'
 DOCKERHUB_USER=cristiandm32
 IMAGE_TAG=v1
-BACKEND_PRIVATE_IP=10.0.1.25
+BACKEND_PRIVATE_IP=10.0.143.131
 EOF
-```
-
-Si la terminal muestra `>` después de pegar las variables, escribe `EOF` solo en una línea, sin espacios, y pulsa Enter. Antes de continuar, comprueba con `head -n 1 sonidovivo.yaml` que estás en la EC2 del frontend y aparece `name: sonidovivo-web`.
-
-```bash
 sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml pull &&
 sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml up -d
-sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml ps -a
-curl --max-time 10 -I http://127.0.0.1/
-curl --max-time 10 -i http://127.0.0.1/api/v1/productos
+curl -I http://localhost/
+curl -i http://localhost/api/v1/productos
 ```
 
 Espera HTTP 200 en ambas peticiones y JSON en la segunda. Si la página carga pero la API devuelve 502 o 504, desde la terminal del **frontend** prueba directamente `curl --connect-timeout 5 http://10.0.1.25:8080/api/v1/productos` con la IP real. Si falla, revisa la regla 8080, la IP y los logs del backend.
@@ -151,84 +145,6 @@ Las dos respuestas HTTP 200 permiten comprobar el despliegue desde la terminal. 
 
 ## 8. Publicar con dominio y HTTPS
 
-El navegador se conectará por HTTPS al balanceador público. El balanceador enviará HTTP al puerto 80 del frontend y Nginx seguirá enviando las llamadas de la API al backend. Puedes utilizar tus imágenes actuales.
-
-### 8.1. Elegir el dominio y revisar la red
-
-Elige un nombre dentro de un dominio cuyos registros DNS puedas editar. Los ejemplos usan `tienda.ejemplo.cl`; sustitúyelo por tu nombre real. Si solo quieres ver la página por la IP pública para una prueba, puedes continuar con el acceso HTTP del frontend. Para el despliegue con HTTPS de esta sección necesitarás el dominio. El balanceador tiene cargos mientras esté aprovisionado. [Precios de Elastic Load Balancing](https://aws.amazon.com/elasticloadbalancing/pricing/)
-
-En **EC2 → Instancias**, selecciona el frontend y anota región, VPC, zona de disponibilidad e ID de instancia. Para el balanceador necesitas dos subredes públicas de esa VPC en zonas distintas, incluida la zona del frontend. En **VPC → Subredes → Tabla de enrutamiento**, verifica en cada una la ruta `0.0.0.0/0` hacia un Internet Gateway. AWS pide al menos una subred /27 o mayor en cada zona y ocho direcciones libres por subred. [Subredes de un ALB](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html#subnets-load-balancer)
-
-### 8.2. Solicitar el certificado
-
-1. Abre **AWS Certificate Manager (ACM)** en la misma región donde crearás el balanceador.
-2. Elige **Solicitar certificado → Certificado público**. Escribe el dominio completo, por ejemplo `tienda.ejemplo.cl`, selecciona **Validación DNS** y solicita el certificado.
-3. Abre el certificado. En **Dominios** verás un registro **CNAME** con un nombre y un valor de validación. Si Route 53 administra tu DNS público, usa **Crear registros en Route 53**. Si lo administra otro proveedor, copia allí el CNAME. Algunos proveedores agregan el dominio al nombre automáticamente. Comprueba que el nombre final coincida con el de ACM.
-4. Espera el estado **Issued / Emitido**. Conserva el registro de validación para las renovaciones. [Validación DNS en ACM](https://docs.aws.amazon.com/acm/latest/userguide/dns-validation.html)
-
-### 8.3. Preparar los grupos de seguridad
-
-En **EC2 → Grupos de seguridad**, crea `sg-sonidovivo-alb` en la VPC del frontend. Configura estas reglas. Para agregar el grupo como origen o destino, selecciona su ID `sg-...` en la consola.
-
-| Grupo | Dirección | Puerto TCP | Origen o destino |
-| --- | --- | --- | --- |
-| Balanceador | Entrada | 443 | `0.0.0.0/0` para HTTPS público por IPv4 |
-| Balanceador | Entrada | 80 | `0.0.0.0/0` si configurarás la redirección HTTP |
-| Frontend | Entrada | 80 | Grupo del balanceador |
-| Balanceador | Salida | 80 | Grupo del frontend, si restringiste la salida |
-
-El acceso del frontend al backend continúa por TCP 8080 usando la regla del paso 1. Si habilitaste HTTP directo para tu IP durante las pruebas, puedes retirar esa regla después de verificar HTTPS. Conserva la regla de entrada desde el grupo del balanceador.
-
-### 8.4. Crear el grupo de destino
-
-1. En **EC2 → Grupos de destino (Target Groups) → Crear grupo**, selecciona **Instancias**.
-2. Usa el nombre `tg-sonidovivo-front`, protocolo **HTTP**, puerto **80** y la VPC del frontend.
-3. En la comprobación de estado usa **HTTP**, ruta `/`, puerto de tráfico y código de éxito **200**.
-4. Pulsa **Siguiente**, selecciona la instancia del **frontend**, confirma puerto **80**, pulsa **Incluir como pendiente** y luego **Crear grupo de destino**. El balanceador usará este grupo para llegar a Nginx.
-
-### 8.5. Crear el balanceador público
-
-1. En **EC2 → Balanceadores de carga → Crear**, elige **Application Load Balancer**. Usa el nombre `alb-sonidovivo`, esquema **Internet-facing** y tipo de dirección **IPv4**.
-2. En **Network mapping** selecciona la VPC y las dos subredes públicas del paso 8.1. En **Security groups** selecciona `sg-sonidovivo-alb`.
-3. Configura el listener **HTTPS 443**. Como acción predeterminada selecciona **Forward to** y el grupo `tg-sonidovivo-front`. En **Default SSL/TLS certificate**, selecciona el certificado emitido por ACM para tu dominio.
-4. Para redirigir visitas HTTP, configura también un listener **HTTP 80**. Selecciona **Redirect to URL**, protocolo **HTTPS**, puerto **443**, código **301**, conservando host, ruta y consulta. Puedes hacerlo después de crear el balanceador desde **Listeners and rules**.
-5. Crea el balanceador. Espera a que muestre **Active** y copia su **DNS name**. En **Target Groups → tg-sonidovivo-front → Targets**, espera el estado **Healthy**. Si figura **Unhealthy**, revisa la regla 80 desde el grupo del balanceador y ejecuta `curl -I http://127.0.0.1/` en el frontend. [Crear un Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-application-load-balancer.html)
-
-### 8.6. Apuntar el dominio al balanceador
-
-En el proveedor que administra el DNS público de tu dominio, crea el registro que dirigirá las visitas al sitio. Este registro es adicional al CNAME de validación de ACM.
-
-- **Con Route 53:** abre **Zonas alojadas → tu zona pública → Crear registro**. Para el ejemplo, nombre `tienda`, tipo **A**, activa **Alias**, elige **Alias to Application and Classic Load Balancer**, selecciona la región y el ALB creado.
-- **Con otro proveedor DNS:** para el subdominio `tienda`, crea un **CNAME** cuyo destino sea el **DNS name del balanceador**, sin protocolo ni ruta. Si usas el dominio raíz, utiliza un alias de raíz compatible con tu proveedor o utiliza un subdominio.
-
-Desde PowerShell comprueba la resolución con `Resolve-DnsName tienda.ejemplo.cl`. [Enrutar un dominio al balanceador](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-elb-load-balancer.html)
-
-### 8.7. Configurar la URL pública en el backend
-
-En la terminal AWS de la **EC2 backend**, abre `cd ~` y luego `nano sonidovivo.env` (o `vi sonidovivo.env`). Cambia únicamente la línea `WEB_ORIGIN` al origen HTTPS exacto del navegador, sin ruta ni barra final.
-
-```dotenv
-WEB_ORIGIN=https://tienda.ejemplo.cl
-```
-
-En nano guarda con **Ctrl+O**, **Enter** y sal con **Ctrl+X**. Aplica el cambio:
-
-```bash
-sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml up -d backend
-sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml ps
-```
-
-### 8.8. Probar desde tu PC
-
-En PowerShell sustituye el dominio y ejecuta:
-
-```powershell
-curl.exe -I https://tienda.ejemplo.cl/
-curl.exe -i https://tienda.ejemplo.cl/api/v1/productos
-```
-
-Espera **200** para la página y **200** con JSON para el catálogo. Si activaste la redirección, `curl.exe -I http://tienda.ejemplo.cl/` debe devolver **301** con la dirección HTTPS. Abre el dominio en el navegador, entra al catálogo e inicia sesión. Si el certificado da error, verifica que el nombre que abres coincide con el certificado del listener 443.
-
-## Actualizaciones posteriores
+Para abrir la aplicación desde el navegador, una opción en AWS es crear un Application Load Balancer público. Configura un certificado de ACM para tu dominio, un listener HTTPS 443 y un grupo de destino HTTP 80 que registre la EC2 frontend. Usa `/` como ruta de comprobación. Permite TCP 443 hacia el balanceador y TCP 80 desde el grupo de seguridad del balanceador hacia la EC2 frontend. Apunta el DNS del dominio al balanceador. En `~/sonidovivo.env` del backend cambia `WEB_ORIGIN` al origen exacto, por ejemplo `https://tienda.ejemplo.cl`, y repite el comando `up -d` del paso 6. Comprueba el catálogo y el login en el dominio. [Listener HTTPS en AWS](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html)
 
 Para actualizar, publica las imágenes con una etiqueta nueva, cambia `IMAGE_TAG` en cada EC2 y repite `pull` y `up -d`, empezando por el backend. Conserva los secretos y haz una copia de PostgreSQL antes de actualizar.
