@@ -18,3 +18,42 @@ git merge "nombre-rama"
 
 usuario: admin@sonidovivo.cl
 pass: admin
+
+Despliegue!
+
+Usa este procedimiento cuando las imágenes ya estén publicadas y cada EC2 tenga sonidovivo.yaml y sonidovivo.env en el directorio personal del usuario con el que los creaste. Abre una terminal de AWS para cada instancia.
+
+BACKEND 
+
+cd ~
+sudo systemctl start docker
+ls -l sonidovivo.yaml sonidovivo.env
+sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml config --images
+
+Comprueba que aparecen PostgreSQL y cristiandm32/sonidovivo-backend con la etiqueta que publicaste (por ejemplo, v1). Descarga las imágenes y arranca los contenedores:
+
+sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml pull && sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml up -d
+sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml ps
+curl --max-time 10 -i http://10.0.143.131:8080/api/v1/productos
+
+sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml logs --tail=60 backend
+
+FRONTEND
+
+cd ~
+sudo systemctl start docker
+ls -l sonidovivo.yaml sonidovivo.env
+sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml config --images
+
+Comprueba que aparece cristiandm32/sonidovivo-frontend con la etiqueta publicada. Ejecuta:
+
+sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml pull && sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml up -d
+sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml ps
+curl --max-time 10 -I http://127.0.0.1/
+curl --max-time 10 -i http://127.0.0.1/api/v1/productos
+
+
+3. ABRIR LA PAGINA | Navegador de tu PC
+
+En tu navegador abre http://IP_PUBLICA_DEL_FRONTEND sustituyendo el texto por la dirección copiada. 
+

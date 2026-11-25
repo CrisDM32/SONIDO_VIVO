@@ -1,0 +1,35 @@
+name: sonidovivo-api
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sonidovivo
+      POSTGRES_USER: sonidovivo
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "sonidovivo", "-d", "sonidovivo"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    image: ${DOCKERHUB_USER:?}/sonidovivo-backend:${IMAGE_TAG:?}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_PRIVATE_IP:?}:8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sonidovivo
+      SPRING_DATASOURCE_USERNAME: sonidovivo
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:?}
+      CORS_ALLOWED_ORIGINS: ${WEB_ORIGIN:?}
+      JWT_SECRETO: ${JWT_SECRETO:?}
+      ADMIN_CLAVE: ${ADMIN_CLAVE:?}
+
+volumes:
+  postgres-data:
