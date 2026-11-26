@@ -4,6 +4,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import Productos from "./pages/Productos";
+import ProductoDetalle from "./pages/ProductoDetalle";
 import Carrito from "./pages/Carrito";
 import Pago from "./pages/Pago";
 import Resumen from "./pages/Resumen";
@@ -33,6 +34,7 @@ export default function App() {
         {/* Cualquier usuario autenticado (Cliente, Vendedor o Administrador). */}
         <Route element={<ProtectedRoute />}>
           <Route path="/productos" element={<Productos />} />
+          <Route path="/productos/:id" element={<ProductoDetalle />} />
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/pago" element={<Pago />} />
           <Route path="/resumen" element={<Resumen />} />

@@ -21,6 +21,8 @@ public class ProductoRequest {
 
     private String icono;
 
+    private String descripcion;
+
     public String getNombre() {
         return nombre;
     }
@@ -59,5 +61,13 @@ public class ProductoRequest {
 
     public void setIcono(String icono) {
         this.icono = icono;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }

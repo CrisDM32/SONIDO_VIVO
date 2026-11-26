@@ -11,6 +11,7 @@ public class ProductoResponse {
     private int stock;
     private boolean disponible;
     private String icono;
+    private String descripcion;
 
     public static ProductoResponse desde(Producto producto) {
         ProductoResponse respuesta = new ProductoResponse();
@@ -21,6 +22,7 @@ public class ProductoResponse {
         respuesta.stock = producto.getStock();
         respuesta.disponible = producto.isDisponible();
         respuesta.icono = producto.getIcono();
+        respuesta.descripcion = producto.getDescripcion();
         return respuesta;
     }
 
@@ -50,5 +52,9 @@ public class ProductoResponse {
 
     public String getIcono() {
         return icono;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
     }
 }

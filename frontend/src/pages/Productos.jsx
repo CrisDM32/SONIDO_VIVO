@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { productos as productosEstaticos } from "../data/productos";
 import { obtenerProductos } from "../api/productos";
 import { agregarAlCarrito, formatearPrecioCLP } from "../utils/carrito";
@@ -96,9 +97,11 @@ export default function Productos() {
           // le permite a React identificar cada tarjeta entre un render
           // y el siguiente, en vez de repintar todo el grid de cero.
           <article className="product-item" key={producto.id}>
-            <div className="producto-icono">{producto.icono}</div>
-            <p className="producto-categoria">{producto.categoria}</p>
-            <h3>{producto.nombre}</h3>
+            <Link to={`/productos/${producto.id}`} className="producto-link">
+              <div className="producto-icono">{producto.icono}</div>
+              <p className="producto-categoria">{producto.categoria}</p>
+              <h3>{producto.nombre}</h3>
+            </Link>
             <p className="producto-precio">{formatearPrecioCLP(producto.precio)}</p>
             <p className={`producto-stock ${producto.disponible ? "disponible" : "agotado"}`}>
               {producto.disponible ? "En stock" : "Agotado"}

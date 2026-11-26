@@ -54,6 +54,7 @@ public class ProductoService {
         producto.setPrecio(request.getPrecio());
         producto.setStock(request.getStock());
         producto.setIcono(request.getIcono());
+        producto.setDescripcion(request.getDescripcion());
     }
 
     private Producto obtenerPorId(Long id) {

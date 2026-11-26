@@ -29,6 +29,12 @@ public class Producto {
     @Column(length = 10)
     private String icono;
 
+    // Texto libre con las especificaciones del producto (material, medidas,
+    // que trae incluido, etc.). Es lo que se muestra en la vista de detalle;
+    // en la tarjeta del catalogo no se usa, ahi solo importa lo esencial.
+    @Column(length = 1000)
+    private String descripcion;
+
     public Producto() {
     }
 
@@ -78,6 +84,14 @@ public class Producto {
 
     public void setIcono(String icono) {
         this.icono = icono;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     @Transient

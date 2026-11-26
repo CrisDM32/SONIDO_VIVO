@@ -504,6 +504,46 @@ header{
   font-size: 18px;
 }
 
+/* El nombre/ícono de cada tarjeta ahora es un link a /productos/:id.
+   Se le quita el subrayado y se hereda el color blanco del texto de la
+   tarjeta, para que no se note como un link "normal" de navegador. */
+.producto-link {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+/* ---- Vista de detalle de un producto ---- */
+.detalle-producto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.detalle-icono {
+  font-size: 120px;
+  line-height: 1;
+  flex: 0 0 auto;
+  text-align: center;
+  width: 220px;
+}
+
+.detalle-info {
+  flex: 1;
+  min-width: 260px;
+}
+
+.detalle-precio {
+  font-size: 28px;
+}
+
+.detalle-descripcion {
+  margin: 12px 0 24px 0;
+  line-height: 1.6;
+  color: #333;
+}
+
 /* ==========================================================================
    Carrito, pago y resumen de compra
    ========================================================================== */

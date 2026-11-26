@@ -6,6 +6,10 @@ export function obtenerProductos() {
   return apiFetch("/api/productos");
 }
 
+export function obtenerProductoPorId(id) {
+  return apiFetch(`/api/productos/${id}`);
+}
+
 export function crearProducto(producto) {
   return apiFetch("/api/productos", { method: "POST", body: producto });
 }
