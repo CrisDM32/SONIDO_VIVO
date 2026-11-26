@@ -148,3 +148,11 @@ Las dos respuestas HTTP 200 permiten comprobar el despliegue desde la terminal. 
 Para abrir la aplicación desde el navegador, una opción en AWS es crear un Application Load Balancer público. Configura un certificado de ACM para tu dominio, un listener HTTPS 443 y un grupo de destino HTTP 80 que registre la EC2 frontend. Usa `/` como ruta de comprobación. Permite TCP 443 hacia el balanceador y TCP 80 desde el grupo de seguridad del balanceador hacia la EC2 frontend. Apunta el DNS del dominio al balanceador. En `~/sonidovivo.env` del backend cambia `WEB_ORIGIN` al origen exacto, por ejemplo `https://tienda.ejemplo.cl`, y repite el comando `up -d` del paso 6. Comprueba el catálogo y el login en el dominio. [Listener HTTPS en AWS](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html)
 
 Para actualizar, publica las imágenes con una etiqueta nueva, cambia `IMAGE_TAG` en cada EC2 y repite `pull` y `up -d`, empezando por el backend. Conserva los secretos y haz una copia de PostgreSQL antes de actualizar.
+
+## 9. Probar una consulta protegida desde Swagger
+
+Con las dos imágenes actualizadas, abre `/swagger-ui/index.html` en el dominio de la tienda. La especificación OpenAPI está disponible en `/v3/api-docs`.
+
+1. En **Administración de usuarios**, ejecuta `GET /api/v1/admin/usuarios` con **Try it out → Execute**. Antes de iniciar sesión debe responder `401`.
+2. En **Autenticación**, ejecuta `POST /api/v1/auth/login` con el correo y la clave de una cuenta administradora. Copia el valor del campo `token`.
+3. Abre **Authorize**, pega el JWT sin comillas ni prefijo `Bearer` y confirma. Vuelve a ejecutar la consulta de usuarios. Debe responder `200` y mostrar la lista paginada.

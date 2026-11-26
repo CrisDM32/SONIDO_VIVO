@@ -3,7 +3,7 @@ server {
     server_name _;
     root /usr/share/nginx/html;
 
-    location /api/ {
+    location ~ ^/(api/|swagger-ui/|swagger-ui\.html$|v3/api-docs(?:/|$)) {
         proxy_pass http://${BACKEND_PRIVATE_IP}:8080;
         proxy_set_header Host $http_host;
     }

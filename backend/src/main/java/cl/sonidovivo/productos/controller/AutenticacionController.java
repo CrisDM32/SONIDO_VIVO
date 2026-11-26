@@ -1,5 +1,7 @@
 package cl.sonidovivo.productos.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +16,7 @@ import cl.sonidovivo.productos.dto.RegistroResponse;
 import cl.sonidovivo.productos.service.AutenticacionService;
 import jakarta.validation.Valid;
 
+@Tag(name = "Autenticación", description = "Registro e inicio de sesión.")
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AutenticacionController {

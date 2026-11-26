@@ -1,5 +1,8 @@
 package cl.sonidovivo.productos.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +24,8 @@ import cl.sonidovivo.productos.service.UsuarioService;
 import jakarta.validation.Valid;
 
 /** Gestión de usuarios: solo administrador (se restringe en SeguridadConfig). */
+@Tag(name = "Administración de usuarios", description = "Requiere perfil administrador.")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/v1/admin/usuarios")
 public class UsuarioAdminController {

@@ -1,5 +1,8 @@
 package cl.sonidovivo.productos.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,8 @@ import cl.sonidovivo.productos.service.ProductoAdminService;
 import jakarta.validation.Valid;
 
 /** Gestión del catálogo: administrador y vendedor (se restringe en SeguridadConfig). */
+@Tag(name = "Administración de productos", description = "Requiere perfil administrador o vendedor.")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/v1/admin/productos")
 public class ProductoAdminController {
