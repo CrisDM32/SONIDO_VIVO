@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { categorias } from '../../data/categorias.js'
 import { useSesion } from '../../hooks/useSesion.js'
 import Logo from '../../images/logo.png'
@@ -17,6 +17,12 @@ const icono = 'block size-10 fill-paper tablet:size-[34px] mobile:size-[30px] mi
 
 export const Header = () => {
   const { usuario, activa, cerrar } = useSesion()
+  const navigate = useNavigate()
+
+  function cerrarSesion() {
+    cerrar()
+    navigate('/iniciar-sesion', { replace: true })
+  }
 
   return (
     <header className="bg-page">
@@ -67,7 +73,7 @@ export const Header = () => {
                         Panel de administración
                       </Link>
                     )}
-                    <button type="button" onClick={cerrar} className={`${enlaceMenu} w-full cursor-pointer border-0 bg-transparent font-[inherit] text-left`}>
+                    <button type="button" onClick={cerrarSesion} className={`${enlaceMenu} w-full cursor-pointer border-0 bg-transparent font-[inherit] text-left`}>
                       Cerrar sesión
                     </button>
                   </>

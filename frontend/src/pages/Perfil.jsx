@@ -11,18 +11,12 @@ import { contenedorAncho, tituloPagina } from '../styles/clases.js'
 
 export default function Perfil() {
   const { usuario, activa, cerrar } = useSesion()
-  const [saliendo, setSaliendo] = useState(false)
 
   if (!activa) {
-    return <Navigate to={saliendo ? '/' : '/iniciar-sesion'} replace />
+    return <Navigate to="/iniciar-sesion" replace />
   }
 
-  function handleCerrarSesion() {
-    setSaliendo(true)
-    cerrar()
-  }
-
-  return <PerfilUsuario usuario={usuario} onCerrarSesion={handleCerrarSesion} />
+  return <PerfilUsuario usuario={usuario} onCerrarSesion={cerrar} />
 }
 
 function PerfilUsuario({ usuario, onCerrarSesion }) {

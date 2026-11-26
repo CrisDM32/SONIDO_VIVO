@@ -151,6 +151,8 @@ test("con una sesión guardada, el encabezado permite cerrarla", async () => {
 
   await user.click(screen.getByRole("button", { name: "Cerrar sesión" }));
 
+  expect(window.location.pathname).toBe("/iniciar-sesion");
+
   expect(screen.queryByText(/^Hola,/)).toBeNull();
   expect(within(screen.getByRole("banner")).getByRole("link", { name: "Iniciar Sesión" })).toBeTruthy();
   expect(localStorage.getItem(Variables.tokenKey)).toBeNull();

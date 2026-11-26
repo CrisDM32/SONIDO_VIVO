@@ -113,13 +113,13 @@ test("con datos inválidos muestra errores y no guarda", async () => {
   expect(localStorage.getItem(`sv_perfil_${correo}`)).toBeNull();
 });
 
-test("el botón Cerrar sesión del perfil termina la sesión y vuelve al inicio", async () => {
+test("el botón Cerrar sesión del perfil termina la sesión y vuelve al login", async () => {
   const user = userEvent.setup();
   abrirPerfil();
 
   await user.click(within(screen.getByRole("region", { name: "José Pérez" })).getByRole("button", { name: "Cerrar sesión" }));
 
-  expect(window.location.pathname).toBe("/");
+  expect(window.location.pathname).toBe("/iniciar-sesion");
   expect(localStorage.getItem(Variables.tokenKey)).toBeNull();
   expect(screen.queryByText(/^Hola,/)).toBeNull();
 });
