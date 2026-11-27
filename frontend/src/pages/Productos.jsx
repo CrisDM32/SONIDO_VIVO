@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { productos as productosEstaticos } from "../data/productos";
 import { obtenerProductos } from "../api/productos";
 import { agregarAlCarrito, formatearPrecioCLP } from "../utils/carrito";
@@ -23,6 +23,14 @@ import { agregarAlCarrito, formatearPrecioCLP } from "../utils/carrito";
    un respaldo que se muestra si el backend no está disponible (por
    ejemplo, mientras se levanta por primera vez), para que la demo no se
    quede con la pantalla vacía.
+
+   Filtro por categoría (Instrumentos, Accesorios, Estudio de Grabación):
+   en vez de guardar la categoría elegida solo en un useState interno, se
+   guarda en la URL como "?categoria=Instrumentos" usando useSearchParams.
+   Eso tiene dos ventajas sobre un estado común: la vista filtrada queda
+   en una URL que se puede compartir o guardar en favoritos (ej:
+   /productos?categoria=Accesorios), y si el usuario recarga la página
+   (F5) el filtro no se pierde, porque sigue viviendo en la URL.
    ========================================================================== */
 
 export default function Productos() {
@@ -30,6 +38,9 @@ export default function Productos() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [busqueda, setBusqueda] = useState("");
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoriaActiva = searchParams.get("categoria") || "Todas";
 
   // "agregados" guarda, por id de producto, si hay que mostrar el
   // mensaje "¡Agregado! ✓" en ese botón en este momento.
@@ -48,12 +59,30 @@ export default function Productos() {
       .finally(() => setCargando(false));
   }, []);
 
+  // Las categorías no vienen fijas en el código: se arman solas a partir
+  // de lo que haya en `productos` en ese momento, usando Set para sacar
+  // los duplicados. Así, si mañana el backend agrega una categoría nueva,
+  // el filtro la muestra sin tener que tocar este archivo.
+  const categorias = ["Todas", ...new Set(productos.map((producto) => producto.categoria))];
+
   // No se necesita un estado separado para "productos filtrados":
-  // es un simple cálculo derivado de `productos` + `busqueda`, y se
-  // vuelve a calcular en cada render (es barato, son solo unos pocos productos).
-  const productosFiltrados = productos.filter((producto) =>
-    producto.nombre.toLowerCase().includes(busqueda.trim().toLowerCase())
-  );
+  // es un simple cálculo derivado de `productos` + `busqueda` + `categoriaActiva`,
+  // y se vuelve a calcular en cada render (es barato, son solo unos pocos productos).
+  const productosFiltrados = productos.filter((producto) => {
+    const coincideNombre = producto.nombre.toLowerCase().includes(busqueda.trim().toLowerCase());
+    const coincideCategoria = categoriaActiva === "Todas" || producto.categoria === categoriaActiva;
+    return coincideNombre && coincideCategoria;
+  });
+
+  function handleFiltrarCategoria(categoria) {
+    // "Todas" no se guarda en la URL (setSearchParams({}) la deja limpia,
+    // como "/productos" sin parámetros); cualquier otra categoría sí.
+    if (categoria === "Todas") {
+      setSearchParams({});
+    } else {
+      setSearchParams({ categoria });
+    }
+  }
 
   function handleAgregar(producto) {
     agregarAlCarrito(producto); 
@@ -81,6 +110,19 @@ export default function Productos() {
             este botón queda solo como apoyo visual, igual que en el
             original (ahí tampoco hacía falta hacer clic para filtrar). */}
         <button type="button" className="search-button">Buscar</button>
+      </section>
+
+      <section className="categorias-filtro">
+        {categorias.map((categoria) => (
+          <button
+            key={categoria}
+            type="button"
+            className={`categoria-pill ${categoriaActiva === categoria ? "activa" : ""}`}
+            onClick={() => handleFiltrarCategoria(categoria)}
+          >
+            {categoria}
+          </button>
+        ))}
       </section>
 
       {error && <p className="aviso-simulacion">⚠️ {error}</p>}

@@ -504,6 +504,39 @@ header{
   font-size: 18px;
 }
 
+/* ---- Filtro de categorías del catálogo ---- */
+.categorias-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto 20px auto;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.categoria-pill {
+  padding: 8px 18px;
+  border: 2px solid var(--button-color);
+  background-color: transparent;
+  color: var(--font-color);
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.categoria-pill:hover {
+  background-color: var(--button-color);
+  color: var(--font-color-white);
+}
+
+.categoria-pill.activa {
+  background-color: var(--header-color);
+  color: var(--font-color-white);
+  border-color: var(--header-color);
+}
+
 /* El nombre/ícono de cada tarjeta ahora es un link a /productos/:id.
    Se le quita el subrayado y se hereda el color blanco del texto de la
    tarjeta, para que no se note como un link "normal" de navegador. */
