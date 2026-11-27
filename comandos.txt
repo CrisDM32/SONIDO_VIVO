@@ -19,6 +19,12 @@ git merge "nombre-rama"
 usuario: admin@sonidovivo.cl
 pass: f70b2dfd49a46fa2df4386446bf58d35af4564a3f86a8675369502b618de1782
 
+usuario: cristian@test.cl
+pass: mia
+
+usuario: luciano@test.cl
+pass: admin1234
+
 Despliegue!
 
 Usa este procedimiento cuando las imágenes ya estén publicadas y cada EC2 tenga sonidovivo.yaml y sonidovivo.env en el directorio personal del usuario con el que los creaste. Abre una terminal de AWS para cada instancia.
