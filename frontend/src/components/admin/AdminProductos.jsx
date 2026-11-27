@@ -22,6 +22,7 @@ export default function AdminProductos({ onError }) {
   const [recarga, setRecarga] = useState(0)
   const [busqueda, setBusqueda] = useState('')
   const [categoria, setCategoria] = useState('')
+  const [estado, setEstado] = useState('')
   const [paginaSolicitada, setPaginaSolicitada] = useState(1)
   const [formulario, setFormulario] = useState(null)
   const [aviso, setAviso] = useState('')
@@ -71,7 +72,9 @@ export default function AdminProductos({ onError }) {
 
   const texto = busqueda.trim().toLowerCase()
   const visibles = (productos ?? []).filter(
-    (p) => (categoria === '' || p.categoria === categoria) && (texto === '' || p.nombre.toLowerCase().includes(texto))
+    (p) => (categoria === '' || p.categoria === categoria)
+      && (estado === '' || p.activo === (estado === 'habilitado'))
+      && (texto === '' || p.nombre.toLowerCase().includes(texto))
   )
 
   const { items, total, totalPaginas, pagina, desde, hasta } = paginar(visibles, paginaSolicitada, PRODUCTOS_POR_PAGINA)
@@ -119,6 +122,19 @@ export default function AdminProductos({ onError }) {
           {categorias.map((c) => (
             <option key={c.slug} value={c.nombre}>{c.nombre}</option>
           ))}
+        </select>
+        <select
+          aria-label="Filtrar por estado"
+          value={estado}
+          onChange={(evento) => {
+            setEstado(evento.target.value)
+            setPaginaSolicitada(1)
+          }}
+          className={`${campoInput(false)} !w-auto`}
+        >
+          <option value="">Todos los estados</option>
+          <option value="habilitado">Habilitados</option>
+          <option value="deshabilitado">Deshabilitados</option>
         </select>
         <button type="button" className={botonPrincipal} onClick={() => setFormulario({ producto: null })}>
           Nuevo producto

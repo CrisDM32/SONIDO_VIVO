@@ -120,6 +120,25 @@ test("filtra por nombre y por categoría", async () => {
   expect(screen.queryByText("Batería Acústica")).toBeNull();
 });
 
+test("filtra por habilitación independientemente del stock y permite volver a todos", async () => {
+  const user = userEvent.setup();
+  abrirPanel();
+  await screen.findByText("Micrófono Shure");
+  const filtro = screen.getByLabelText("Filtrar por estado");
+
+  await user.selectOptions(filtro, "habilitado");
+  expect(screen.getByText("Batería Acústica")).toBeTruthy();
+  expect(screen.queryByText("Micrófono Shure")).toBeNull();
+
+  await user.selectOptions(filtro, "deshabilitado");
+  expect(screen.getByText("Micrófono Shure")).toBeTruthy();
+  expect(screen.queryByText("Batería Acústica")).toBeNull();
+
+  await user.selectOptions(filtro, "");
+  expect(screen.getByText("Batería Acústica")).toBeTruthy();
+  expect(screen.getByText("Micrófono Shure")).toBeTruthy();
+});
+
 test("crea un producto: valida, envía los datos y refresca la lista", async () => {
   const user = userEvent.setup();
   manejadores["POST /admin/productos"] = (op) => {

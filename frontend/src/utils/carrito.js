@@ -21,6 +21,7 @@ export function agregarAlCarrito(producto) {
         ...carrito,
         {
           id: producto.id,
+          codigo: producto.codigo,
           nombre: producto.nombre,
           precio: producto.precio,
           icono: producto.icono,

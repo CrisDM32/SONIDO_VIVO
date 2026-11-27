@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useProductos } from '../hooks/useProductos.jsx'
 import { agregarAlCarrito } from '../utils/carrito.js'
 import GaleriaProducto from '../components/producto/GaleriaProducto.jsx'
+import { referenciaDeFoto } from '../data/fotosProductos.js'
 import InfoProducto from '../components/producto/InfoProducto.jsx'
 import BotonAgregarProducto from '../components/producto/BotonAgregarProducto.jsx'
 import ProductoNoEncontrado from '../components/producto/ProductoNoEncontrado.jsx'
@@ -50,11 +51,14 @@ export default function Producto() {
       <Link className="mb-4 inline-block font-semibold text-ink underline" to="/productos">← Volver a productos</Link>
 
       <article className="grid grid-cols-[1fr_1fr] gap-8 rounded-[10px] bg-button p-8 text-paper mobile:grid-cols-[1fr] mobile:gap-5 mobile:p-5">
-        <GaleriaProducto
-          imagenes={producto.imagenes}
-          nombre={producto.nombre}
-          icono={producto.icono}
-        />
+        <div>
+          <GaleriaProducto
+            imagenes={producto.imagenes}
+            nombre={producto.nombre}
+            icono={producto.icono}
+          />
+          {referenciaDeFoto(producto) && <p className="mt-2 text-sm">Imagen referencial.</p>}
+        </div>
 
         <div className="flex flex-col items-start gap-3">
           <InfoProducto producto={producto} />

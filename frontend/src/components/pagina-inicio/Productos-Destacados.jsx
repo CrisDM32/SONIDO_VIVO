@@ -1,7 +1,7 @@
 import { agregarAlCarrito, formatearPrecioCLP } from '../../utils/carrito.js'
 import { Link } from 'react-router-dom'
 import { useRef, useState } from 'react'
-import Producto1 from '../../images/producto1.png'
+import FotoProducto from '../producto/FotoProducto.jsx'
 import { useProductos } from '../../hooks/useProductos.jsx'
 import { botonCarrito, tituloSeccion } from '../../styles/clases.js'
 
@@ -75,7 +75,7 @@ export const ProductosDestacados = () => {
                     {destacados.map((producto) => (
                         <article className={tarjeta} key={producto.id}>
                             <Link to={`/producto/${producto.id}`} className="block text-inherit no-underline">
-                                <img src={Producto1} alt={producto.nombre} className="h-auto max-w-full rounded-sv"></img>
+                                <FotoProducto src={producto.imagenes?.[0]} alt={producto.nombre} icono={producto.icono} className="aspect-square w-full rounded-sv bg-white object-contain" />
                                 <h3>{producto.nombre}</h3>
                                 <p>{formatearPrecioCLP(producto.precio)}</p>
                             </Link>

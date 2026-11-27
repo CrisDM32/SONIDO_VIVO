@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Rutas } from '../service/endpoints.js'
-import imagenProducto from '../images/producto1.png'
+import { fotoDeProducto } from '../data/fotosProductos.js'
 
-// El backend entrega todos los datos del producto (código, marca, modelo, descripción, precio, disponibilidad).
-// Solo falta la imagen: por ahora todos los productos usan la misma imagen genérica.
-const conImagen = (producto) => ({ ...producto, imagenes: [imagenProducto] })
+function conImagen(producto) {
+  const foto = fotoDeProducto(producto)
+  return { ...producto, imagenes: foto ? [foto] : [] }
+}
 
 export const useProductos = () => {
   const [resultado, setResultado] = useState({ productos: [], estado: 'LOADING' })

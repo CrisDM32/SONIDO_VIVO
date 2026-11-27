@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import FotoProducto from './FotoProducto.jsx'
 
 export default function GaleriaProducto({ imagenes = [], nombre, icono }) {
   const [imagenActiva, setImagenActiva] = useState(0)
@@ -7,7 +8,7 @@ export default function GaleriaProducto({ imagenes = [], nombre, icono }) {
     <div className="flex flex-col gap-3">
       <div className="flex aspect-square items-center justify-center overflow-hidden rounded-sv bg-paper">
         {imagenes.length > 0 ? (
-          <img className="h-full w-full object-contain" src={imagenes[imagenActiva]} alt={`${nombre} - imagen ${imagenActiva + 1}`} />
+          <FotoProducto className="h-full w-full object-contain" src={imagenes[imagenActiva]} alt={`${nombre} - imagen ${imagenActiva + 1}`} icono={icono} />
         ) : (
           <span aria-hidden="true">{icono}</span>
         )}

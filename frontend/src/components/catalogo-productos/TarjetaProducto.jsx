@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import FotoProducto from '../producto/FotoProducto.jsx'
 import { formatearPrecioCLP } from '../../utils/carrito.js'
 import { botonCarrito } from '../../styles/clases.js'
 
@@ -6,15 +7,12 @@ export default function TarjetaProducto({ producto, agregado, onAgregar }) {
   return (
     <article className="rounded-[10px] bg-button p-[30px] text-center text-paper no-underline transition-transform duration-300 ease-[ease] [overflow-wrap:anywhere] hover:scale-105 tablet:p-[22px] mobile:px-3 mobile:py-4 mini:p-5">
       <Link className="block text-inherit no-underline" to={`/producto/${producto.id}`}>
-        {producto.imagenes?.[0] ? (
-          <img
-            className="mx-auto mb-3 block aspect-square h-auto w-full max-w-full rounded-sv object-cover"
-            src={producto.imagenes[0]}
-            alt={producto.nombre}
-          />
-        ) : (
-          <div aria-hidden="true">{producto.icono}</div>
-        )}
+        <FotoProducto
+          className="mx-auto mb-3 aspect-square w-full rounded-sv bg-white object-contain"
+          src={producto.imagenes?.[0]}
+          alt={producto.nombre}
+          icono={producto.icono}
+        />
         <p className="text-[13px] tracking-[1px] uppercase opacity-80">{producto.categoria}</p>
         <h2 className="mobile:text-[18px]">{producto.nombre}</h2>
       </Link>
