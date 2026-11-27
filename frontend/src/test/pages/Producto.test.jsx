@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import Producto from "../../pages/Producto";
 import GaleriaProducto from "../../components/producto/GaleriaProducto";
+import { fotoDeProducto } from "../../data/fotosProductos";
 import { productosApi, stubCatalogo } from "../helpers/catalogo";
 
 async function renderProducto(id) {
@@ -41,9 +42,12 @@ test("muestra nombre, código, precio, stock y descripción del producto", async
 });
 
 test("muestra la imagen del producto", async () => {
-  await renderProducto(1);
+  const guitarra = { ...productosApi[0], codigo: "GA001", nombre: "Guitarra Acústica Folk" };
+  stubCatalogo([guitarra]);
+  await renderProducto(guitarra.id);
 
-  expect(screen.getByAltText("Guitarra Acústica Yamaha - imagen 1")).toBeTruthy();
+  const imagen = screen.getByRole("img", { name: "Guitarra Acústica Folk - imagen 1" });
+  expect(imagen.getAttribute("src")).toBe(fotoDeProducto(guitarra));
 });
 
 test("la galería permite cambiar entre miniaturas cuando hay varias imágenes", async () => {
@@ -66,7 +70,7 @@ test("'Añadir al carrito' agrega el producto y muestra la confirmación", async
   await user.click(screen.getByRole("button", { name: "Añadir al carrito" }));
 
   expect(carritoGuardado()).toEqual([
-    { id: 6, nombre: "Micrófono Shure SM58", precio: 89990, icono: "🎤", cantidad: 1 },
+    { id: 6, codigo: "SV-ACC-001", nombre: "Micrófono Shure SM58", precio: 89990, icono: "🎤", cantidad: 1 },
   ]);
   expect(screen.getByRole("button", { name: "¡Agregado! ✓" })).toBeTruthy();
 });

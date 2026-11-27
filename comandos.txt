@@ -17,7 +17,7 @@ git remote add origin "URL"
 git merge "nombre-rama"
 
 usuario: admin@sonidovivo.cl
-pass: admin
+pass: f70b2dfd49a46fa2df4386446bf58d35af4564a3f86a8675369502b618de1782
 
 Despliegue!
 
@@ -55,5 +55,4 @@ curl --max-time 10 -i http://127.0.0.1/api/v1/productos
 
 3. ABRIR LA PAGINA | Navegador de tu PC
 
-En tu navegador abre http://IP_PUBLICA_DEL_FRONTEND sustituyendo el texto por la dirección copiada. 
-
+En tu navegador abre http://98.92.114.226

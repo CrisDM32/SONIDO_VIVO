@@ -44,7 +44,7 @@ test("'Agregar al carrito' guarda el producto con cantidad 1 y muestra la confir
   await user.click(tarjeta.querySelector("button"));
 
   expect(carritoGuardado()).toEqual([
-    { id: 1, nombre: "Guitarra Acústica Yamaha", precio: 189990, icono: "🎸", cantidad: 1 },
+    { id: 1, codigo: "SV-INS-001", nombre: "Guitarra Acústica Yamaha", precio: 189990, icono: "🎸", cantidad: 1 },
   ]);
   expect(tarjeta.querySelector("button").textContent).toBe("¡Agregado! ✓");
 });
@@ -253,5 +253,5 @@ test("agregar al carrito funciona en cualquier página", async () => {
   const tarjeta = screen.getByRole("heading", { name: "Producto 13" }).closest("article");
   await user.click(tarjeta.querySelector("button"));
 
-  expect(carritoGuardado()).toEqual([{ id: 13, nombre: "Producto 13", precio: 1012, icono: "🎸", cantidad: 1 }]);
+  expect(carritoGuardado()).toEqual([{ id: 13, codigo: "P13", nombre: "Producto 13", precio: 1012, icono: "🎸", cantidad: 1 }]);
 });

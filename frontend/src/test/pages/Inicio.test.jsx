@@ -70,7 +70,7 @@ test("un destacado agotado se ve deshabilitado y uno disponible se agrega al car
   await user.click(within(tarjeta).getByRole("button", { name: "Añadir al carrito" }));
 
   expect(JSON.parse(localStorage.getItem("sv_carrito"))).toEqual([
-    { id: 1, nombre: "Guitarra Acústica Yamaha", precio: 189990, icono: "🎸", cantidad: 1 },
+    { id: 1, codigo: "SV-INS-001", nombre: "Guitarra Acústica Yamaha", precio: 189990, icono: "🎸", cantidad: 1 },
   ]);
 });
 
