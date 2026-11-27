@@ -53,6 +53,5 @@ curl --max-time 10 -I http://127.0.0.1/
 curl --max-time 10 -i http://127.0.0.1/api/v1/productos
 
 
-3. ABRIR LA PAGINA | Navegador de tu PC
-
-En tu navegador abre http://98.92.114.226
+http://98.92.114.226
+http://98.92.114.226/swagger-ui/index.html
