@@ -1,4 +1,3 @@
-// Mismas categorías que el backend (model/Categorias.java) y que el catálogo de Sonido Vivo.
 export const categorias = [
   { slug: 'guitarras-acusticas', nombre: 'Guitarras Acústicas' },
   { slug: 'guitarras-electricas', nombre: 'Guitarras Eléctricas' },

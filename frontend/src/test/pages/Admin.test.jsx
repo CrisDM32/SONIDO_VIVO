@@ -53,7 +53,6 @@ function abrirPanel(perfil = "administrador") {
 const llamadas = (metodo, ruta) =>
   fetchMock.mock.calls.filter(([url, op]) => (op?.method ?? "GET") === metodo && new URL(url).pathname.endsWith(ruta));
 
-// ---------- Acceso ----------
 
 test("sin sesión redirige al inicio de sesión", () => {
   window.history.pushState({}, "", "/admin");
@@ -93,7 +92,6 @@ test("el administrador ve las pestañas Productos y Usuarios; el vendedor solo p
   expect(llamadas("GET", "/admin/usuarios")).toHaveLength(0);
 });
 
-// ---------- Productos ----------
 
 test("lista los productos con el token de la sesión, incluidos los inactivos y las alertas de stock", async () => {
   abrirPanel();
@@ -303,7 +301,6 @@ test("un 401 (sesión inválida o usuario eliminado) cierra la sesión y lleva a
   expect(localStorage.getItem(Variables.tokenKey)).toBeNull();
 });
 
-// ---------- Usuarios ----------
 
 async function abrirUsuarios(user) {
   abrirPanel();
@@ -412,7 +409,6 @@ test("crea un vendedor: valida, muestra errores del backend por campo y luego lo
   expect(JSON.parse(llamadas("POST", "/admin/usuarios")[1][1].body)).toMatchObject({ perfil: "vendedor", rut: "12.345.678-5" });
 });
 
-// ---------- Paginación de productos (12 por página, no configurable) ----------
 
 function conMuchosProductos() {
   productos = Array.from({ length: 30 }, (_, i) =>
@@ -493,7 +489,6 @@ test("con 12 productos o menos no aparece la navegación", async () => {
   expect(screen.getByText(/Mostrando/).textContent).toBe("Mostrando 1–3 de 3 productos");
 });
 
-// ---------- Destacados ----------
 
 test("la tabla muestra con un check cuáles productos son destacados", async () => {
   productos[1] = { ...productos[1], destacado: true };

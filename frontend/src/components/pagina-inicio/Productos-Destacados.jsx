@@ -13,7 +13,6 @@ export const ProductosDestacados = () => {
     const productListRef = useRef(null)
     const [agregados, setAgregados] = useState({})
     const { productos, estado } = useProductos()
-    // El carrusel muestra solo los productos que el administrador marcó como destacados.
     const destacados = productos.filter((producto) => producto.destacado)
 
     const agregarProducto = (producto) => {
@@ -50,7 +49,6 @@ export const ProductosDestacados = () => {
         })
     }
 
-    // Sin destacados (o mientras carga) no se muestra la sección; si falla la carga, sí, para avisarlo.
     if (estado === 'LOADING' || (estado === 'SUCCESS' && destacados.length === 0)) {
         return null
     }

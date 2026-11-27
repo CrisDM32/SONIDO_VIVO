@@ -1,6 +1,5 @@
 import { vi } from "vitest";
 
-// Productos de ejemplo para las pruebas: lo que devolveria GET /api/v1/productos (no es el catalogo real).
 export const productosApi = [
   { id: 1,  codigo: "SV-INS-001", nombre: "Guitarra Acústica Yamaha",            categoria: "Instrumentos",        precio: 189990, icono: "🎸", destacado: true, disponible: true,  descripcion: "Guitarra acústica de cuerdas de acero con tapa y cuerpo de gran proyección sonora. Ideal para quienes comienzan y para presentaciones en vivo." },
   { id: 2,  codigo: "SV-INS-002", nombre: "Bajo Eléctrico Fender Precision",     categoria: "Instrumentos",        precio: 459990, icono: "🎸", destacado: true, disponible: true,  descripcion: "Bajo eléctrico de 4 cuerdas con el clásico sonido Precision: graves firmes, definición y gran comodidad de toque." },
@@ -16,7 +15,6 @@ export const productosApi = [
   { id: 12, codigo: "SV-EST-003", nombre: "Audífonos de estudio Audio-Technica", categoria: "Estudio de Grabación", precio: 69990,  icono: "🎧", destacado: false, disponible: true,  descripcion: "Audífonos de estudio cerrados con sonido fiel y aislamiento, ideales para grabar y mezclar." },
 ];
 
-/** Simula el backend: el catalogo responde con `lista` (por defecto, los productos de ejemplo). */
 export function stubCatalogo(lista = productosApi) {
   vi.stubGlobal(
     "fetch",

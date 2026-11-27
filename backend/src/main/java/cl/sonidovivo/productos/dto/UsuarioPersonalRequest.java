@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-/** Alta de personal (administrador o vendedor) hecha por un administrador. */
 public record UsuarioPersonalRequest(
 		@NotBlank(message = "Escribe el nombre completo") @Size(min = 3, max = 120, message = "El nombre debe tener entre 3 y 120 caracteres") String nombre,
 		@NotBlank(message = "Ingresa el correo") @Email(message = "Ingresa un correo electrónico válido") @Size(max = 180, message = "El correo es demasiado largo") String correo,

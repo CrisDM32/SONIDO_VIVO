@@ -64,7 +64,7 @@ class CatalogoServiceTest {
 	@Test
 	void reemplazarEliminaLosProductosAnterioresIncluidoElQueComparteNombreConElCatalogo() {
 		anterior("Guitarra Acústica Yamaha");
-		anterior("Batería Acústica 5 piezas"); // mismo nombre que BT001 del catálogo
+		anterior("Batería Acústica 5 piezas");
 		anterior("Teclado Yamaha PSR");
 
 		ResultadoCatalogo resultado = catalogoService.reemplazar(catalogoService.leerCatalogo());
@@ -109,7 +109,6 @@ class CatalogoServiceTest {
 
 	@Test
 	void siFallaEnMitadDeLaCargaSeRevierteTodoYLosAnterioresSiguenAhi() {
-		// Existen C1 ("N1") y C2 ("N2") y un producto anterior sin código.
 		productoRepository.saveAndFlush(conCodigo("C1", "N1"));
 		productoRepository.saveAndFlush(conCodigo("C2", "N2"));
 		anterior("Producto anterior");
@@ -145,12 +144,10 @@ class CatalogoServiceTest {
 		assertTrue(ga001.isDestacado());
 		assertFalse(ac001.isDestacado());
 
-		// El administrador cambia dos productos...
 		ga001.setDestacado(false);
 		ac001.setDestacado(true);
 		productoRepository.saveAll(List.of(ga001, ac001));
 
-		// ...y al volver a ejecutar la carga se respetan sus decisiones.
 		catalogoService.reemplazar(catalogoService.leerCatalogo());
 
 		assertFalse(productoRepository.findByCodigo("GA001").orElseThrow().isDestacado());

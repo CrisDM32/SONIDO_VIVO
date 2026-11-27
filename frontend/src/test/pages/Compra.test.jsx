@@ -4,8 +4,6 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import App from "../../App";
 import { stubCatalogo } from "../helpers/catalogo";
 
-// Pruebas del proceso de compra completo, navegando por la app real como lo haría una persona:
-// catálogo -> carrito -> datos de envío -> pago con tarjeta -> resumen.
 
 const datosEnvio = {
   "Nombre completo": "Ana Pérez",
@@ -69,31 +67,25 @@ test("compra completa: catálogo, carrito, envío, pago con tarjeta y resumen", 
   abrir("/productos");
   await screen.findAllByRole("article");
 
-  // 1) Agregar productos desde el catálogo
   await user.click(botonDe("Guitarra Acústica Yamaha"));
   await user.click(botonDe("Cable de instrumento 3 metros"));
   expect(carritoGuardado().map((item) => item.id)).toEqual([1, 7]);
 
-  // 2) Ir al carrito (ícono del encabezado) y subir la cantidad de la guitarra a 2
   await user.click(screen.getByRole("link", { name: "Carrito de compras" }));
   expect(window.location.pathname).toBe("/carrito");
   await user.click(screen.getByRole("button", { name: "Aumentar cantidad de Guitarra Acústica Yamaha" }));
-  // total = 189.990 x 2 + 8.990
   expect(screen.getAllByText("$388.970").length).toBeGreaterThan(0);
 
-  // 3) Ir a pagar y completar los datos de envío
   await user.click(screen.getByRole("link", { name: "Ir a pagar" }));
   expect(window.location.pathname).toBe("/pago");
   expect(screen.getByRole("heading", { name: "Resumen del pedido" })).toBeTruthy();
   await completarEnvio(user);
   await user.click(screen.getByRole("button", { name: "Continuar" }));
 
-  // 4) Pagar con tarjeta
   expect(window.location.pathname).toBe("/pago-tarjeta");
   await completarTarjeta(user);
   await user.click(screen.getByRole("button", { name: "Pagar $388.970" }));
 
-  // 5) Resumen del pedido
   expect(window.location.pathname).toBe("/resumen");
   expect(screen.getByRole("heading", { name: "¡Gracias por tu compra!" })).toBeTruthy();
   const detalle = within(screen.getByRole("region", { name: "Detalle del pedido" }));
@@ -102,7 +94,6 @@ test("compra completa: catálogo, carrito, envío, pago con tarjeta y resumen", 
   expect(detalle.getByText(/Cable de instrumento 3 metros x1/)).toBeTruthy();
   expect(detalle.getByText("$388.970")).toBeTruthy();
 
-  // el pedido queda guardado y el carrito se vacía
   const pedido = JSON.parse(localStorage.getItem("sv_ultimo_pedido"));
   expect(pedido.total).toBe(388970);
   expect(pedido.items).toHaveLength(2);

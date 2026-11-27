@@ -30,7 +30,6 @@ function formularioDesde(producto) {
   }
 }
 
-/** Crear (producto = null) o editar un producto. `onGuardar` hace la llamada y lanza el error si falla. */
 export default function FormularioProducto({ producto, onGuardar, onCancelar }) {
   const [form, setForm] = useState(() => formularioDesde(producto))
   const [errores, setErrores] = useState({})

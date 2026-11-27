@@ -162,7 +162,6 @@ class ProductoAdminControllerTest {
 		String token = tokenDe(Perfiles.ADMINISTRADOR);
 		long otro = crear(token, "Otro producto " + UUID.randomUUID(), 1);
 
-		// El código GA001 pertenece a un producto del catálogo.
 		enviar(post(RUTA), token, productoConCodigo("ga001", "Nombre nuevo " + UUID.randomUUID(), "Accesorios", 1000, 1))
 				.andExpect(status().isConflict())
 				.andExpect(jsonPath("$.campo").value("codigo"));
@@ -239,7 +238,6 @@ class ProductoAdminControllerTest {
 				.andExpect(jsonPath("$.length()").value(2));
 	}
 
-	// ---------- Destacados ----------
 
 	private String conDestacado(String json, boolean destacado) {
 		return json.substring(0, json.length() - 1) + ",\"destacado\":" + destacado + "}";

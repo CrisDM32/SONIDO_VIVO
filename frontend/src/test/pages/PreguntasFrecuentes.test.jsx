@@ -58,7 +58,6 @@ test("al hacer clic en una pregunta se abre y muestra su respuesta; otro clic la
   await user.click(pregunta);
   expect(detalle.open).toBe(true);
   expect(within(detalle).getByText("Sí, puedes pagar en 12 cuotas sin interés.")).toBeTruthy();
-  // abrir una no abre las demás
   expect(detallesDe(container).filter((d) => d.open)).toHaveLength(1);
 
   await user.click(pregunta);

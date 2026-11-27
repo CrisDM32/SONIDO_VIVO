@@ -5,7 +5,7 @@ import { afterEach, beforeEach, expect, test } from "vitest";
 import PagoTarjeta from "../../pages/PagoTarjeta";
 import { validarPagoTarjeta } from "../../utils/validacionPagoTarjeta";
 
-const hoy = new Date(2026, 9, 15); // octubre de 2026
+const hoy = new Date(2026, 9, 15);
 
 const formValido = {
   nombreTitular: "Ana Pérez",

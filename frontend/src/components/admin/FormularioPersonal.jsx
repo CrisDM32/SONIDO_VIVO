@@ -15,7 +15,6 @@ import {
 const CAMPOS = ['nombre', 'correo', 'rut', 'telefono', 'clave', 'perfil']
 const formInicial = { nombre: '', correo: '', rut: '', telefono: '', clave: '', perfil: 'vendedor' }
 
-/** Alta de personal (vendedor o administrador). `onGuardar` hace la llamada y lanza el error si falla. */
 export default function FormularioPersonal({ onGuardar, onCancelar }) {
   const [form, setForm] = useState(formInicial)
   const [errores, setErrores] = useState({})

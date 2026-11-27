@@ -1,7 +1,6 @@
 import { Rutas } from './endpoints.js'
 import { peticionAutenticada } from './http.js'
 
-// ---------- Productos (administrador y vendedor) ----------
 export const listarProductos = () => peticionAutenticada(Rutas.adminProductos)
 
 export const crearProducto = (datos) =>
@@ -19,7 +18,6 @@ export const cambiarDestacado = (id, destacado) =>
 export const cambiarActivo = (id, activo) =>
   peticionAutenticada(`${Rutas.adminProductos}/${id}/activo`, { metodo: 'PATCH', cuerpo: { activo } })
 
-// ---------- Usuarios (solo administrador) ----------
 export const buscarUsuarios = ({ q = '', page = 0 } = {}) => {
   const parametros = new URLSearchParams({ q, page: String(page) })
   return peticionAutenticada(`${Rutas.adminUsuarios}?${parametros}`)

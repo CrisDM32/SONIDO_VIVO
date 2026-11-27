@@ -19,7 +19,6 @@ import cl.sonidovivo.productos.model.Usuario;
 import cl.sonidovivo.productos.repository.UsuarioRepository;
 import cl.sonidovivo.productos.util.Rut;
 
-/** Alta, búsqueda y baja de usuarios. Compartido por el registro de clientes y el panel de administración. */
 @Service
 public class UsuarioService {
 
@@ -33,7 +32,6 @@ public class UsuarioService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	/** Crea un usuario garantizando RUT válido y RUT/correo únicos (RUT sin formato, correo en minúsculas). */
 	@Transactional
 	public Usuario crear(String nombre, String correoIngresado, String rutIngresado, String telefono, String clave, String perfil) {
 		String correo = correoIngresado.trim().toLowerCase();

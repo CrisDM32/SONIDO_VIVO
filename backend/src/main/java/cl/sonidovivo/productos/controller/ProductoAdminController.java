@@ -25,7 +25,6 @@ import cl.sonidovivo.productos.dto.StockRequest;
 import cl.sonidovivo.productos.service.ProductoAdminService;
 import jakarta.validation.Valid;
 
-/** Gestión del catálogo: administrador y vendedor (se restringe en SeguridadConfig). */
 @Tag(name = "Administración de productos", description = "Requiere perfil administrador o vendedor.")
 @SecurityRequirement(name = "bearerAuth")
 @RestController

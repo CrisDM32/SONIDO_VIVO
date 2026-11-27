@@ -5,7 +5,6 @@ public final class Rut {
 	private Rut() {
 	}
 
-	/** Quita puntos, guion y espacios y pasa a mayúscula: "12.345.678-k" -> "12345678K". */
 	public static String normalizar(String rut) {
 		if (rut == null) {
 			return "";

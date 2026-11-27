@@ -1,7 +1,6 @@
 import { campoInput } from '../../styles/clases.js'
 import { OPCIONES_TAMANO } from '../../utils/paginacion.js'
 
-/** Panel superior del catálogo: cuántos productos mostrar por página y qué rango se ve. */
 export default function PanelPaginacion({ tamano, onTamanoChange, desde, hasta, total }) {
   return (
     <section

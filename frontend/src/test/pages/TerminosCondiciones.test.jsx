@@ -50,7 +50,6 @@ test("el índice tiene un enlace por sección que apunta a su ancla", () => {
   secciones.forEach((seccion, indiceSeccion) => {
     expect(enlaces[indiceSeccion].textContent).toBe(`${indiceSeccion + 1}. ${seccion.titulo}`);
     expect(enlaces[indiceSeccion].getAttribute("href")).toBe(`#termino-${seccion.id}`);
-    // cada ancla existe en la página
     expect(document.getElementById(`termino-${seccion.id}`)).toBeTruthy();
   });
 });

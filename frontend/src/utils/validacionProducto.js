@@ -1,6 +1,5 @@
 import { categorias } from '../data/categorias.js'
 
-// Mismas reglas que valida el backend (ProductoRequest).
 export function validarProducto(form) {
   const errores = {}
 

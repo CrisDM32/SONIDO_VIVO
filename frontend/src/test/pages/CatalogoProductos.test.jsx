@@ -17,7 +17,6 @@ const carritoGuardado = () => JSON.parse(localStorage.getItem("sv_carrito") || "
 
 beforeEach(() => {
   localStorage.clear();
-  // El catálogo se carga desde el backend (useProductos)
   stubCatalogo();
 });
 
@@ -158,7 +157,6 @@ test("mientras carga muestra un aviso y si el backend falla, un mensaje de error
   expect((await screen.findByRole("alert")).textContent).toBe("No se han cargado los productos");
 });
 
-// ---------- Paginación ----------
 
 const muchos = Array.from({ length: 30 }, (_, i) => ({
   id: i + 1,

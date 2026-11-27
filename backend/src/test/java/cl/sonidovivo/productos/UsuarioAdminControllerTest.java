@@ -205,7 +205,6 @@ class UsuarioAdminControllerTest {
 
 	@Test
 	void noSePuedeEliminarNiDegradarAlUltimoAdministrador() {
-		// Cada test limpia sus usuarios: aquí el único administrador es el sembrado.
 		Usuario sembrado = usuarioRepository.findByCorreo("admin@sonidovivo.cl").orElseThrow();
 
 		assertThrows(ReglaNegocioException.class, () -> usuarioService.eliminar(sembrado.getId(), "otra@persona.cl"));

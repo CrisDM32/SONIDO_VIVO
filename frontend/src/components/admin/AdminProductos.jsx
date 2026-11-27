@@ -14,7 +14,6 @@ import { categorias } from '../../data/categorias.js'
 import { paginar } from '../../utils/paginacion.js'
 import { botonPrincipal, campoError, campoInput, mensajeExito } from '../../styles/clases.js'
 
-// En el panel siempre se ven 12 productos por página (no es configurable).
 const PRODUCTOS_POR_PAGINA = 12
 
 export default function AdminProductos({ onError }) {
@@ -44,7 +43,6 @@ export default function AdminProductos({ onError }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recarga])
 
-  // Ejecuta una acción sobre un producto y refresca la lista con lo que el servidor confirma.
   async function ejecutar(accion, mensaje) {
     setError('')
     setAviso('')
@@ -79,7 +77,6 @@ export default function AdminProductos({ onError }) {
 
   const { items, total, totalPaginas, pagina, desde, hasta } = paginar(visibles, paginaSolicitada, PRODUCTOS_POR_PAGINA)
 
-  // Buscar o filtrar cambia la lista: se vuelve a la primera página.
   const cambiarBusqueda = (valor) => {
     setBusqueda(valor)
     setPaginaSolicitada(1)

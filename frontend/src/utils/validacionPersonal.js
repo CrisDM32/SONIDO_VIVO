@@ -1,6 +1,5 @@
 import { rutValido } from './validacionEnvio.js'
 
-// Alta de personal (administrador o vendedor). Mismas reglas que el registro de clientes.
 export function validarPersonal(form) {
   const errores = {}
 

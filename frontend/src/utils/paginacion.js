@@ -1,7 +1,6 @@
 export const OPCIONES_TAMANO = [6, 12, 24, 48]
 export const TAMANO_INICIAL = 12
 
-/** Corta `lista` en la página pedida (desde 1). Si la página no existe, usa la más cercana. */
 export function paginar(lista, pagina, tamano) {
   const total = lista.length
   const totalPaginas = Math.max(1, Math.ceil(total / tamano))
@@ -19,7 +18,6 @@ export function paginar(lista, pagina, tamano) {
   }
 }
 
-/** Números a mostrar en la navegación: siempre la primera y la última, y las vecinas de la actual ("…" en los saltos). */
 export function numerosDePagina(actual, totalPaginas) {
   if (totalPaginas <= 7) {
     return Array.from({ length: totalPaginas }, (_, i) => i + 1)
@@ -33,7 +31,6 @@ export function numerosDePagina(actual, totalPaginas) {
   const resultado = []
   ordenados.forEach((n, i) => {
     const salto = i > 0 ? n - ordenados[i - 1] : 1
-    // Un hueco de un solo número se muestra completo: "…" no ahorraría nada.
     if (salto === 2) resultado.push(n - 1)
     if (salto > 2) resultado.push('…')
     resultado.push(n)

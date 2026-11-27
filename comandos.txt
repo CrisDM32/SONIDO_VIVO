@@ -61,3 +61,25 @@ curl --max-time 10 -i http://127.0.0.1/api/v1/productos
 
 http://98.92.114.226
 http://98.92.114.226/swagger-ui/index.html
+
+
+
+EjecutaR EN LA CONSOLA DEL BACKEND AWS.
+
+cd ~
+sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml ps
+sudo docker compose --env-file sonidovivo.env -f sonidovivo.yaml \
+  exec db psql -U sonidovivo -d sonidovivo
+
+Cuando aparezca sonidovivo=#, deja esta terminal lista para los pasos e y f
+
+
+COMANDO SELECCION DE PRODCTO A ELECCION EN CONSOLA BACKEND (E)
+
+SELECT codigo, nombre, precio, activo, stock
+FROM productos WHERE codigo = 'GA001';
+
+COMANDO SELECCION DE CORREO PERFIL EN CONSOLA BACKEND (F)
+
+SELECT id, nombre, correo, perfil FROM usuarios
+WHERE correo = 'test@test.cl';

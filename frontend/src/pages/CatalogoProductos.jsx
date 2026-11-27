@@ -30,7 +30,6 @@ export default function CatalogoProductos({ categoria }) {
     }, 1000)
   }
 
-  // Cualquier cambio en lo que se ve (búsqueda, cantidad por página) vuelve a la primera página.
   const cambiarBusqueda = (texto) => {
     setBusqueda(texto)
     setPaginaSolicitada(1)

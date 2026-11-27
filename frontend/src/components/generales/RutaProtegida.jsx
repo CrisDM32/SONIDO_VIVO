@@ -1,7 +1,6 @@
 import { Navigate } from 'react-router-dom'
 import { useSesion } from '../../hooks/useSesion.js'
 
-/** Deja pasar solo a quien tenga sesión y uno de los perfiles indicados. */
 export default function RutaProtegida({ perfiles, children }) {
   const { usuario, activa } = useSesion()
 

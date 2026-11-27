@@ -49,7 +49,6 @@ test("muestra cada producto con su precio unitario, subtotal y el total", () => 
   const lineaCable = within(lineaDe("Cable de instrumento 3 metros"));
   expect(lineaCable.getByText("$8.990 c/u")).toBeTruthy();
 
-  // total = 189.990 x 2 + 8.990 x 1
   expect(screen.getByText("$388.970")).toBeTruthy();
 });
 

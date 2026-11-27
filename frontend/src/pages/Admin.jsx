@@ -15,7 +15,6 @@ export default function Admin() {
 
   const esAdministrador = usuario.perfil === 'administrador'
 
-  // Si el backend dice 401 (token vencido o usuario eliminado) se cierra la sesión; el resto se muestra como mensaje.
   function manejarError(error) {
     if (error.status === 401) cerrar()
     return error.message

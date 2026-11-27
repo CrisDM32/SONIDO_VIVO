@@ -5,7 +5,6 @@ const boton =
 const botonNormal = `${boton} bg-transparent text-button hover:bg-button hover:text-paper disabled:hover:bg-transparent disabled:hover:text-button`
 const botonActual = `${boton} bg-header text-paper`
 
-/** Navegación del catálogo: Anterior, números de página y Siguiente. No se muestra si hay una sola página. */
 export default function NavegacionPaginas({ pagina, totalPaginas, onCambiar, etiqueta = 'Paginación del catálogo', className = 'mb-[50px]' }) {
   if (totalPaginas <= 1) return null
 

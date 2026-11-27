@@ -23,7 +23,6 @@ import cl.sonidovivo.productos.dto.UsuarioPersonalRequest;
 import cl.sonidovivo.productos.service.UsuarioService;
 import jakarta.validation.Valid;
 
-/** Gestión de usuarios: solo administrador (se restringe en SeguridadConfig). */
 @Tag(name = "Administración de usuarios", description = "Requiere perfil administrador.")
 @SecurityRequirement(name = "bearerAuth")
 @RestController

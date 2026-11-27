@@ -2,7 +2,6 @@ package cl.sonidovivo.productos.dto;
 
 import cl.sonidovivo.productos.model.Producto;
 
-/** Lo que ve cualquier visitante del catálogo: sin el stock exacto. */
 public record ProductoPublico(
 		Long id, String codigo, String nombre, String categoria, String marca, String modelo, String descripcion,
 		int precio, String icono, boolean disponible, boolean destacado) {
