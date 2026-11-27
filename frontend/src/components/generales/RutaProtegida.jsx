@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom'
 import { useSesion } from '../../hooks/useSesion.js'
 
+
 export default function RutaProtegida({ perfiles, children }) {
   const { usuario, activa } = useSesion()
 
